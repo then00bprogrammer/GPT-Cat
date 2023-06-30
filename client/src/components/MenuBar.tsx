@@ -26,7 +26,7 @@ const MenuBar: React.FC = () => {
         bg={getBackgroundColor(0)}
         onClick={() => handleClick(0)}
         borderRadius={20}
-        transition="background-color 0.3s"
+        transition="width 0.3s ease-in"
       >
         <Icon boxSize='6vh' color={getTextColor(0)} as={FaBookmark} />
         {selected === 0 && <Text color='white'>Bookmarks</Text>}
@@ -37,7 +37,7 @@ const MenuBar: React.FC = () => {
         bg={getBackgroundColor(1)}
         onClick={() => handleClick(1)}
         borderRadius={20}
-        transition="background-color 0.3s"
+        transition="background-color 0.3s ease-in"
       >
         <Icon boxSize='6vh' color={getTextColor(1)} as={FaPlus} />
         {selected === 1 && <Text color='white'>Add Prompt</Text>}

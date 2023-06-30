@@ -1,6 +1,6 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 
-const config:ThemeConfig = {
+const config: ThemeConfig = {
   initialColorMode: 'light',
   useSystemColorMode: false,
 }
@@ -31,6 +31,9 @@ export const theme = extendTheme({
         borderRadius: "10px",
         backgroundColor: 'gray.600',
         boxShadow: "inset 0 0 6px rgba(0,0,0,.3)",
+      },
+      'html': {
+        scrollBehavior: 'smooth',
       },
     }),
   },

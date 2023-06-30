@@ -29,6 +29,12 @@ module.exports = {
                 ]
 
             },
+            {
+                test: /\.(jpg|png)$/,
+                use: {
+                    loader: 'url-loader',
+                },
+            },
         ],
     },
     plugins: [
@@ -40,7 +46,7 @@ module.exports = {
         ...getHtmlPlugins(["index"]),
     ],
     resolve: {
-        extensions: [".tsx", ".ts", ".js"],
+        extensions: [".tsx", ".ts", ".js"]
     },
     output: {
         path: path.join(__dirname, "dist/js"),
