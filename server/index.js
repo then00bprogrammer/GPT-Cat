@@ -5,6 +5,7 @@ const folderRoutes = require('./routes/folderRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 const cors = require('cors');
 const Folder = require('./models/folderSchema');
+const { Types: { ObjectId } } = mongoose;
 
 const corsOptions = {
   origin: true,
@@ -15,16 +16,25 @@ const corsOptions = {
 
 const app = express();
 
-const MONGODB_URI =
-  'mongodb+srv://nikhil03:hellskitchen03@cluster0.v5kssag.mongodb.net/gpt-cat?retryWrites=true&w=majority';
+const MONGODB_URI = 'mongodb+srv://nikhil03:hellskitchen03@cluster0.v5kssag.mongodb.net/gpt-cat?retryWrites=true&w=majority';
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-app.get('/', async (req, res) => {
+app.get('/:id?', async (req, res) => {
   try {
-    const data = await Folder.find();
-    res.status(200).json({ data: data });
+    let data;
+    const { id } = req.params;
+    const objectId = ObjectId.isValid(id) ? new ObjectId(id) : null;
+    if (objectId) {
+      data = await Folder.findById(objectId);
+    } else {
+      data = await Folder.find({"name":"home"});
+      data = data[0];
+      console.log(data);
+    }
+
+    res.status(200).json({ folders: data.folders, files: data.files });
   } catch (error) {
     console.error('Error retrieving data:', error);
     res.status(500).json({ error: 'Internal server error' });

@@ -4,6 +4,7 @@ const createFolder = async (req, res) => {
   try {
     const { name, path } = req.body;
     const folders = path.split('/').filter(folder => folder.trim() !== '');
+    folders.unshift("home");
     let parentFolder = null;
 
     for (const folderName of folders) {

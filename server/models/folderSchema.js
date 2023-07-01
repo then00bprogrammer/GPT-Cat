@@ -10,8 +10,14 @@ const folderSchema = new mongoose.Schema({
     ref: 'Folder',
   },
   folders: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Folder',
+    name: {
+      type: String,
+      required: true,
+    },
+    folder: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Folder',
+    },
   }],
   files: [{
     name: {

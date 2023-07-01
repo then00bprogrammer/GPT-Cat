@@ -6,7 +6,6 @@ import { auth } from '../firebase/clientApp';
 const Auth = () => {
   const [signInWithGoogle, guser, gloading, gerror] = useSignInWithGoogle(auth);
   const handleSignIn= async()=>{
-    console.log('okkkkkkkk')
     await signInWithGoogle();
   }
   return (

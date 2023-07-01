@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { auth } from '../firebase/clientApp';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { Flex, Heading, Text } from '@chakra-ui/react';
+import { Flex, Heading } from '@chakra-ui/react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import Cat from '../assets/cat.json'
 
