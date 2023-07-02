@@ -5,7 +5,7 @@ import NavBar from "./components/NavBar";
 import Prompts from "./components/Prompts";
 import Auth from "./components/SignUp";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./Providers/AuthProvider";
 import Profile from "./components/Profile";
 import Bookmark from "./components/Bookmark";

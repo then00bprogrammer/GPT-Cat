@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^2.7.1",
+    "@craco/craco": "^7.1.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@lottiefiles/react-lottie-player": "^3.5.3",
@@ -38,6 +39,7 @@
     "watch": "webpack -w --config webpack.config.js"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.239",
     "file-loader": "^6.2.0",
     "ts-loader": "^9.4.2",
     "url-loader": "^4.1.1",
