@@ -17,6 +17,8 @@ import {
   FaPencilAlt,
   FaTrashAlt,
 } from "react-icons/fa";
+import AddPromptModal from "./AddPromptModal";
+import DeleteFileModal from "./DeleteFile";
 
 type Props = {
   _id: string;
@@ -51,8 +53,14 @@ const File = ({ _id, name, content }: Props) => {
     setTextContent(event.target.innerText);
   };
 
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
+  const onDeleteClose = () => {
+    setIsDeleteOpen(false);
+  };
+
   return (
     <VStack width="full">
+      <DeleteFileModal isOpen={isDeleteOpen} onClose={onDeleteClose}></DeleteFileModal>
       <HStack
         padding="2vw"
         fontSize="xl"
@@ -80,7 +88,7 @@ const File = ({ _id, name, content }: Props) => {
           onClick={handleToggleEdit}
           cursor="pointer"
         />
-        <Icon as={FaTrashAlt} cursor="pointer" />
+        <Icon as={FaTrashAlt} cursor="pointer" onClick={()=>setIsDeleteOpen(!isDeleteOpen)}/>
       </HStack>
       <Collapse in={isOpen} animateOpacity>
         <HStack

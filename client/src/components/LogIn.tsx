@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { Button, Flex, Input, FormLabel, Box, Heading, Text } from "@chakra-ui/react";
 import {
   useSignInWithEmailAndPassword,
@@ -7,6 +7,7 @@ import { auth } from "../firebase/clientApp";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 const LogIn = () => {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [signupForm, setSignupForm] = useState({
     email: "",
     password: "",
@@ -23,7 +24,6 @@ const LogIn = () => {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     try {
       await signInWithEmailAndPassword(
         signupForm.email,
@@ -46,6 +46,20 @@ const LogIn = () => {
       [event.target.name]: event.target.value,
     }));
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event:any) => {
+      if (event.key === 'Enter') {
+        buttonRef.current?.click()
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <Flex
@@ -101,6 +115,7 @@ const LogIn = () => {
             size="lg"
             type="submit"
             isLoading={loading}
+            ref={buttonRef}
           >
             Login
           </Button>

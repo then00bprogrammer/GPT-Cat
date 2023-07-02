@@ -3,7 +3,7 @@ import "./App.css";
 import MenuBar from "./components/MenuBar";
 import NavBar from "./components/NavBar";
 import Prompts from "./components/Prompts";
-import Auth from "./components/Auth";
+import Auth from "./components/SignUp";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "./Providers/AuthProvider";

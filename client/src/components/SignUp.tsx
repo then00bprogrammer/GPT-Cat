@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Button,
   Flex,
@@ -13,6 +13,7 @@ import { auth } from "../firebase/clientApp";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 const SignupForm = () => {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [signupForm, setSignupForm] = useState({
     email: "",
     password: "",
@@ -60,6 +61,20 @@ const SignupForm = () => {
       [event.target.name]: event.target.value,
     }));
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event:any) => {
+      if (event.key === 'Enter') {
+        buttonRef.current?.click()
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <Flex
@@ -134,6 +149,7 @@ const SignupForm = () => {
             size="lg"
             type="submit"
             isLoading={loading}
+            ref={buttonRef}
           >
             Sign Up
           </Button>

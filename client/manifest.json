@@ -6,11 +6,17 @@
     "default_popup": "js/index.html",
     "default_title": "React Chrome Extension"
   },
-  "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'",
   "permissions": [
     "identity",
     "tabs",
     "storage",
     "https://apis.google.com/*"
-  ]
+  ],
+  "content_scripts": [
+    {
+      "js": ["/modifyChatGpt.js"],
+      "matches": ["https://chat.openai.com/*"]
+    }
+  ]  
 }

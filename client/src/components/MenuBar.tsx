@@ -1,25 +1,13 @@
 import React, { useState, useContext } from "react";
 import { HStack, Text, Icon, useToken } from "@chakra-ui/react";
-import { FaPlus, FaBookmark, FaUser } from "react-icons/fa";
+import { FaPlus, FaBookmark, FaUser, FaHome } from "react-icons/fa";
 import AddPromptModal from "./AddPromptModal";
 import { PathContext } from "../Providers/PathProvider";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 const MenuBar: React.FC = () => {
-  const [selected, setSelected] = useState<number>(-1);
+  const [selected, setSelected] = useState<number>(1);
   const [teal400] = useToken("colors", ["teal.400"]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const onClose = () => {
-    setIsOpen(false);
-  };
-  const handleAddPrompt = () => {
-    setIsOpen(true);
-  };
-
-  const handleClick = (index: number) => {
-    setSelected(index);
-    if (index == 1) handleAddPrompt();
-  };
 
   const getBackgroundColor = (index: number) => {
     return selected === index ? teal400 : "none";
@@ -27,6 +15,10 @@ const MenuBar: React.FC = () => {
 
   const getTextColor = (index: number) => {
     return selected === index ? "white" : teal400;
+  };
+
+  const handleClick = (index: number) => {
+    setSelected(index);
   };
 
   const path = useContext(PathContext);
@@ -41,7 +33,7 @@ const MenuBar: React.FC = () => {
       borderTopWidth="1px"
       borderTopColor="blackAlpha.700"
     >
-      <AddPromptModal isOpen={isOpen} onClose={onClose}></AddPromptModal>
+      
       <Link to="/bookmarks">
       <HStack
         cursor="pointer"
@@ -68,10 +60,10 @@ const MenuBar: React.FC = () => {
         borderRadius={20}
         transition="width .3s ease-in"
       >
-        <Icon boxSize="6vh" color={getTextColor(1)} as={FaPlus} />
+        <Icon boxSize="6vh" color={getTextColor(1)} as={FaHome} />
         {selected === 1 && (
           <Text color="white" fontSize="md">
-            Add Prompt
+            Prompts
           </Text>
         )}
       </HStack>
