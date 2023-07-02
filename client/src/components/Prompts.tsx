@@ -70,7 +70,7 @@ const Prompts = () => {
   }, []);
 
   return (
-    <VStack padding='5vw' minHeight='70%' width='100%' overflowY='hidden'>
+    <VStack padding='5vw' minHeight='80vh' width='100%' overflowY='hidden'>
       <HStack
         marginBottom='1vh'
         color='teal.400'

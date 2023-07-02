@@ -16,7 +16,9 @@ export const theme = extendTheme({
         WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
       },
       body: {
-        bg: "white",
+        bg: "none",
+        height:'600px',
+        width:'450px'
       },
       '::-webkit-scrollbar-track': {
         borderRadius: '10px',
@@ -31,9 +33,6 @@ export const theme = extendTheme({
         borderRadius: "10px",
         backgroundColor: 'gray.600',
         boxShadow: "inset 0 0 6px rgba(0,0,0,.3)",
-      },
-      'html': {
-        scrollBehavior: 'smooth',
       },
     }),
   },

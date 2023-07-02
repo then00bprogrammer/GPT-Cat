@@ -1,71 +1,98 @@
-import React, { useState, useContext } from 'react';
-import { HStack, Text, Icon, useToken } from '@chakra-ui/react';
-import { FaPlus, FaBookmark, FaUser } from 'react-icons/fa';
-import AddPromptModal from './AddPromptModal';
-import { PathContext } from '../Providers/PathProvider';
+import React, { useState, useContext } from "react";
+import { HStack, Text, Icon, useToken } from "@chakra-ui/react";
+import { FaPlus, FaBookmark, FaUser } from "react-icons/fa";
+import AddPromptModal from "./AddPromptModal";
+import { PathContext } from "../Providers/PathProvider";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 const MenuBar: React.FC = () => {
   const [selected, setSelected] = useState<number>(-1);
-  const [teal400,] = useToken("colors", ["teal.400"]);
-  const [isOpen,setIsOpen] = useState<boolean>(false);
-  const onClose=()=>{
+  const [teal400] = useToken("colors", ["teal.400"]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const onClose = () => {
     setIsOpen(false);
-  }
-  const handleAddPrompt=()=>{
+  };
+  const handleAddPrompt = () => {
     setIsOpen(true);
-  }
+  };
 
   const handleClick = (index: number) => {
     setSelected(index);
-    if(index==1) handleAddPrompt();
+    if (index == 1) handleAddPrompt();
   };
 
   const getBackgroundColor = (index: number) => {
-    return selected === index ? teal400 : 'white';
+    return selected === index ? teal400 : "none";
   };
 
   const getTextColor = (index: number) => {
-    return selected === index ? 'white' : teal400;
+    return selected === index ? "white" : teal400;
   };
 
   const path = useContext(PathContext);
 
   return (
-    <HStack justifyContent='space-around' alignItems='center' width='100vw' height='8vh' padding='1vh 5vw'>
+    <HStack
+      justifyContent="space-around"
+      alignItems="center"
+      width="100vw"
+      height="10vh"
+      padding="1vh 5vw"
+      borderTopWidth="1px"
+      borderTopColor="blackAlpha.700"
+    >
       <AddPromptModal isOpen={isOpen} onClose={onClose}></AddPromptModal>
+      <Link to="/bookmarks">
       <HStack
-        cursor='pointer'
-        padding='1vh 4vh'
+        cursor="pointer"
+        padding="1vh 4vh"
         bg={getBackgroundColor(0)}
         onClick={() => handleClick(0)}
         borderRadius={20}
         transition="width 0.3s ease-in"
       >
-        <Icon boxSize='6vh' color={getTextColor(0)} as={FaBookmark} />
-        {selected === 0 && <Text color='white' fontSize='md'>Bookmarks</Text>}
+        <Icon boxSize="6vh" color={getTextColor(0)} as={FaBookmark} />
+        {selected === 0 && (
+          <Text color="white" fontSize="md">
+            Bookmarks
+          </Text>
+        )}
       </HStack>
+      </Link>
+      <Link to="/">
       <HStack
-        cursor='pointer'
-        padding='1vh 4vh'
+        cursor="pointer"
+        padding="1vh 4vh"
         bg={getBackgroundColor(1)}
         onClick={() => handleClick(1)}
         borderRadius={20}
         transition="width .3s ease-in"
       >
-        <Icon boxSize='6vh' color={getTextColor(1)} as={FaPlus} />
-        {selected === 1 && <Text color='white' fontSize='md'>Add Prompt</Text>}
+        <Icon boxSize="6vh" color={getTextColor(1)} as={FaPlus} />
+        {selected === 1 && (
+          <Text color="white" fontSize="md">
+            Add Prompt
+          </Text>
+        )}
       </HStack>
-      <HStack
-        cursor='pointer'
-        padding='1vh 4vh'
-        bg={getBackgroundColor(2)}
-        onClick={() => handleClick(2)}
-        borderRadius={20}
-        transition="width 0.3s ease-in"
-      >
-        <Icon boxSize='6vh' color={getTextColor(2)} as={FaUser} />
-        {selected === 2 && <Text color='white' fontSize='md'>Profile</Text>}
-      </HStack>
+      </Link>
+      <Link to="/profile">
+        <HStack
+          cursor="pointer"
+          padding="1vh 4vh"
+          bg={getBackgroundColor(2)}
+          onClick={() => handleClick(2)}
+          borderRadius={20}
+          transition="width 0.3s ease-in"
+        >
+          <Icon boxSize="6vh" color={getTextColor(2)} as={FaUser} />
+          {selected === 2 && (
+            <Text color="white" fontSize="md">
+              Profile
+            </Text>
+          )}
+        </HStack>
+      </Link>
     </HStack>
   );
 };

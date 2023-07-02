@@ -12,13 +12,13 @@ root.className = "container";
 document.body.appendChild(root);
 const rootDiv = ReactDOM.createRoot(root);
 rootDiv.render(
-  <AuthProvider>
-    <PathProvider>
-      <ChakraProvider theme={theme}>
+  <ChakraProvider theme={theme}>
+    <AuthProvider>
+      <PathProvider>
         <React.StrictMode>
           <App />
         </React.StrictMode>
-      </ChakraProvider>
-    </PathProvider>
-  </AuthProvider>
+      </PathProvider>
+    </AuthProvider>
+  </ChakraProvider>
 );

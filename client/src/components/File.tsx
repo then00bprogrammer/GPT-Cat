@@ -67,7 +67,10 @@ const File = ({ _id, name, content }: Props) => {
           borderBottom={editable ? '2px dashed' : 'none'}
           contentEditable={editable}
           onInput={handleChange}
-          bg={editable ? 'white' : 'none'}
+          bg={editable ? 'gray.500' : 'none'}
+          paddingRight='5vw'
+          color={editable?'white':'black'}
+          caret-color="white"
         >
           {name}
         </Text>
