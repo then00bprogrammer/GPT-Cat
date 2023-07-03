@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext, useRef } from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
 import {
   Button,
@@ -12,34 +12,47 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import Dustbin from "../assets/trash-can.json";
+import { AuthContext } from "../Providers/AuthProvider";
 
 const DeleteFileModal = ({
   isOpen,
   onClose,
   id,
-  parentId,
   setIsDeleted,
 }: {
   isOpen: boolean;
   onClose: () => void;
   id: string;
-  parentId: string;
   setIsDeleted: any;
 }) => {
-  const [isLoading,setIsLoading] = useState<boolean>(false);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const currentUser = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleDeleteFile = async () => {
     try {
-      setIsLoading(true);
-      await fetch(`http://localhost:5000/files/${id}/${parentId}`, {
-        method: "DELETE",
-      });
-      setIsLoading(false);
       setIsDeleted(true);
       onClose();
+      await fetch(`http://localhost:5000/files/${id}`, {
+        method: "DELETE",
+      });
     } catch (error) {
       console.error("An error occurred while deleting the file:", error);
     }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Enter") {
+        buttonRef.current?.click();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <>
@@ -66,6 +79,7 @@ const DeleteFileModal = ({
             >
               <LightMode>
                 <Button
+                  ref={buttonRef}
                   isLoading={isLoading}
                   variant="outline"
                   colorScheme="red"

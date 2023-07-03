@@ -3,7 +3,7 @@ import { auth } from "../firebase/clientApp";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Flex, Heading, useColorModeValue } from "@chakra-ui/react";
 import { Player } from "@lottiefiles/react-lottie-player";
-import Cat from "../assets/cat.json";
+import Ball from "../assets/ball.json";
 
 interface User {
   email: string | null | undefined;
@@ -45,7 +45,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         <Player
           autoplay
           loop
-          src={Cat}
+          src={Ball}
           style={{ height: "100%", width: "100%" }}
         />
       </Flex>

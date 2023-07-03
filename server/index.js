@@ -5,6 +5,7 @@ const folderRoutes = require('./routes/folderRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 const cors = require('cors');
 const Folder = require('./models/folderSchema');
+const User = require('./models/userSchema');
 const { Types: { ObjectId } } = mongoose;
 
 const corsOptions = {
@@ -21,23 +22,65 @@ const MONGODB_URI = 'mongodb+srv://nikhil03:hellskitchen03@cluster0.v5kssag.mong
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
-app.get('/:id?', async (req, res) => {
+app.get('/:email/:id?', async (req, res) => {
   try {
+    const { email, id } = req.params;
     let data;
-    const { id } = req.params;
-    const objectId = ObjectId.isValid(id) ? new ObjectId(id) : null;
-    if (objectId) {
-      data = await Folder.findById(objectId);
+
+    if (email) {
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      if (!id) {
+        data = await Folder.find({ user: user._id, name: 'home' });
+      } else {
+        const folder = await Folder.findOne({ user: user._id, _id: id });
+        if (!folder) {
+          return res.status(404).json({ error: 'Folder not found' });
+        }
+        data = [folder]; 
+      }
     } else {
-      data = await Folder.find({"name":"home"});
-      data = data[0];
-      console.log(data);
+      return res.status(400).json({ error: 'Email parameter is required' });
     }
 
-    res.status(200).json({ folders: data.folders, files: data.files });
+    if (data.length === 0) {
+      return res.status(404).json({ error: 'Folder not found' });
+    }
+
+    res.status(200).json({ folders: data[0].folders, files: data[0].files });
   } catch (error) {
     console.error('Error retrieving data:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+app.post('/createUser',async(req,res)=>{
+  try{
+    const { email } = req.body;
+    const user = new User({email:email});
+    await user.save();
+    const homeFolder = new Folder({ name: 'home', user: user._id });
+    await homeFolder.save();
+    res.status(201).json({'message':'User created successfully'});
+  } catch(error){
+    console.log(error);
+  }
+});
+
+app.post('/bookmark',async(req,res)=>{
+  try{
+    const { email, link } = req.body;
+    const user = await User.findOne({email:email});
+    user.bookmarks.push(link);
+    await user.save();
+    res.status(201).json({'message':'Bookmarked successfully'});
+  } catch(error){
+    console.log(error);
   }
 });
 

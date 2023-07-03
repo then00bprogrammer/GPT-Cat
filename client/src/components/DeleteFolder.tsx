@@ -1,33 +1,58 @@
-import { useState } from 'react';
-import { Button, Flex, Heading, LightMode, Modal, ModalBody, ModalContent, ModalFooter, ModalOverlay } from '@chakra-ui/react';
-import { Player } from '@lottiefiles/react-lottie-player';
+import { useState, useEffect, useContext, useRef } from "react";
+import {
+  Button,
+  Flex,
+  Heading,
+  LightMode,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+} from "@chakra-ui/react";
+import { Player } from "@lottiefiles/react-lottie-player";
 import Dustbin from "../assets/trash-can.json";
+import { AuthContext } from "../Providers/AuthProvider";
 
 const DeleteFolderModal = ({
-    isOpen,
-    onClose,
-    id,
-    setIsDeleted,
-  }: {
-    isOpen: boolean;
-    onClose: () => void;
-    id: string;
-    setIsDeleted: any;
-  }) => {
-    const [isLoading,setIsLoading] = useState<boolean>(false);
-    const handleDeleteFolder= async () => {
-        try {
-          setIsLoading(true);
-          await fetch(`http://localhost:5000/folders/${id}`, {
-            method: "DELETE",
-          });
-          setIsLoading(false);
-          setIsDeleted(true);
-          onClose();
-        } catch (error) {
-          console.error("An error occurred while deleting the file:", error);
-        }
-      };
+  isOpen,
+  onClose,
+  id,
+  setIsDeleted,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  id: string;
+  setIsDeleted: any;
+}) => {
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const currentUser = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const handleDeleteFolder = async () => {
+    try {
+      setIsDeleted(true);
+      onClose();
+      await fetch(`http://localhost:5000/folders/${id}`, {
+        method: "DELETE",
+      });
+    } catch (error) {
+      console.error("An error occurred while deleting the file:", error);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Enter") {
+        buttonRef.current?.click();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
   return (
     <>
       <Modal size={["xs", "xs", "lg", "lg"]} isOpen={isOpen} onClose={onClose}>
@@ -35,7 +60,8 @@ const DeleteFolderModal = ({
         <ModalContent>
           <ModalBody>
             <Heading margin="2% auto" size="xl" textAlign="center">
-              Are you sure you would like to delete this folder and its contents?
+              Are you sure you would like to delete this folder and its
+              contents?
             </Heading>
             <Player
               autoplay
@@ -53,6 +79,7 @@ const DeleteFolderModal = ({
             >
               <LightMode>
                 <Button
+                  ref={buttonRef}
                   isLoading={isLoading}
                   variant="outline"
                   colorScheme="red"
@@ -70,7 +97,7 @@ const DeleteFolderModal = ({
         </ModalContent>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default DeleteFolderModal;

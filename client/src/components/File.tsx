@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Collapse,
   HStack,
@@ -17,15 +17,16 @@ import {
   FaTrashAlt,
 } from "react-icons/fa";
 import DeleteFileModal from "./DeleteFile";
+import { AuthContext } from "../Providers/AuthProvider";
 
 type Props = {
   _id: string;
-  parentId: string;
   name: string;
   content: string;
 };
 
-const File = ({ _id, name, content, parentId }: Props) => {
+const File = ({ _id, name, content }: Props) => {
+  const currentUser = useContext(AuthContext);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const bg = useColorModeValue("gray.200", "gray.600");
   const { isOpen, onToggle } = useDisclosure();
@@ -48,9 +49,9 @@ const File = ({ _id, name, content, parentId }: Props) => {
     setEditable(!editable);
     if (toSubmit) {
       try {
-        await fetch(`http://localhost:5000/files/${_id}/${parentId}`, {
+        await fetch(`http://localhost:5000/files/${_id}`, {
           method: "PATCH",
-          body: JSON.stringify({ name: inputName }),
+          body: JSON.stringify({ name: inputName, email:currentUser?.email }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -77,7 +78,6 @@ const File = ({ _id, name, content, parentId }: Props) => {
           isOpen={isDeleteOpen}
           onClose={onDeleteClose}
           id={_id}
-          parentId={parentId}
           setIsDeleted={setIsDeleted}
         />
         <HStack

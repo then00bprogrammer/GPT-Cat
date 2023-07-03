@@ -1,4 +1,4 @@
-const { mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
 const folderSchema = new mongoose.Schema({
   name: {
@@ -14,7 +14,7 @@ const folderSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-    folder: {
+    id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Folder',
     },
@@ -28,11 +28,16 @@ const folderSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-    parent: {
+    id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Folder',
     },
   }],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
 const Folder = mongoose.model('Folder', folderSchema);

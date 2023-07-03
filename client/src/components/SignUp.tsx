@@ -7,6 +7,7 @@ import {
   Box,
   Heading,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
@@ -43,6 +44,15 @@ const SignupForm = () => {
         signupForm.email,
         signupForm.password
       );
+      await fetch("http://localhost:5000/createUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: signupForm.email,
+        }),
+      });
       setSignupForm({
         email: "",
         password: "",
@@ -62,17 +72,24 @@ const SignupForm = () => {
     }));
   };
 
+  const bgImage = useColorModeValue(
+    "https://images.unsplash.com/photo-1432821596592-e2c18b78144f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bG9naW58ZW58MHx8MHx8fDA%3D&w=1000&q=80",
+    "https://images.unsplash.com/photo-1511406361295-0a1ff814c0ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGRhcmslMjBsb2dpbiUyMHBhZ2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+  );
+  const inputBG = useColorModeValue("white", "blackAlpha.300");
+  const color = useColorModeValue("black", "white");
+
   useEffect(() => {
-    const handleKeyDown = (event:any) => {
-      if (event.key === 'Enter') {
-        buttonRef.current?.click()
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Enter") {
+        buttonRef.current?.click();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
@@ -83,7 +100,7 @@ const SignupForm = () => {
       flexDir="column"
       alignItems="center"
       justifyContent="center"
-      bgImage="https://images.unsplash.com/photo-1432821596592-e2c18b78144f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bG9naW58ZW58MHx8MHx8fDA%3D&w=1000&q=80"
+      bgImage={bgImage}
       bgPosition="center"
       bgRepeat="no-repeat"
       bgSize="cover"
@@ -102,7 +119,8 @@ const SignupForm = () => {
           mb={2}
           onChange={onChange}
           width="75vw"
-          bg="white"
+          bg={inputBG}
+          color={color}
           borderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
         />
@@ -115,7 +133,8 @@ const SignupForm = () => {
           mb={2}
           onChange={onChange}
           width="75vw"
-          bg="white"
+          bg={inputBG}
+          color={color}
           borderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
         />
@@ -127,7 +146,8 @@ const SignupForm = () => {
           mb={2}
           onChange={onChange}
           width="75vw"
-          bg="white"
+          bg={inputBG}
+          color={color}
           borderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
         />

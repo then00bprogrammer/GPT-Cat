@@ -1,4 +1,4 @@
-export const addFolder = async (name: string, pathArray: string[] | undefined) => {
+export const addFolder = async (name: string, pathArray: string[] | undefined, email: string | null |undefined) => {
     try {
       let path: string = '';
       if (pathArray !== undefined) {
@@ -9,13 +9,15 @@ export const addFolder = async (name: string, pathArray: string[] | undefined) =
         }
       }
   
-      await fetch('http://localhost:5000/folders', {
+      const resp=await fetch('http://localhost:5000/folders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 'name': name, 'path': path })
+        body: JSON.stringify({ 'name': name, 'path': path, 'email':email })
       });
+      const newFolder = await resp.json();
+      return newFolder;
     } catch (error) {
       console.error('An error occurred while adding the prompt:', error);
     }

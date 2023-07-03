@@ -5,7 +5,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   FaCheck,
   FaPencilAlt,
@@ -14,8 +14,10 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import DeleteFolderModal from "./DeleteFolder";
+import { AuthContext } from "../Providers/AuthProvider";
 
 const Folder = ({ name, _id }: { name: string; _id: string }) => {
+  const currentUser = useContext(AuthContext);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const bg = useColorModeValue("gray.200", "gray.600");
   const [editable, setEditable] = useState<boolean>(false);
@@ -35,7 +37,7 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
       try {
         await fetch(`http://localhost:5000/folders/${_id}`, {
           method: "PATCH",
-          body: JSON.stringify({ name: inputName }),
+          body: JSON.stringify({ name: inputName, email:currentUser?.email }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -67,7 +69,7 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
         id={_id}
         setIsDeleted={setIsDeleted}
       />
-      <Link to={`/prompts/${_id}/${name}`}>
+      <Link to={`/prompts/${_id}/${inputName}`}>
         <Icon as={FaRegFolderOpen} />
       </Link>
       <Text
