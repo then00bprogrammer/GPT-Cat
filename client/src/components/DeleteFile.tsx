@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import Dustbin from "../assets/trash-can.json";
 import { AuthContext } from "../Providers/AuthProvider";
+import useEnterKeyPress from "../hooks/useEnterKeyPress";
 
 const DeleteFileModal = ({
   isOpen,
@@ -40,19 +41,7 @@ const DeleteFileModal = ({
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.key === "Enter") {
-        buttonRef.current?.click();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  useEnterKeyPress(buttonRef);
 
   return (
     <>

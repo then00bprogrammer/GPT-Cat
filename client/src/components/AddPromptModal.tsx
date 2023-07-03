@@ -16,6 +16,7 @@ import {
 import { addPrompt } from "../handlers/addPrompt";
 import { useState, useEffect, useContext, useRef } from "react";
 import { AuthContext } from "../Providers/AuthProvider";
+import useEnterKeyPress from "../hooks/useEnterKeyPress";
 
 const AddPromptModal = ({
   isOpen,
@@ -48,19 +49,7 @@ const AddPromptModal = ({
     onClose();
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.key === "Enter") {
-        buttonRef.current?.click();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  useEnterKeyPress(buttonRef);
   return (
     <>
       <Modal size="sm" isOpen={isOpen} onClose={onClose}>

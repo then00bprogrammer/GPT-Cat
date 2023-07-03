@@ -13,6 +13,7 @@ import {
 import { Player } from "@lottiefiles/react-lottie-player";
 import Dustbin from "../assets/trash-can.json";
 import { AuthContext } from "../Providers/AuthProvider";
+import useEnterKeyPress from "../hooks/useEnterKeyPress";
 
 const DeleteFolderModal = ({
   isOpen,
@@ -40,19 +41,8 @@ const DeleteFolderModal = ({
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.key === "Enter") {
-        buttonRef.current?.click();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  useEnterKeyPress(buttonRef);
+  
   return (
     <>
       <Modal size={["xs", "xs", "lg", "lg"]} isOpen={isOpen} onClose={onClose}>

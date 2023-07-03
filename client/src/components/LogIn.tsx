@@ -13,6 +13,7 @@ import {
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import useEnterKeyPress from "../hooks/useEnterKeyPress";
 
 const LogIn = () => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -48,19 +49,7 @@ const LogIn = () => {
     }));
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.key === "Enter") {
-        buttonRef.current?.click();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  useEnterKeyPress(buttonRef);
 
   const colorMode = useColorMode();
   const bgImage = useColorModeValue(

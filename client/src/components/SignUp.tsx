@@ -12,6 +12,7 @@ import {
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import useEnterKeyPress from "../hooks/useEnterKeyPress";
 
 const SignupForm = () => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -79,19 +80,7 @@ const SignupForm = () => {
   const inputBG = useColorModeValue("white", "blackAlpha.300");
   const color = useColorModeValue("black", "white");
 
-  useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.key === "Enter") {
-        buttonRef.current?.click();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  useEnterKeyPress(buttonRef);
 
   return (
     <Flex
