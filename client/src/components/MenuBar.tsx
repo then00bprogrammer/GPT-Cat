@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { HStack, Text, Icon, useToken } from "@chakra-ui/react";
+import { HStack, Text, Icon, useToken, useColorModeValue } from "@chakra-ui/react";
 import { FaPlus, FaBookmark, FaUser, FaHome } from "react-icons/fa";
 import AddPromptModal from "./AddPromptModal";
 import { PathContext } from "../Providers/PathProvider";
@@ -31,7 +31,7 @@ const MenuBar: React.FC = () => {
       height="10vh"
       padding="1vh 5vw"
       borderTopWidth="1px"
-      borderTopColor="blackAlpha.700"
+      borderTopColor={useColorModeValue('blackAlpha.700','gray.400')}
     >
       
       <Link to="/bookmarks">

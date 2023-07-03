@@ -6,6 +6,7 @@ import {
   Text,
   Spacer,
   Heading,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   FaEllipsisV,
@@ -63,17 +64,18 @@ const Bookmark = () => {
       setFiles(latestData.files);
     }
   };
+  const bodyBG = useColorModeValue('white','gray.800');
 
   return (
-    <VStack padding="5vw" minHeight="80vh" width="100%" overflowY="hidden">
-      <Heading color='gray.700'>BOOKMARKS</Heading>
+    <VStack padding="5vw" minHeight="80vh" width="100%" overflowY="hidden" bg={bodyBG}>
+      <Heading color={useColorModeValue('gray.700','white')}>BOOKMARKS</Heading>
       <VStack width="full" height="100%" overflowY="auto">
         <HStack
           cursor="pointer"
           padding="2vw"
           fontSize="xl"
           width="100%"
-          bg="gray.200"
+          bg={useColorModeValue('gray.200','gray.600')}
           borderRadius={10}
         >
           <Icon as={FaRegFolderOpen} />
@@ -86,11 +88,11 @@ const Bookmark = () => {
           padding="2vw"
           fontSize="xl"
           width="100%"
-          bg="gray.200"
           borderRadius={10}
+          bg={useColorModeValue('gray.200','gray.600')}
         >
           <Icon as={FaRegFolderOpen} />
-          <Text>Sample Bookmarks</Text>
+          <Text >Sample Bookmarks</Text>
           <Spacer />
           <Icon as={FaEllipsisV} />
         </HStack>
@@ -99,8 +101,8 @@ const Bookmark = () => {
           padding="2vw"
           fontSize="xl"
           width="100%"
-          bg="gray.200"
           borderRadius={10}
+          bg={useColorModeValue('gray.200','gray.600')}
         >
           <Icon as={FaRegFolderOpen} />
           <Text>Sample Bookmarks</Text>

@@ -44,10 +44,21 @@ const renameFolder = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
 
-    const folder = await Folder.findByIdAndUpdate(id, { name }, { new: true });
-
+    const folder = await Folder.findByIdAndUpdate(id, { name });
     if (!folder) {
       return res.status(404).json({ error: 'Folder not found' });
+    }
+    
+    if (folder.parent) {
+      const parentFolder = await Folder.findById(folder.parent);
+      if (parentFolder) {
+        parentFolder.folders.forEach((subfolder) => {
+          if (subfolder._id.toString() === folder._id.toString()) {
+            subfolder.name = name;
+          }
+        });
+        await parentFolder.save();
+      }
     }
 
     res.status(204).json({ message: 'Folder renamed successfully', folder });
@@ -56,6 +67,7 @@ const renameFolder = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 const deleteFolderAndContents = async (folderId) => {
   const folder = await Folder.findById(folderId);
@@ -73,7 +85,23 @@ const deleteFolder = async (req, res) => {
   try {
     const { id } = req.params;
 
-    await deleteFolderAndContents(id);
+    const folder = await Folder.findById(id);
+
+    if (!folder) {
+      return res.status(404).json({ error: 'Folder not found' });
+    }
+
+    const parentFolder = await Folder.findById(folder.parent);
+
+    if (!parentFolder) {
+      return res.status(404).json({ error: 'Parent folder not found' });
+    }
+
+    parentFolder.folders = parentFolder.folders.filter((f) => f.folder.name !== folder.name);
+    await parentFolder.save();
+
+    const a=await deleteFolderAndContents(id);
+    console.log(a);
     await Folder.deleteOne({ _id: id });
 
     res.sendStatus(204);

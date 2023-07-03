@@ -1,20 +1,24 @@
-import { Button, Heading, Text, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  LightMode,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useContext } from "react";
 import { AuthContext } from "../Providers/AuthProvider";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
 
-type Props = {};
-
-const Profile = (props: Props) => {
+const Profile = () => {
   const currentUser = useContext(AuthContext);
   const displayName = currentUser?.displayName
     ? currentUser.displayName
     : currentUser?.email?.split("@")[0];
   const [signOut] = useSignOut(auth);
-  const handleSignOut = async()=>{
+  const handleSignOut = async () => {
     await signOut();
-  }
+  };
 
   return (
     <VStack
@@ -36,9 +40,17 @@ const Profile = (props: Props) => {
       <Text color="gray.300" fontSize="2xl" fontWeight="semibold">
         {currentUser?.email}
       </Text>
-      <Button marginTop="2vh" variant="solid" colorScheme="red" size="lg" onClick={handleSignOut}>
-        Log Out
-      </Button>
+      <LightMode>
+        <Button
+          marginTop="2vh"
+          variant="solid"
+          colorScheme="red"
+          size="lg"
+          onClick={handleSignOut}
+        >
+          Log Out
+        </Button>
+      </LightMode>
     </VStack>
   );
 };

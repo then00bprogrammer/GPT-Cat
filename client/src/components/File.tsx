@@ -1,38 +1,39 @@
 import { useState } from "react";
 import {
-  Box,
   Collapse,
   HStack,
   Icon,
   Spacer,
   Text,
   VStack,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
   FaCheck,
   FaCopy,
-  FaEllipsisV,
   FaFileAlt,
   FaPencilAlt,
   FaTrashAlt,
 } from "react-icons/fa";
-import AddPromptModal from "./AddPromptModal";
 import DeleteFileModal from "./DeleteFile";
 
 type Props = {
   _id: string;
+  parentId: string;
   name: string;
   content: string;
 };
 
-const File = ({ _id, name, content }: Props) => {
+const File = ({ _id, name, content, parentId }: Props) => {
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
+  const bg = useColorModeValue("gray.200", "gray.600");
   const { isOpen, onToggle } = useDisclosure();
   const [editable, setEditable] = useState<boolean>(false);
-  const [textContent, setTextContent] = useState(content);
+  const [inputName, setInputName] = useState(name);
 
   const handleCopy = async () => {
-    const text = content;
+    const text:string = content;
     if ("clipboard" in navigator) {
       await navigator.clipboard.writeText(text);
     } else {
@@ -40,17 +41,28 @@ const File = ({ _id, name, content }: Props) => {
     }
   };
 
-  const handleToggleEdit = (
+  const handleToggleEdit = async (
     event: React.MouseEvent<SVGSVGElement, MouseEvent>
   ) => {
+    const toSubmit:boolean = editable;
     setEditable(!editable);
-    if (!editable) {
-      console.log(textContent);
+    if (toSubmit) {
+      try {
+        await fetch(`http://localhost:5000/files/${_id}/${parentId}`, {
+          method: "PATCH",
+          body: JSON.stringify({ name: inputName }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      } catch (error) {
+        console.log("An error occurred while editing the file", error);
+      }
     }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLDivElement>) => {
-    setTextContent(event.target.innerText);
+    setInputName(event.target.innerText);
   };
 
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
@@ -58,56 +70,73 @@ const File = ({ _id, name, content }: Props) => {
     setIsDeleteOpen(false);
   };
 
-  return (
-    <VStack width="full">
-      <DeleteFileModal isOpen={isDeleteOpen} onClose={onDeleteClose}></DeleteFileModal>
-      <HStack
-        padding="2vw"
-        fontSize="xl"
-        width="100%"
-        bg="gray.200"
-        borderRadius={10}
-      >
-        <Icon as={FaFileAlt} onClick={onToggle} cursor="pointer" />
-        <Text
-          outline="none"
-          border="none"
-          borderBottom={editable ? '2px dashed' : 'none'}
-          contentEditable={editable}
-          onInput={handleChange}
-          bg={editable ? 'gray.500' : 'none'}
-          paddingRight='5vw'
-          color={editable?'white':'black'}
-          caret-color="white"
-        >
-          {name}
-        </Text>
-        <Spacer />
-        <Icon
-          as={editable ? FaCheck : FaPencilAlt}
-          onClick={handleToggleEdit}
-          cursor="pointer"
+  if (!isDeleted) {
+    return (
+      <VStack width="full">
+        <DeleteFileModal
+          isOpen={isDeleteOpen}
+          onClose={onDeleteClose}
+          id={_id}
+          parentId={parentId}
+          setIsDeleted={setIsDeleted}
         />
-        <Icon as={FaTrashAlt} cursor="pointer" onClick={()=>setIsDeleteOpen(!isDeleteOpen)}/>
-      </HStack>
-      <Collapse in={isOpen} animateOpacity>
         <HStack
-          width="390px"
-          p="1vh 4vw"
-          color="white"
-          mt="1"
-          bg="teal.500"
-          rounded="md"
-          shadow="md"
-          fontSize="md"
+          padding="2vw"
+          fontSize="xl"
+          width="95%"
+          marginRight="5%"
+          bg={bg}
+          borderRadius={10}
+          color={useColorModeValue('black','white')}
+          overflowX="hidden"
         >
-          <Text>{content}</Text>
+          <Icon as={FaFileAlt} onClick={onToggle} cursor="pointer" />
+          <Text
+            outline="none"
+            border="none"
+            borderBottom={editable ? "2px dashed" : "none"}
+            contentEditable={editable}
+            onInput={handleChange}
+            bg={editable ? "gray.500" : "none"}
+            paddingRight="5vw"
+            color={editable ? "white" : "black"}
+            style={{ caretColor: "white" }}
+          >
+            {name}
+          </Text>
           <Spacer />
-          <Icon as={FaCopy} cursor="pointer" onClick={handleCopy} />
+          <Icon
+            as={editable ? FaCheck : FaPencilAlt}
+            onClick={handleToggleEdit}
+            cursor="pointer"
+          />
+          <Icon
+            as={FaTrashAlt}
+            cursor="pointer"
+            onClick={() => setIsDeleteOpen(!isDeleteOpen)}
+          />
         </HStack>
-      </Collapse>
-    </VStack>
-  );
+        <Collapse in={isOpen} animateOpacity>
+          <HStack
+            width="390px"
+            p="1vh 4vw"
+            color="white"
+            mt="1"
+            bg="teal.500"
+            rounded="md"
+            shadow="md"
+            fontSize="md"
+          >
+            <Text>{content}</Text>
+            <Spacer />
+            <Icon as={FaCopy} cursor="pointer" onClick={handleCopy} />
+          </HStack>
+        </Collapse>
+      </VStack>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default File;

@@ -31,7 +31,7 @@ export const theme = extendTheme({
       },
       '::-webkit-scrollbar-thumb': {
         borderRadius: "10px",
-        backgroundColor: 'gray.600',
+        backgroundColor: 'gray.700',
         boxShadow: "inset 0 0 6px rgba(0,0,0,.3)",
       },
     }),

@@ -1,4 +1,4 @@
-export const addPrompt = async (name: string, pathArray: string[] | undefined, content: string) => {
+export const addFolder = async (name: string, pathArray: string[] | undefined) => {
     try {
       let path: string = '';
       if (pathArray !== undefined) {
@@ -9,12 +9,12 @@ export const addPrompt = async (name: string, pathArray: string[] | undefined, c
         }
       }
   
-      await fetch('http://localhost:5000/files', {
+      await fetch('http://localhost:5000/folders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 'name': name, 'path': path, 'content': content })
+        body: JSON.stringify({ 'name': name, 'path': path })
       });
     } catch (error) {
       console.error('An error occurred while adding the prompt:', error);

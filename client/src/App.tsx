@@ -1,4 +1,4 @@
-import { Spacer, VStack } from "@chakra-ui/react";
+import { Spacer, VStack, useColorMode, useColorModeValue } from "@chakra-ui/react";
 import "./App.css";
 import MenuBar from "./components/MenuBar";
 import NavBar from "./components/NavBar";
@@ -13,13 +13,16 @@ import LogIn from "./components/LogIn";
 
 function App() {
   const currentUser = useContext(AuthContext);
+  const { toggleColorMode } = useColorMode();
+  const bg = useColorModeValue('white', 'gray.900');
+  
   return (
     <VStack
       height="600px"
       width="450px"
       borderRadius={10}
       alignItems="flex-start"
-      bg="white"
+      bg={bg}
       spacing={0}
     >
       {currentUser ? (
@@ -29,6 +32,7 @@ function App() {
             <Route path="/" element={<Prompts />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/bookmarks" element={<Bookmark />} />
+            <Route path="/prompts/:id/:folderName" element={<Prompts />} />
           </Routes>
           <MenuBar />
         </Router>

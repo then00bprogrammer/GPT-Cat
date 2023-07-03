@@ -23,7 +23,7 @@ const createFile = async (req, res) => {
       parentFolder = folder;
     }
 
-    const newFile = { name, content };
+    const newFile = { name, content, parent:parentFolder._id };
     parentFolder.files.push(newFile);
     await parentFolder.save();
 

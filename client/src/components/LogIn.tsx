@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef} from "react";
-import { Button, Flex, Input, FormLabel, Box, Heading, Text } from "@chakra-ui/react";
+import { Button, Flex, Input, FormLabel, Box, Heading, Text, useColorMode, useColorModeValue } from "@chakra-ui/react";
 import {
   useSignInWithEmailAndPassword,
 } from "react-firebase-hooks/auth";
@@ -61,6 +61,14 @@ const LogIn = () => {
     };
   }, []);
 
+  const colorMode = useColorMode();
+  const bgImage = useColorModeValue(
+    "https://images.unsplash.com/photo-1432821596592-e2c18b78144f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bG9naW58ZW58MHx8MHx8fDA%3D&w=1000&q=80",
+    "https://images.unsplash.com/photo-1511406361295-0a1ff814c0ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGRhcmslMjBsb2dpbiUyMHBhZ2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+  );
+  const color=useColorModeValue('black','white');
+  const inputBG = useColorModeValue('white','blackAlpha.300');
+
   return (
     <Flex
       width="100vw"
@@ -68,7 +76,8 @@ const LogIn = () => {
       flexDir='column'
       alignItems="center"
       justifyContent="center"
-      bgImage="https://images.unsplash.com/photo-1432821596592-e2c18b78144f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bG9naW58ZW58MHx8MHx8fDA%3D&w=1000&q=80"
+      bgImage={bgImage}
+      color={color}
       bgPosition="center"
       bgRepeat="no-repeat"
       bgSize="cover"
@@ -84,9 +93,10 @@ const LogIn = () => {
           mb={2}
           onChange={onChange}
           width="75vw"
-          bg='white'
+          bg={inputBG}
           borderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
+          color={color}
         />
         <FormLabel color="white">Password</FormLabel>
         <Input
@@ -97,9 +107,10 @@ const LogIn = () => {
           mb={2}
           onChange={onChange}
           width="75vw"
-          bg='white'
+          bg={inputBG}
           borderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
+          color={color}
         />
         
         <Flex width="full" flexDir='column' alignItems="center" justifyContent="center">
@@ -107,7 +118,6 @@ const LogIn = () => {
             width="25vw"
             height="50px"
             bg="teal.400"
-            color="white"
             variant="solid"
             _hover={{ bg: "teal.500" }}
             mt={5}

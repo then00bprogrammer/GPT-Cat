@@ -10,12 +10,11 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
-  Textarea,
 } from "@chakra-ui/react";
-import { addPrompt } from "../handlers/addPrompt";
 import { useState } from "react";
+import { addFolder } from "../handlers/addFolder";
 
-const AddPromptModal = ({
+const AddFolderModal = ({
   isOpen,
   onClose,
   path,
@@ -24,13 +23,12 @@ const AddPromptModal = ({
   onClose: () => void;
   path: string[];
 }) => {
-  const [promptName, setPromptName] = useState<string>('');
-  const [promptText, setPromptText] = useState<string>('');
+  const [folderName, setFolderName] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleAddPrompt = async () => {
+  const handleAddFolder = async () => {
     setIsLoading(true);
-    await addPrompt(promptName,path,promptText);
+    await addFolder(folderName, path);
     setIsLoading(false);
     onClose();
   };
@@ -42,43 +40,42 @@ const AddPromptModal = ({
         <ModalContent>
           <ModalBody>
             <Heading margin="2% auto" size="xl" textAlign="center">
-              Enter your prompt
+              Create New Folder
             </Heading>
-            <InputGroup size="sm" flexDir="column" alignItems='center' justifyContent='center'>
+            <InputGroup
+              size="sm"
+              flexDir="column"
+              alignItems="center"
+              justifyContent="center"
+            >
               <InputGroup margin={2}>
-                <InputLeftAddon children="Prompt Name: " />
+                <InputLeftAddon children="Folder Name: " />
                 <Input
                   type="text"
                   focusBorderColor="gray.100"
-                  value={promptName}
-                  onChange={(e) => setPromptName(e.target.value)}
+                  value={folderName}
+                  onChange={(e) => setFolderName(e.target.value)}
                 />
               </InputGroup>
-              <Textarea
-                placeholder="Enter Your Prompt here"
-                focusBorderColor="gray.100"
-                value={promptText}
-                onChange={(e) => setPromptText(e.target.value)}
-              />
             </InputGroup>
           </ModalBody>
           <ModalFooter>
             <HStack>
               <Button
-              isLoading={isLoading}
+                isLoading={isLoading}
                 bg="teal.400"
                 color="white"
                 variant="solid"
                 _hover={{ bg: "teal.500" }}
-                onClick={handleAddPrompt}
+                onClick={handleAddFolder}
               >
-                Add Prompt
+                Add Folder
               </Button>
               <Button
                 colorScheme="red"
                 variant="outline"
-                _hover={{ bg: "red.500",color:"white" }}
-                onClick={()=>onClose()}
+                _hover={{ bg: "red.500", color: "white" }}
+                onClick={() => onClose()}
               >
                 Cancel
               </Button>
@@ -90,4 +87,4 @@ const AddPromptModal = ({
   );
 };
 
-export default AddPromptModal;
+export default AddFolderModal;
