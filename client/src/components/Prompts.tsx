@@ -19,6 +19,7 @@ import {
   LightMode,
   Flex,
   Heading,
+  useColorMode,
 } from "@chakra-ui/react";
 import { FaArrowLeft, FaFolder, FaPen, FaPlus } from "react-icons/fa";
 import AddPromptModal from "./AddPromptModal";
@@ -187,6 +188,7 @@ const Prompts = () => {
               right="1vw"
               bottom="calc(10vh + 5vw )"
               cursor="pointer"
+              color={useColorModeValue('black','black')}
             >
               <Popover placement="left-end">
                 <PopoverTrigger>
@@ -203,26 +205,26 @@ const Prompts = () => {
                     <Icon boxSize="5vh" as={FaPlus} />
                   </Box>
                 </PopoverTrigger>
-                <PopoverContent width="fit-content" border={0}>
-                  <PopoverArrow bg="gray.100" />
-                  <PopoverHeader
-                    padding="2vh 5vh"
-                    borderBottom="2px solid black"
-                    bg="gray.100"
-                    onClick={() => setIsNewFolderModalOpen(true)}
-                  >
-                    <Icon as={FaFolder} marginRight={2} />
-                    New folder
-                  </PopoverHeader>
-                  <PopoverHeader
-                    padding="2vh 5vh"
-                    bg="gray.100"
-                    onClick={() => setisNewFileModalOpen(true)}
-                  >
-                    <Icon as={FaPen} marginRight={2} />
-                    Add Prompt
-                  </PopoverHeader>
-                </PopoverContent>
+                  <PopoverContent width="fit-content" border={0}>
+                    <PopoverArrow bg="gray.100" />
+                      <PopoverHeader
+                        padding="2vh 5vh"
+                        borderBottom="2px solid black"
+                        bg="gray.100"
+                        onClick={() => setIsNewFolderModalOpen(true)}
+                      >
+                        <Icon as={FaFolder} marginRight={2} />
+                        New folder
+                      </PopoverHeader>
+                    <PopoverHeader
+                      padding="2vh 5vh"
+                      bg="gray.100"
+                      onClick={() => setisNewFileModalOpen(true)}
+                    >
+                      <Icon as={FaPen} marginRight={2} />
+                      Add Prompt
+                    </PopoverHeader>
+                  </PopoverContent>
               </Popover>
             </Box>
           </LightMode>

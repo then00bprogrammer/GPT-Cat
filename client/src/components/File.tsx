@@ -1,10 +1,16 @@
 import { useContext, useState } from "react";
 import {
+  Box,
   Collapse,
   HStack,
   Icon,
+  Popover,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
   Spacer,
   Text,
+  Tooltip,
   VStack,
   useColorModeValue,
   useDisclosure,
@@ -32,26 +38,32 @@ const File = ({ _id, name, content }: Props) => {
   const { isOpen, onToggle } = useDisclosure();
   const [editable, setEditable] = useState<boolean>(false);
   const [inputName, setInputName] = useState(name);
+  const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const handleCopy = async () => {
-    const text:string = content;
+    const text: string = content;
     if ("clipboard" in navigator) {
       await navigator.clipboard.writeText(text);
     } else {
       document.execCommand("copy", true, text);
     }
+    
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
   };
 
   const handleToggleEdit = async (
     event: React.MouseEvent<SVGSVGElement, MouseEvent>
   ) => {
-    const toSubmit:boolean = editable;
+    const toSubmit: boolean = editable;
     setEditable(!editable);
     if (toSubmit) {
       try {
         await fetch(`http://localhost:5000/files/${_id}`, {
           method: "PATCH",
-          body: JSON.stringify({ name: inputName, email:currentUser?.email }),
+          body: JSON.stringify({ name: inputName, email: currentUser?.email }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -87,7 +99,7 @@ const File = ({ _id, name, content }: Props) => {
           marginRight="5%"
           bg={bg}
           borderRadius={10}
-          color={useColorModeValue('black','white')}
+          color={useColorModeValue("black", "white")}
           overflowX="hidden"
         >
           <Icon as={FaFileAlt} onClick={onToggle} cursor="pointer" />
@@ -116,12 +128,14 @@ const File = ({ _id, name, content }: Props) => {
             onClick={() => setIsDeleteOpen(!isDeleteOpen)}
           />
         </HStack>
-        <Collapse in={isOpen} animateOpacity>
+        <Box width="full" as={Collapse} in={isOpen} animateOpacity>
           <HStack
-            width="390px"
-            p="1vh 4vw"
+            width="95%"
+            p="1vh 3vw"
+            marginRight="5%"
             color="white"
             mt="1"
+            mb="1"
             bg="teal.500"
             rounded="md"
             shadow="md"
@@ -129,9 +143,12 @@ const File = ({ _id, name, content }: Props) => {
           >
             <Text>{content}</Text>
             <Spacer />
-            <Icon as={FaCopy} cursor="pointer" onClick={handleCopy} />
+            <HStack>
+              {isCopied && <Text fontSize='sm' >Prompt copied!</Text>}
+              <Icon as={FaCopy} cursor="pointer" onClick={handleCopy} />
+            </HStack>
           </HStack>
-        </Collapse>
+        </Box>
       </VStack>
     );
   } else {

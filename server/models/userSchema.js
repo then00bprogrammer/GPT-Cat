@@ -1,6 +1,11 @@
 const Folder = require('./folderSchema');
 const mongoose = require("mongoose");
 
+const ConversationSchema = new mongoose.Schema({
+    query: String,
+    response: String
+  });
+
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -11,8 +16,8 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Folder',
     },
-    bookmarks:{
-        type: [String],
+    bookmarks: {
+        type: [[ConversationSchema]],
     },
 });
 

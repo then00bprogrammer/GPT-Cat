@@ -18,7 +18,8 @@ export const theme = extendTheme({
       body: {
         bg: "none",
         height:'600px',
-        width:'450px'
+        width:'450px',
+        borderRadius: "10px",
       },
       '::-webkit-scrollbar-track': {
         borderRadius: '10px',

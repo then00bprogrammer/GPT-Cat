@@ -6,6 +6,7 @@ const fileRoutes = require('./routes/fileRoutes');
 const cors = require('cors');
 const Folder = require('./models/folderSchema');
 const User = require('./models/userSchema');
+const File = require('./models/fileSchema');
 const { Types: { ObjectId } } = mongoose;
 
 const corsOptions = {
@@ -58,6 +59,15 @@ app.get('/:email/:id?', async (req, res) => {
 });
 
 
+app.get('/', async (req, res) => {
+  try {
+    const files = await File.find({});
+    res.json(files);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 app.post('/createUser',async(req,res)=>{
   try{
@@ -74,9 +84,16 @@ app.post('/createUser',async(req,res)=>{
 
 app.post('/bookmark',async(req,res)=>{
   try{
-    const { email, link } = req.body;
+    const { queries, response, email } = req.body;
+    let conversation=[]
+    for (let i=0;i<queries.length;i++){
+      conversation.push({
+        query:queries[i],
+        response:response[i]
+      })
+    }
     const user = await User.findOne({email:email});
-    user.bookmarks.push(link);
+    user.bookmarks.push(conversation);
     await user.save();
     res.status(201).json({'message':'Bookmarked successfully'});
   } catch(error){

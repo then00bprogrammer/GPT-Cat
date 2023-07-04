@@ -1,21 +1,29 @@
 {
   "version": "1.0.0",
   "manifest_version": 3,
-  "name": "React Chrome Extension",
+  "name": "GPT Cat",
   "action": {
     "default_popup": "js/index.html",
-    "default_title": "React Chrome Extension"
+    "default_title": "GPT Cat"
   },
   "permissions": [
-    "activeTab"
+    "webNavigation",
+    "tabs",
+    "activeTab",
+    "scripting",
+    "storage"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://chat.openai.com/*"
       ],
-      "js": ["content.js"],
-      "run_at": "document_end"
+      "run_at": "document_idle",
+      "js": ["content.js"]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
 }

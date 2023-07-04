@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Heading } from "@chakra-ui/react";
 import { Player } from "@lottiefiles/react-lottie-player";
-import Cat from '../assets/cat.json'
+import Ball from '../assets/ball.json'
 
 const Loading = () => {
   return (
@@ -9,7 +9,7 @@ const Loading = () => {
       <Player
       autoplay
       loop
-      src={Cat}
+      src={Ball}
       style={{ height: '80%', width: '100%' }}
     /></Flex>
   );
