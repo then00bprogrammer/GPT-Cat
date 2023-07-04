@@ -1,5 +1,37 @@
 console.log("This is from Content Script.");
 
+//Monitor URL changes
+let url = window.location.href;
+
+window.addEventListener('click', () => {
+  if (window.location.href != url) {
+    url = window.location.href;
+    let observer = new MutationObserver(observerCallback);
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+})
+
+if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
+
+  let observer = new MutationObserver(observerCallback);
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+const observerCallback = function (mutationsList, observer) {
+  for (const mutation of mutationsList) {
+    if (mutation.type === 'childList') {
+      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
+
+      if (element) {
+        observer.disconnect();
+        modifyGPT();
+        break;
+      }
+    }
+  }
+};
+
+//Add bookmark button
 const button = document.createElement('button');
 button.style.position = 'fixed';
 button.style.bottom = '80px';
@@ -21,14 +53,14 @@ document.body.appendChild(button);
 button.addEventListener('click', () => {
   chrome.runtime.sendMessage({ action: 'getValue' }, function (response) {
     let email = response.email;
-    if(email===null || email===undefined) alert('Please login in GPT Cat');
+    if (email === null || email === undefined) alert('Please login in GPT Cat');
     sendBookmarkData(email);
     alert('Bookmarked!');
   });
 });
 
-
-function copyToClipboard(element) {
+//Copy prompt
+const copyToClipboard = (element) => {
   const inp = document.querySelector("#prompt-textarea");
   const range = document.createRange();
 
@@ -44,6 +76,7 @@ function copyToClipboard(element) {
   button.removeAttribute("disabled");
 }
 
+//Show copied status
 function showMessage(message) {
   const messageElement = document.createElement("div");
   messageElement.textContent = message;
@@ -63,22 +96,23 @@ function showMessage(message) {
   }, 2000);
 }
 
-function modifyGPT() {
+//Show trending prompts
+const modifyGPT = () => {
   console.log("changing");
   fetch("http://localhost:5000/")
     .then(response => response.json())
     .then(data => {
-      const changeMargin = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
-
-      changeMargin.style.marginTop = "5vh";
-
-      const heading = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
-      heading.innerText = "Trending prompts";
-
       const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
-      element.innerHTML = ""
 
       if (element) {
+        const changeMargin = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
+        changeMargin.style.marginTop = "5vh";
+
+        const heading = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
+        heading.innerText = "Trending prompts";
+
+        element.innerHTML = ""
+
         const boxSize = "30%";
         const boxSpacing = "10px";
 
@@ -109,7 +143,8 @@ function modifyGPT() {
     });
 }
 
-async function sendBookmarkData(email) {
+//bookmark chat gpt conversation upto that point
+const sendBookmarkData = async (email) => {
   let x = document.getElementsByClassName("empty:hidden");
   x = Array.from(x);
   x = x.map((query) => query.innerText);
@@ -133,3 +168,4 @@ async function sendBookmarkData(email) {
     })
   });
 }
+
