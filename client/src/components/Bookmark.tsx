@@ -19,6 +19,7 @@ type Bookmarks = {
 const Bookmark = ({ _id, name, link }: Bookmarks) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
+  const textColor = useColorModeValue('black','gray.50');
   const onDeleteClose = () => {
     setIsDeleteOpen(false);
   };
@@ -37,6 +38,7 @@ const Bookmark = ({ _id, name, link }: Bookmarks) => {
           setIsDeleted={setIsDeleted}
         />
         <HStack
+          color={textColor}
           key={_id}
           cursor="pointer"
           padding="2vw"
@@ -47,6 +49,7 @@ const Bookmark = ({ _id, name, link }: Bookmarks) => {
           overflowX="hidden"
         >
           <Text
+            color={textColor}
             fontSize="sm"
             onClick={handleRedirect}
             _hover={{ textDecoration: "underline" }}

@@ -33,7 +33,7 @@ const DeleteFileModal = ({
     try {
       setIsDeleted(true);
       onClose();
-      await fetch(`http://localhost:5000/files/${id}`, {
+      await fetch(`http://localhost:5000/files/${id}/${currentUser?.email}`, {
         method: "DELETE",
       });
     } catch (error) {
@@ -75,7 +75,7 @@ const DeleteFileModal = ({
                   size="lg"
                   width="40%"
                   borderRadius={5}
-                  _hover={{ bg: "red.500", color: "white" }}
+                  _hover={{ bg: "red.500", color: "white", borderColor:'red.500' }}
                   onClick={handleDeleteFile}
                 >
                   Delete

@@ -38,6 +38,8 @@ const File = ({ _id, name, content, view }: {
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [visible,setVisible] = useState<boolean>(view==='public');
 
+  const textColor = useColorModeValue('black','gray.50');
+
   const handleCopy = async () => {
     const text: string = content;
     if ("clipboard" in navigator) {
@@ -108,7 +110,7 @@ const File = ({ _id, name, content, view }: {
           marginRight="5%"
           bg={bg}
           borderRadius={10}
-          color={useColorModeValue("black", "white")}
+          color={textColor}
           overflowX="hidden"
         >
           <Icon as={FaFileAlt} onClick={onToggle} cursor="pointer" />
@@ -121,7 +123,7 @@ const File = ({ _id, name, content, view }: {
             onInput={handleChange}
             bg={editable ? "gray.500" : "none"}
             paddingRight="5vw"
-            color={editable ? "white" : "black"}
+            color={editable ? "white" : textColor}
             style={{ caretColor: "white" }}
           >
             {name}

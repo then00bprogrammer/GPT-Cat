@@ -157,6 +157,10 @@ app.post('/unstar', async (req, res) => {
     const { email, id } = req.body;
     const user = await User.findOne({ email: email });
 
+    const referenceFile = await File.findById(id);
+    referenceFile.starredBy = referenceFile.starredBy.filter((starredEmail)=>starredEmail!=email);
+    await referenceFile.save();
+
     const favouritesFolder = await Folder.findOne({ name: 'Favourites', user: user._id });
     favouritesFolder.files = favouritesFolder.files.filter((folderFile) => {
       return folderFile.referenceFile.toString() !== id.toString();

@@ -39,6 +39,7 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked,isStarred }: Props) => 
   const bg = useColorModeValue("gray.200", "gray.600");
   const { isOpen, onToggle } = useDisclosure();
   const [isCopied, setIsCopied] = useState<boolean>(false);
+  const textColor = useColorModeValue('black','gray.50');
 
   const handleCopy = async () => {
     const text: string = content;
@@ -106,12 +107,12 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked,isStarred }: Props) => 
     return (
       <VStack width="full">
         <HStack
+          color={textColor}
           padding="2vw"
           fontSize="xl"
           width="100%"
           bg={bg}
           borderRadius={10}
-          color={useColorModeValue("black", "white")}
           overflowX="hidden"
         >
           <Icon as={FaFileAlt} onClick={onToggle} cursor="pointer" />
@@ -122,7 +123,7 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked,isStarred }: Props) => 
             borderBottom="none"
             bg="none"
             paddingRight="5vw"
-            color="black"
+            color={textColor}
             style={{ caretColor: "white" }}
           >
             {name}

@@ -92,7 +92,7 @@ const AddFolderModal = ({
               <Button
                 colorScheme="red"
                 variant="outline"
-                _hover={{ bg: "red.500", color: "white" }}
+                _hover={{ bg: "red.500", color: "white", borderColor:'red.500' }}
                 onClick={() => onClose()}
               >
                 Cancel

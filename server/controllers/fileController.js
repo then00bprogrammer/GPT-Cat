@@ -76,8 +76,15 @@ const renameFile = async (req, res) => {
 
 const deleteFile = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id, email } = req.params;
+    const user = await User.findOne({email: email});
     const file = await File.findById(id);
+    
+    if(file.referenceFile){
+      const referenceFile = await File.findById(file.referenceFile);
+      referenceFile.starredBy = referenceFile.starredBy.filter((starredEmail)=>starredEmail!=email);
+      await referenceFile.save();
+    }
     const folder = await Folder.findById(file.parent);
 
     if (!file) {

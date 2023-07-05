@@ -23,6 +23,7 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
   const [editable, setEditable] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [inputName, setInputName] = useState(name);
+  const textColor = useColorModeValue('black','gray.50');
   const onDeleteClose = () => {
     setIsDeleteOpen(false);
   };
@@ -54,6 +55,7 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
   if (!isDeleted)
   return (
     <HStack
+      color={textColor}
       key={_id}
       cursor="pointer"
       padding="2vw"
@@ -81,7 +83,7 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
         onInput={handleChange}
         paddingRight="5vw"
         bg={editable ? "gray.500" : "none"}
-        color={editable ? "white" : "black"}
+        color={editable ? "white" : textColor}
         style={{ caretColor: "white" }}
       >
         {name}

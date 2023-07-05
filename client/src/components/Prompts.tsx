@@ -167,27 +167,27 @@ const Prompts = () => {
                   <Icon color='teal.400' cursor="pointer" as={FaPlus}/>
                 </Button>
               </PopoverTrigger>
-              <PopoverContent width="fit-content" border={0} fontSize="sm" cursor='pointer'>
+              <PopoverContent width="fit-content" border={0} fontSize="md" cursor='pointer'>
                 <PopoverArrow bg="gray.100" />
                 <PopoverHeader
-                  padding="1vh 1vh"
+                  padding="1vh 2vh"
                   borderBottom="2px solid black"
                   bg="gray.100"
                   onClick={() => setIsNewFolderModalOpen(true)}
                 >
                   <HStack>
                     <Icon as={FaFolder} marginRight={2} />
-                    <Text fontSize="xs">New folder</Text>
+                    <Text fontSize="md">New folder</Text>
                   </HStack>
                 </PopoverHeader>
                 <PopoverHeader
-                  padding="1vh 1vh"
+                  padding="1vh 2vh"
                   bg="gray.100"
                   onClick={() => setisNewFileModalOpen(true)}
                 >
                   <HStack>
                     <Icon as={FaPen} marginRight={2} />
-                    <Text fontSize="xs">Add Prompt</Text>
+                    <Text fontSize="md">Add Prompt</Text>
                   </HStack>
                 </PopoverHeader>
               </PopoverContent>

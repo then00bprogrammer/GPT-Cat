@@ -76,7 +76,7 @@ const DeleteFolderModal = ({
                   size="lg"
                   width="40%"
                   borderRadius={5}
-                  _hover={{ bg: "red.500", color: "white" }}
+                  _hover={{ bg: "red.500", color: "white", borderColor:'red.500' }}
                   onClick={handleDeleteFolder}
                 >
                   Delete
