@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   Button,
   Flex,
   Input,
   FormLabel,
-  Box,
   Heading,
   Text,
   useColorMode,
@@ -12,10 +11,11 @@ import {
 } from "@chakra-ui/react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useEnterKeyPress from "../hooks/useEnterKeyPress";
 
 const LogIn = () => {
+  const navigate = useNavigate();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [signupForm, setSignupForm] = useState({
     email: "",
@@ -41,6 +41,7 @@ const LogIn = () => {
         email: "",
         password: "",
       });
+      navigate('/');
     } catch (error) {
       console.log(error);
       setCustomErrorMessage("Internal Server Error");
@@ -95,6 +96,7 @@ const LogIn = () => {
           bg={inputBG}
           borderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
+          _focus={{ borderColor: "teal.500", bg:inputBG }}
           color={color}
         />
         <FormLabel color="white">Password</FormLabel>
@@ -109,6 +111,7 @@ const LogIn = () => {
           bg={inputBG}
           borderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
+          _focus={{ borderColor: "teal.500", bg:inputBG }}
           color={color}
         />
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useContext, useRef } from "react";
 import { Player } from "@lottiefiles/react-lottie-player";
 import {
   Button,

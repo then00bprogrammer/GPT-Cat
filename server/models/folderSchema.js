@@ -28,10 +28,18 @@ const folderSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    view:{
+      type: String,
+      required: true,
+    },
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Folder',
     },
+    referenceFile:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'File'
+    }
   }],
   user: {
     type: mongoose.Schema.Types.ObjectId,

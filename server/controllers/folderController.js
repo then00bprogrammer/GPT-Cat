@@ -71,7 +71,7 @@ const renameFolder = async (req, res) => {
       }
     }
 
-    res.status(204).json({ message: 'Folder renamed successfully', folder });
+    res.sendStatus(204);
   } catch (error) {
     console.error('Error renaming folder:', error);
     res.status(500).json({ error: 'Internal server error' });

@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
 import { HStack, Text, Icon, useToken, useColorModeValue } from "@chakra-ui/react";
-import { FaPlus, FaBookmark, FaUser, FaHome, FaFire } from "react-icons/fa";
-import AddPromptModal from "./AddPromptModal";
+import {  FaBookmark, FaUser, FaHome, FaFire } from "react-icons/fa";
 import { PathContext } from "../Providers/PathProvider";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const MenuBar: React.FC = () => {
   const [selected, setSelected] = useState<number>(1);

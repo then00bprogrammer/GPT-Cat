@@ -6,10 +6,9 @@ import {
   VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaExternalLinkAlt, FaTrashAlt } from "react-icons/fa";
 import DeleteBookmarkModal from "./DeleteBookmark";
-
 
 type Bookmarks = {
   _id: string;
@@ -24,36 +23,51 @@ const Bookmark = ({ _id, name, link }: Bookmarks) => {
     setIsDeleteOpen(false);
   };
 
-  const handleRedirect =()=>{
+  const handleRedirect = () => {
     chrome.tabs.create({ url: link });
-  }
-  if(!isDeleted){
-      return (
-        <VStack width="full">
-          <DeleteBookmarkModal
-            isOpen={isDeleteOpen}
-            onClose={onDeleteClose}
-            id={_id}
-            setIsDeleted={setIsDeleted}
-          />
-          <HStack
-            key={_id}
-            cursor="pointer"
-            padding="2vw"
-            fontSize="xl"
-            width="100%"
-            bg={useColorModeValue("gray.200", "gray.600")}
-            borderRadius={10}
+  };
+
+  if (!isDeleted) {
+    return (
+      <VStack width="full">
+        <DeleteBookmarkModal
+          isOpen={isDeleteOpen}
+          onClose={onDeleteClose}
+          id={_id}
+          setIsDeleted={setIsDeleted}
+        />
+        <HStack
+          key={_id}
+          cursor="pointer"
+          padding="2vw"
+          fontSize="xl"
+          width="100%"
+          bg={useColorModeValue("gray.200", "gray.600")}
+          borderRadius={10}
+          overflowX="hidden"
+        >
+          <Text
+            fontSize="sm"
+            onClick={handleRedirect}
+            _hover={{ textDecoration: "underline" }}
           >
-            <Text onClick={handleRedirect} _hover={{textDecoration:'underline'}}>{name}</Text>
-            <Spacer />
-            <Icon as={FaExternalLinkAlt} cursor="pointer" onClick={handleRedirect}/>
-            <Icon as={FaTrashAlt} cursor="pointer" onClick={()=>setIsDeleteOpen(true)}/>
-          </HStack>
-        </VStack>
-      );
-  }
-  else return null;
+            {name}
+          </Text>
+          <Spacer />
+          <Icon
+            as={FaExternalLinkAlt}
+            cursor="pointer"
+            onClick={handleRedirect}
+          />
+          <Icon
+            as={FaTrashAlt}
+            cursor="pointer"
+            onClick={() => setIsDeleteOpen(true)}
+          />
+        </HStack>
+      </VStack>
+    );
+  } else return null;
 };
 
 export default Bookmark;

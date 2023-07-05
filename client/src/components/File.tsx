@@ -4,13 +4,8 @@ import {
   Collapse,
   HStack,
   Icon,
-  Popover,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverTrigger,
   Spacer,
   Text,
-  Tooltip,
   VStack,
   useColorModeValue,
   useDisclosure,
@@ -19,26 +14,29 @@ import {
   FaCheck,
   FaCopy,
   FaFileAlt,
+  FaLock,
+  FaLockOpen,
   FaPencilAlt,
   FaTrashAlt,
 } from "react-icons/fa";
 import DeleteFileModal from "./DeleteFile";
 import { AuthContext } from "../Providers/AuthProvider";
 
-type Props = {
+const File = ({ _id, name, content, view }: {
   _id: string;
   name: string;
   content: string;
-};
-
-const File = ({ _id, name, content }: Props) => {
+  view: string;
+}) => {
   const currentUser = useContext(AuthContext);
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const bg = useColorModeValue("gray.200", "gray.600");
   const { isOpen, onToggle } = useDisclosure();
   const [editable, setEditable] = useState<boolean>(false);
   const [inputName, setInputName] = useState(name);
   const [isCopied, setIsCopied] = useState<boolean>(false);
+  const [visible,setVisible] = useState<boolean>(view==='public');
 
   const handleCopy = async () => {
     const text: string = content;
@@ -74,11 +72,22 @@ const File = ({ _id, name, content }: Props) => {
     }
   };
 
+  const handleChangeVisibility = async ()=>{
+    try{
+      setVisible(!visible);
+      await fetch(`http://localhost:5000/files/changeVisibility/${_id}`,{
+        method:'PATCH'
+      });
+    }
+    catch (error){
+      console.log('An error occured while changing visibility');
+    }
+  }
+
   const handleChange = (event: React.ChangeEvent<HTMLDivElement>) => {
     setInputName(event.target.innerText);
   };
 
-  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const onDeleteClose = () => {
     setIsDeleteOpen(false);
   };
@@ -104,6 +113,7 @@ const File = ({ _id, name, content }: Props) => {
         >
           <Icon as={FaFileAlt} onClick={onToggle} cursor="pointer" />
           <Text
+            fontSize='sm'
             outline="none"
             border="none"
             borderBottom={editable ? "2px dashed" : "none"}
@@ -117,6 +127,11 @@ const File = ({ _id, name, content }: Props) => {
             {name}
           </Text>
           <Spacer />
+          <Icon
+            onClick={handleChangeVisibility}
+            as={visible?FaLockOpen:FaLock}
+            cursor="pointer"
+          />
           <Icon
             as={editable ? FaCheck : FaPencilAlt}
             onClick={handleToggleEdit}

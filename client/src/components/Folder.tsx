@@ -73,6 +73,7 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
         <Icon as={FaRegFolderOpen} />
       </Link>
       <Text
+        fontSize='sm'
         outline="none"
         border="none"
         borderBottom={editable ? "2px dashed" : "none"}

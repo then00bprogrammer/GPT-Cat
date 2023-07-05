@@ -35,6 +35,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/prompts/:id/:folderName" element={<Prompts />} />
+            <Route path="/login" element={<LogIn />} />
           </Routes>
           <MenuBar />
         </Router>

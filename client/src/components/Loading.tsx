@@ -1,5 +1,4 @@
-import React from "react";
-import { Flex, Heading } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Ball from '../assets/ball.json'
 

@@ -1,11 +1,6 @@
 const Folder = require('./folderSchema');
 const mongoose = require("mongoose");
 
-// const chatSchema = new mongoose.Schema({
-//     query: String,
-//     response: String
-//   });
-
 const conversationSchema = new mongoose.Schema({
     name:{
         type:String,

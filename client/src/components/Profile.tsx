@@ -1,14 +1,9 @@
-import {
-  Button,
-  Heading,
-  LightMode,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Heading, LightMode, Text, VStack } from "@chakra-ui/react";
 import { useContext } from "react";
 import { AuthContext } from "../Providers/AuthProvider";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const currentUser = useContext(AuthContext);
@@ -41,15 +36,17 @@ const Profile = () => {
         {currentUser?.email}
       </Text>
       <LightMode>
-        <Button
-          marginTop="2vh"
-          variant="solid"
-          colorScheme="red"
-          size="lg"
-          onClick={handleSignOut}
-        >
-          Log Out
-        </Button>
+        <Link to="/">
+          <Button
+            marginTop="2vh"
+            variant="solid"
+            colorScheme="red"
+            size="lg"
+            onClick={handleSignOut}
+          >
+            Log Out
+          </Button>
+        </Link>
       </LightMode>
     </VStack>
   );

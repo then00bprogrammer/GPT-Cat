@@ -14,12 +14,9 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverHeader,
-  Box,
   useColorModeValue,
-  LightMode,
   Flex,
-  Heading,
-  useColorMode,
+  Button,
 } from "@chakra-ui/react";
 import { FaArrowLeft, FaFolder, FaPen, FaPlus } from "react-icons/fa";
 import AddPromptModal from "./AddPromptModal";
@@ -39,6 +36,7 @@ type File = {
   name: string;
   content: string;
   id: string;
+  view: string;
 };
 
 const Prompts = () => {
@@ -143,6 +141,7 @@ const Prompts = () => {
             justifyContent="flex-start"
             fontSize="xl"
             overflowY="hidden"
+            overflowX='hidden'
           >
             <Link to="#">
               <Text fontWeight="bold">/</Text>
@@ -162,6 +161,37 @@ const Prompts = () => {
                 ))}
             </Breadcrumb>
             <Spacer />
+            <Popover placement="left-end" isLazy>
+              <PopoverTrigger >
+                <Button bg="none" _hover={{ bg: "none" }} padding={0} margin={0}>
+                  <Icon color='teal.400' cursor="pointer" as={FaPlus}/>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent width="fit-content" border={0} fontSize="sm" cursor='pointer'>
+                <PopoverArrow bg="gray.100" />
+                <PopoverHeader
+                  padding="1vh 1vh"
+                  borderBottom="2px solid black"
+                  bg="gray.100"
+                  onClick={() => setIsNewFolderModalOpen(true)}
+                >
+                  <HStack>
+                    <Icon as={FaFolder} marginRight={2} />
+                    <Text fontSize="xs">New folder</Text>
+                  </HStack>
+                </PopoverHeader>
+                <PopoverHeader
+                  padding="1vh 1vh"
+                  bg="gray.100"
+                  onClick={() => setisNewFileModalOpen(true)}
+                >
+                  <HStack>
+                    <Icon as={FaPen} marginRight={2} />
+                    <Text fontSize="xs">Add Prompt</Text>
+                  </HStack>
+                </PopoverHeader>
+              </PopoverContent>
+            </Popover>
             <Icon cursor="pointer" as={FaArrowLeft} onClick={handleBack} />
           </HStack>
           <VStack width="full" height="100%" overflowY="auto">
@@ -178,56 +208,10 @@ const Prompts = () => {
                 _id={file.id}
                 name={file.name}
                 content={file.content}
+                view={file.view}
               />
             ))}
           </VStack>
-          <LightMode>
-            <Box
-              border={0}
-              position="fixed"
-              right="1vw"
-              bottom="calc(10vh + 5vw )"
-              cursor="pointer"
-              color={useColorModeValue('black','black')}
-            >
-              <Popover placement="left-end">
-                <PopoverTrigger>
-                  <Box
-                    rounded="full"
-                    bg="teal.400"
-                    color="white"
-                    _hover={{ bg: "teal.500" }}
-                    width="8vh"
-                    height="8vh"
-                    padding="1.5vh"
-                    border={0}
-                  >
-                    <Icon boxSize="5vh" as={FaPlus} />
-                  </Box>
-                </PopoverTrigger>
-                  <PopoverContent width="fit-content" border={0}>
-                    <PopoverArrow bg="gray.100" />
-                      <PopoverHeader
-                        padding="2vh 5vh"
-                        borderBottom="2px solid black"
-                        bg="gray.100"
-                        onClick={() => setIsNewFolderModalOpen(true)}
-                      >
-                        <Icon as={FaFolder} marginRight={2} />
-                        New folder
-                      </PopoverHeader>
-                    <PopoverHeader
-                      padding="2vh 5vh"
-                      bg="gray.100"
-                      onClick={() => setisNewFileModalOpen(true)}
-                    >
-                      <Icon as={FaPen} marginRight={2} />
-                      Add Prompt
-                    </PopoverHeader>
-                  </PopoverContent>
-              </Popover>
-            </Box>
-          </LightMode>
         </>
       )}
     </VStack>

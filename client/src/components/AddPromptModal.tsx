@@ -14,7 +14,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { addPrompt } from "../handlers/addPrompt";
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useContext, useRef } from "react";
 import { AuthContext } from "../Providers/AuthProvider";
 import useEnterKeyPress from "../hooks/useEnterKeyPress";
 

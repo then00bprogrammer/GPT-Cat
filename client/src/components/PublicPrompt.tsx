@@ -13,7 +13,9 @@ import {
 import {
   FaCopy,
   FaFileAlt,
+  FaRegStar,
   FaRegThumbsUp,
+  FaStar,
   FaThumbsUp,
 } from "react-icons/fa";
 import { AuthContext } from "../Providers/AuthProvider";
@@ -24,10 +26,12 @@ type Props = {
   content: string;
   likes: string;
   isLiked: boolean;
+  isStarred: boolean;
 };
 
-const PublicPrompt = ({ _id, name, content,likes,isLiked }: Props) => {
+const PublicPrompt = ({ _id, name, content,likes,isLiked,isStarred }: Props) => {
   const [hasLiked,setHasLiked] = useState<boolean>(isLiked);
+  const [hasStarred,setHasStarred] = useState<boolean>(isStarred);
   const [numberOfLikes,setHasNumberOfLikes] = useState<number>(parseInt(likes));
 
   const currentUser = useContext(AuthContext);
@@ -64,7 +68,7 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked }: Props) => {
       }
       else {
         setHasLiked(false);
-        setHasNumberOfLikes(numberOfLikes-1)
+        setHasNumberOfLikes(numberOfLikes-1);
         await fetch('http://localhost:5000/unlike', {
           method: 'POST',
           body: JSON.stringify({ id: _id, email: currentUser?.email }),
@@ -73,6 +77,29 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked }: Props) => {
           }
         })
       }
+  }
+
+  const handleStar = async ()=>{
+    if (!hasStarred) {
+      setHasStarred(true);
+      await fetch('http://localhost:5000/star', {
+        method: 'POST',
+        body: JSON.stringify({ id: _id, email: currentUser?.email }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
+    else {
+      setHasStarred(false);
+      await fetch('http://localhost:5000/unstar', {
+        method: 'POST',
+        body: JSON.stringify({ id: _id, email: currentUser?.email }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    }
   }
 
   if (!isDeleted) {
@@ -89,6 +116,7 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked }: Props) => {
         >
           <Icon as={FaFileAlt} onClick={onToggle} cursor="pointer" />
           <Text
+            fontSize='sm'
             outline="none"
             border="none"
             borderBottom="none"
@@ -106,10 +134,11 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked }: Props) => {
             cursor="pointer"
             onClick={handleLike}
           />
+          <Icon onClick={handleStar} cursor='pointer' marginLeft={1} as={hasStarred?FaStar:FaRegStar}/>
         </HStack>
         <Box width="full" as={Collapse} in={isOpen} animateOpacity>
           <HStack
-            width="95%"
+            width="100%"
             p="1vh 3vw"
             marginRight="5%"
             color="white"

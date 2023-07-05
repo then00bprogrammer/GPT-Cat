@@ -23,10 +23,11 @@ export const theme = extendTheme({
       },
       '::-webkit-scrollbar-track': {
         borderRadius: '10px',
-        backgroundColor: 'gray.200',
+        backgroundColor: 'none',
         boxShadow: "inset 0 0 6px rgba(0,0,0,0.3)"
       },
       '::-webkit-scrollbar': {
+        borderRadius: "10px",
         width: '12px',
         backgroundColor: 'gray.200',
       },

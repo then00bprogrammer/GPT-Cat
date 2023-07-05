@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const folderRoutes = require('./routes/folderRoutes');
 const fileRoutes = require('./routes/fileRoutes');
+const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const cors = require('cors');
 const Folder = require('./models/folderSchema');
 const User = require('./models/userSchema');
@@ -33,7 +34,7 @@ app.get('/:email/:id?', async (req, res) => {
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
-      
+
       if (!id) {
         data = await Folder.find({ user: user._id, name: 'home' });
       } else {
@@ -41,7 +42,7 @@ app.get('/:email/:id?', async (req, res) => {
         if (!folder) {
           return res.status(404).json({ error: 'Folder not found' });
         }
-        data = [folder]; 
+        data = [folder];
       }
     } else {
       return res.status(400).json({ error: 'Email parameter is required' });
@@ -61,7 +62,7 @@ app.get('/:email/:id?', async (req, res) => {
 
 app.get('/', async (req, res) => {
   try {
-    const files = await File.find({})
+    const files = await File.find({ view: 'public' })
       .sort({ likes: -1 })
       .limit(10);
     res.json(files);
@@ -71,92 +72,111 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.post('/createUser',async(req,res)=>{
-  try{
+app.post('/createUser', async (req, res) => {
+  try {
     const { email } = req.body;
-    const user = new User({email:email});
+    const user = new User({ email: email });
     await user.save();
     const homeFolder = new Folder({ name: 'home', user: user._id });
     await homeFolder.save();
-    res.status(201).json({'message':'User created successfully'});
-  } catch(error){
+    const favouritesFolder = new Folder({ user: user._id, name: 'Favourites', files: [], parent: homeFolder._id });
+    await favouritesFolder.save();
+    homeFolder.folders.push({ name: 'Favourites', id: favouritesFolder._id });
+    await homeFolder.save();
+    res.sendStatus(201);
+  } catch (error) {
     console.log(error);
   }
 });
 
-app.post('/bookmarks',async(req,res)=>{
-  try{
+app.post('/bookmarks', async (req, res) => {
+  try {
     const { email } = req.body;
-    const user = await User.findOne({email:email});
+    const user = await User.findOne({ email: email });
     res.status(201).json(user.bookmarks);
-  } catch(error){
-    console.log(error);
-  }
-})
-
-app.post('/bookmark',async(req,res)=>{
-  try{
-    const { name, link, email } = req.body;
-    // let conversation=[]
-    // for (let i=0;i<queries.length;i++){
-    //   conversation.push({
-    //     query:queries[i],
-    //     response:response[i]
-    //   })
-    // }
-    const user = await User.findOne({email:email});
-    user.bookmarks.push({name:name,link:link});
-    await user.save();
-    res.status(201).json({'message':'Bookmarked successfully'});
-  } catch(error){
+  } catch (error) {
     console.log(error);
   }
 });
 
-app.delete('/bookmark',async(req,res)=>{
-  try{
-    const {email,id} = req.body;
-    const user = await User.findOne({email:email});
-    user.bookmarks = user.bookmarks.filter((bookmark)=>bookmark._id.toString()!=id);
-    await user.save();
-    res.sendStatus(204);
-  } catch(error){
-    console.log('An error occured while deleting the bookmark');
-    res.status(500).json({ error: 'Internal server error' });
-  }
-})
-
-app.post('/like',async(req,res)=>{
-  try{
-    const {email,id} = req.body;
+app.post('/like', async (req, res) => {
+  try {
+    const { email, id } = req.body;
     const file = await File.findById(id);
     file.likedBy.push(email);
-    file.likes=file.likes+1;
+    file.likes = file.likes + 1;
     await file.save();
-    res.status(201).json({'message':'Liked successfully'});
-  } catch(error){
+    res.sendStatus(201);
+  } catch (error) {
     console.log('An error occured while adding likes');
     res.status(500).json({ error: 'Internal server error' });
   }
-})
+});
 
-app.post('/unlike',async(req,res)=>{
-  try{
-    const {email,id} = req.body;
+app.post('/unlike', async (req, res) => {
+  try {
+    const { email, id } = req.body;
     const file = await File.findById(id);
-    file.likedBy=file.likedBy.filter((likedEmail)=>likedEmail!=email);
-    file.likes=file.likes-1;
+    file.likedBy = file.likedBy.filter((likedEmail) => likedEmail != email);
+    file.likes = file.likes - 1;
     await file.save();
-    res.status(201).json({'message':'Unliked successfully'});
-  } catch(error){
+    res.sendStatus(201);
+  } catch (error) {
     console.log('An error occured while adding likes');
     res.status(500).json({ error: 'Internal server error' });
   }
-})
+});
+
+app.post('/star', async (req, res) => {
+  try {
+    const { email, id } = req.body;
+
+    //Modifying public prompt starred array
+    const user = await User.findOne({ email: email });
+    const file = await File.findById(id);
+    file.starredBy.push(email);
+    await file.save();
+
+    //Creating new file and pushing it in favourites folder
+    console.log('saved');
+    const favouritesFolder = await Folder.findOne({ user: user._id, name: 'Favourites' });
+    const starredFile = new File({ name: file.name, content: file.content, parent: favouritesFolder._id, user: user._id, referenceFile: file._id });
+    await starredFile.save();
+    favouritesFolder.files.push({ name: file.name, content: file.content, view: 'private', id: starredFile._id, referenceFile: file._id });
+    await favouritesFolder.save();
+    res.sendStatus(201);
+  } catch (error) {
+    console.log('An error occurred while starring the file');
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+app.post('/unstar', async (req, res) => {
+  try {
+    const { email, id } = req.body;
+    const user = await User.findOne({ email: email });
+
+    const favouritesFolder = await Folder.findOne({ name: 'Favourites', user: user._id });
+    favouritesFolder.files = favouritesFolder.files.filter((folderFile) => {
+      return folderFile.referenceFile.toString() !== id.toString();
+    });
+    await favouritesFolder.save();
+
+    await File.findOneAndDelete({ referenceFile: id, user: user._id });
+
+    res.sendStatus(201);
+  } catch (error) {
+    console.log('An error occurred while unstarring the file');
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 
 app.use('/folders', folderRoutes);
 app.use('/files', fileRoutes);
+app.use('/bookmark', bookmarkRoutes);
 
 mongoose
   .connect(MONGODB_URI)

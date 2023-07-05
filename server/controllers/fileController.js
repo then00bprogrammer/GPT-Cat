@@ -26,15 +26,15 @@ const createFile = async (req, res) => {
       parentFolder = folder;
     }
 
-    const newFile = new File({ name, content, parent: parentFolder._id, user: user._id });
+    const newFile = new File({ name, content, view: 'private', parent: parentFolder._id, user: user._id });
     await newFile.save();
-    const respFile ={
-      name:newFile.name,
-      content:newFile.content,
-      id:newFile.id,
+    const respFile = {
+      name: newFile.name,
+      content: newFile.content,
+      id: newFile.id,
     }
 
-    parentFolder.files.push({ id: newFile, name: name, content: content });
+    parentFolder.files.push({ id: newFile, name: name, content: content, view: 'private' });
     await parentFolder.save();
 
     res.status(201).json(respFile);
@@ -67,7 +67,7 @@ const renameFile = async (req, res) => {
       }
     }
 
-    res.status(204).json({ message: 'File renamed successfully', file });
+    res.sendStatus(204);
   } catch (error) {
     console.error('Error renaming file:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -99,8 +99,34 @@ const deleteFile = async (req, res) => {
   }
 };
 
+const changeVisibility = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const file = await File.findById(id);
+    if (file.view === 'public') file.view = 'private';
+    else file.view = 'public';
+    await file.save();
+
+    if (file.parent) {
+      const parentFolder = await Folder.findById(file.parent);
+      if (parentFolder) {
+        parentFolder.files.forEach((folderfile) => {
+          if (folderfile.id.toString() === file._id.toString()) {
+            folderfile.view = file.view;
+          }
+        });
+        await parentFolder.save();
+      }
+    }
+    res.sendStatus(204);
+  } catch (error) {
+
+  }
+}
+
 module.exports = {
   createFile,
   renameFile,
   deleteFile,
+  changeVisibility
 };

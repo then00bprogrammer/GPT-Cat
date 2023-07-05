@@ -11,6 +11,7 @@ type PublicPrompt = {
   _id: string;
   likes: string;
   likedBy: string[];
+  starredBy: string[];
 };
 
 const TopPrompts = () => {
@@ -79,6 +80,11 @@ const TopPrompts = () => {
                   currentUser?.email
                     ? prompt.likedBy.includes(currentUser.email)
                     : false
+                }
+                isStarred={
+                  currentUser?.email
+                    ? prompt.starredBy.includes(currentUser?.email)
+                    :false
                 }
               />
             ))}

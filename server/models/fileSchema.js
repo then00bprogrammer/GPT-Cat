@@ -27,10 +27,18 @@ const fileSchema = new mongoose.Schema({
     type: [String],
     default:[]
   },
+  starredBy:{
+    type: [String],
+    default:[]
+  },
   view:{
     type: String,
     default: "private"
   },
+  referenceFile:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'File'
+  }
 });
 
 const File = mongoose.model('File', fileSchema);

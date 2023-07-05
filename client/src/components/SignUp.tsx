@@ -4,14 +4,13 @@ import {
   Flex,
   Input,
   FormLabel,
-  Box,
   Heading,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {  Link } from "react-router-dom";
 import useEnterKeyPress from "../hooks/useEnterKeyPress";
 
 const SignupForm = () => {
@@ -51,7 +50,7 @@ const SignupForm = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: signupForm.email,
+          'email': signupForm.email,
         }),
       });
       setSignupForm({
@@ -112,6 +111,7 @@ const SignupForm = () => {
           color={color}
           borderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
+          _focus={{ borderColor: "teal.500", bg:inputBG }}
         />
         <FormLabel color="white">Password</FormLabel>
         <Input
@@ -126,6 +126,7 @@ const SignupForm = () => {
           color={color}
           borderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
+          _focus={{ borderColor: "teal.500", bg:inputBG }}
         />
         <FormLabel color="white">Confirm Password</FormLabel>
         <Input
@@ -139,6 +140,7 @@ const SignupForm = () => {
           color={color}
           borderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
+          _focus={{ borderColor: "teal.500", bg:inputBG }}
         />
         <Flex
           width="full"
