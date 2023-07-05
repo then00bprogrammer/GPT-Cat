@@ -8,7 +8,6 @@ const cors = require('cors');
 const Folder = require('./models/folderSchema');
 const User = require('./models/userSchema');
 const File = require('./models/fileSchema');
-const { Types: { ObjectId } } = mongoose;
 
 const corsOptions = {
   origin: true,
@@ -186,7 +185,7 @@ mongoose
   .connect(MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(5000, () => {
+    app.listen(process.env.PORT || 3000, () => {
       console.log('Server is listening on port 5000');
     });
   })
