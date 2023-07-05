@@ -81,7 +81,7 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked }: Props) => {
         <HStack
           padding="2vw"
           fontSize="xl"
-          width="95%"
+          width="100%"
           bg={bg}
           borderRadius={10}
           color={useColorModeValue("black", "white")}

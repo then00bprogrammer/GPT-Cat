@@ -96,16 +96,16 @@ app.post('/bookmarks',async(req,res)=>{
 
 app.post('/bookmark',async(req,res)=>{
   try{
-    const { name,queries, response, email } = req.body;
-    let conversation=[]
-    for (let i=0;i<queries.length;i++){
-      conversation.push({
-        query:queries[i],
-        response:response[i]
-      })
-    }
+    const { name, link, email } = req.body;
+    // let conversation=[]
+    // for (let i=0;i<queries.length;i++){
+    //   conversation.push({
+    //     query:queries[i],
+    //     response:response[i]
+    //   })
+    // }
     const user = await User.findOne({email:email});
-    user.bookmarks.push({name:name,conversation:conversation});
+    user.bookmarks.push({name:name,link:link});
     await user.save();
     res.status(201).json({'message':'Bookmarked successfully'});
   } catch(error){

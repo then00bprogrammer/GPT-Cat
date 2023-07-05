@@ -5,15 +5,11 @@ import Bookmark from "./Bookmark";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Ball from "../assets/ball.json";
 
-type Chat = {
-  query: string;
-  response: string;
-};
 
 type Bookmarks = {
   _id: string;
   name: string;
-  conversation: Chat[];
+  link: string;
 };
 
 const Bookmarks = () => {
@@ -79,7 +75,7 @@ const Bookmarks = () => {
               <Bookmark
                 _id={bookmark._id}
                 name={bookmark.name}
-                conversation={bookmark.conversation}
+                link={bookmark.link}
               ></Bookmark>
             );
           })}

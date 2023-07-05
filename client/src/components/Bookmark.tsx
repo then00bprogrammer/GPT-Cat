@@ -7,26 +7,26 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaExternalLinkAlt, FaTrashAlt } from "react-icons/fa";
 import DeleteBookmarkModal from "./DeleteBookmark";
 
-type Chat = {
-  query: string;
-  response: string;
-};
 
 type Bookmarks = {
   _id: string;
   name: string;
-  conversation: Chat[];
+  link: string;
 };
 
-const Bookmark = ({ _id, name, conversation }: Bookmarks) => {
+const Bookmark = ({ _id, name, link }: Bookmarks) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const onDeleteClose = () => {
     setIsDeleteOpen(false);
   };
+
+  const handleRedirect =()=>{
+    chrome.tabs.create({ url: link });
+  }
   if(!isDeleted){
       return (
         <VStack width="full">
@@ -45,8 +45,9 @@ const Bookmark = ({ _id, name, conversation }: Bookmarks) => {
             bg={useColorModeValue("gray.200", "gray.600")}
             borderRadius={10}
           >
-            <Text>{name}</Text>
+            <Text onClick={handleRedirect} _hover={{textDecoration:'underline'}}>{name}</Text>
             <Spacer />
+            <Icon as={FaExternalLinkAlt} cursor="pointer" onClick={handleRedirect}/>
             <Icon as={FaTrashAlt} cursor="pointer" onClick={()=>setIsDeleteOpen(true)}/>
           </HStack>
         </VStack>

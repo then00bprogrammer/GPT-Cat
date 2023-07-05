@@ -34,12 +34,14 @@ button.addEventListener('click', () => {
     alert('Name cannot be empty.');
     return;
   }
-  chrome.runtime.sendMessage({ action: 'getValue' }, function (response) {
-    let email = response.email;
-    if (email === null || email === undefined) alert('Please login in GPT Cat');
-    sendBookmarkData(email, name);
-    alert('Bookmarked!');
-  });
+  if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
+    alert("Please refresh the browser");
+    return;
+  }
+  if (email === null || email === undefined) alert('Please login in GPT Cat');
+  sendBookmarkData(email, name);
+  alert('Bookmarked!');
+
 });
 
 //Copy prompt
@@ -135,7 +137,7 @@ const modifyGPT = () => {
         changeMargin.style.marginTop = "5vh";
 
         const heading = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
-        heading.innerText = "Trending prompts";
+        heading.innerText = "GPT Cat : Trending prompts";
 
         element.innerHTML = ""
 
@@ -174,16 +176,16 @@ const modifyGPT = () => {
 
 //bookmark chat gpt conversation upto that point
 const sendBookmarkData = async (email, name) => {
-  let x = document.getElementsByClassName("empty:hidden");
-  x = Array.from(x);
-  x = x.map((query) => query.innerText);
-  if (x.length > 0) {
-    x.shift();
-  }
+  // let x = document.getElementsByClassName("empty:hidden");
+  // x = Array.from(x);
+  // x = x.map((query) => query.innerText);
+  // if (x.length > 0) {
+  //   x.shift();
+  // }
 
-  let y = document.getElementsByClassName("markdown");
-  y = Array.from(y);
-  y = y.map((query) => query.innerText);
+  // let y = document.getElementsByClassName("markdown");
+  // y = Array.from(y);
+  // y = y.map((query) => query.innerText);
 
   await fetch("http://localhost:5000/bookmark/", {
     method: "POST",
@@ -193,8 +195,7 @@ const sendBookmarkData = async (email, name) => {
     body: JSON.stringify({
       name: name,
       email: email,
-      queries: x,
-      response: y
+      link: window.location.href,
     })
   });
 }
@@ -220,6 +221,7 @@ const observerCallback = function (mutationsList, observer) {
 window.addEventListener('click', () => {
   console.log('clicked');
   if (window.location.href != url) {
+    console.log(window.location.href);
     url = window.location.href;
     let observer = new MutationObserver(observerCallback);
     observer.observe(document.body, { childList: true, subtree: true });
