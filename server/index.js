@@ -61,7 +61,9 @@ app.get('/:email/:id?', async (req, res) => {
 
 app.get('/', async (req, res) => {
   try {
-    const files = await File.find({});
+    const files = await File.find({})
+      .sort({ likes: -1 })
+      .limit(10);
     res.json(files);
   } catch (error) {
     console.log(error);
@@ -82,9 +84,19 @@ app.post('/createUser',async(req,res)=>{
   }
 });
 
+app.post('/bookmarks',async(req,res)=>{
+  try{
+    const { email } = req.body;
+    const user = await User.findOne({email:email});
+    res.status(201).json(user.bookmarks);
+  } catch(error){
+    console.log(error);
+  }
+})
+
 app.post('/bookmark',async(req,res)=>{
   try{
-    const { queries, response, email } = req.body;
+    const { name,queries, response, email } = req.body;
     let conversation=[]
     for (let i=0;i<queries.length;i++){
       conversation.push({
@@ -93,13 +105,55 @@ app.post('/bookmark',async(req,res)=>{
       })
     }
     const user = await User.findOne({email:email});
-    user.bookmarks.push(conversation);
+    user.bookmarks.push({name:name,conversation:conversation});
     await user.save();
     res.status(201).json({'message':'Bookmarked successfully'});
   } catch(error){
     console.log(error);
   }
 });
+
+app.delete('/bookmark',async(req,res)=>{
+  try{
+    const {email,id} = req.body;
+    const user = await User.findOne({email:email});
+    user.bookmarks = user.bookmarks.filter((bookmark)=>bookmark._id.toString()!=id);
+    await user.save();
+    res.sendStatus(204);
+  } catch(error){
+    console.log('An error occured while deleting the bookmark');
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+
+app.post('/like',async(req,res)=>{
+  try{
+    const {email,id} = req.body;
+    const file = await File.findById(id);
+    file.likedBy.push(email);
+    file.likes=file.likes+1;
+    await file.save();
+    res.status(201).json({'message':'Liked successfully'});
+  } catch(error){
+    console.log('An error occured while adding likes');
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+
+app.post('/unlike',async(req,res)=>{
+  try{
+    const {email,id} = req.body;
+    const file = await File.findById(id);
+    file.likedBy=file.likedBy.filter((likedEmail)=>likedEmail!=email);
+    file.likes=file.likes-1;
+    await file.save();
+    res.status(201).json({'message':'Unliked successfully'});
+  } catch(error){
+    console.log('An error occured while adding likes');
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+
 
 app.use('/folders', folderRoutes);
 app.use('/files', fileRoutes);

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { HStack, Text, Icon, useToken, useColorModeValue } from "@chakra-ui/react";
-import { FaPlus, FaBookmark, FaUser, FaHome } from "react-icons/fa";
+import { FaPlus, FaBookmark, FaUser, FaHome, FaFire } from "react-icons/fa";
 import AddPromptModal from "./AddPromptModal";
 import { PathContext } from "../Providers/PathProvider";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
@@ -68,7 +68,7 @@ const MenuBar: React.FC = () => {
         )}
       </HStack>
       </Link>
-      <Link to="/profile">
+      <Link to="/topPrompts">
         <HStack
           cursor="pointer"
           padding="1vh 4vh"
@@ -77,8 +77,25 @@ const MenuBar: React.FC = () => {
           borderRadius={20}
           transition="width 0.3s ease-in"
         >
-          <Icon boxSize="6vh" color={getTextColor(2)} as={FaUser} />
+          <Icon boxSize="6vh" color={getTextColor(2)} as={FaFire} />
           {selected === 2 && (
+            <Text color="white" fontSize="md">
+              Top
+            </Text>
+          )}
+        </HStack>
+      </Link>
+      <Link to="/profile">
+        <HStack
+          cursor="pointer"
+          padding="1vh 4vh"
+          bg={getBackgroundColor(3)}
+          onClick={() => handleClick(3)}
+          borderRadius={20}
+          transition="width 0.3s ease-in"
+        >
+          <Icon boxSize="6vh" color={getTextColor(3)} as={FaUser} />
+          {selected === 3 && (
             <Text color="white" fontSize="md">
               Profile
             </Text>

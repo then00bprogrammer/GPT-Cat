@@ -1,66 +1,49 @@
 console.log("This is from Content Script.");
+let email = '';
 
-//Monitor URL changes
-let url = window.location.href;
+chrome.runtime.sendMessage({ action: 'getValue' }, function (response) {
+  email = response.email;
+});
 
-window.addEventListener('click', () => {
-  if (window.location.href != url) {
-    url = window.location.href;
-    let observer = new MutationObserver(observerCallback);
-    observer.observe(document.body, { childList: true, subtree: true });
-  }
-})
+const createBookmarkButton = () => {
+  const button = document.createElement('button');
+  button.style.position = 'fixed';
+  button.style.bottom = '80px';
+  button.style.right = '16px';
+  button.style.padding = '10px';
+  button.style.border = 'none';
+  button.style.borderRadius = '50%';
+  button.style.cursor = 'pointer';
 
-if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
+  const icon = document.createElement('img');
+  icon.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXj3VLdkPLOXpyxCpKsKMNk0JTyYyMJVoSTDURHqA&s';
+  icon.style.width = '20px';
+  icon.style.height = '20px';
+  icon.style.objectFit = 'contain';
+  button.appendChild(icon);
 
-  let observer = new MutationObserver(observerCallback);
-  observer.observe(document.body, { childList: true, subtree: true });
+  return button;
 }
 
-const observerCallback = function (mutationsList, observer) {
-  for (const mutation of mutationsList) {
-    if (mutation.type === 'childList') {
-      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
-
-      if (element) {
-        observer.disconnect();
-        modifyGPT();
-        break;
-      }
-    }
-  }
-};
-
-//Add bookmark button
-const button = document.createElement('button');
-button.style.position = 'fixed';
-button.style.bottom = '80px';
-button.style.right = '16px';
-button.style.padding = '10px';
-button.style.border = 'none';
-button.style.borderRadius = '50%';
-button.style.cursor = 'pointer';
-
-const icon = document.createElement('img');
-icon.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXj3VLdkPLOXpyxCpKsKMNk0JTyYyMJVoSTDURHqA&s';
-icon.style.width = '20px';
-icon.style.height = '20px';
-icon.style.objectFit = 'contain';
-
-button.appendChild(icon);
+const button = createBookmarkButton();
 document.body.appendChild(button);
 
 button.addEventListener('click', () => {
+  const name = prompt('Please name the conversation:');
+  if (name === null || name === '') {
+    alert('Name cannot be empty.');
+    return;
+  }
   chrome.runtime.sendMessage({ action: 'getValue' }, function (response) {
     let email = response.email;
     if (email === null || email === undefined) alert('Please login in GPT Cat');
-    sendBookmarkData(email);
+    sendBookmarkData(email, name);
     alert('Bookmarked!');
   });
 });
 
 //Copy prompt
-const copyToClipboard = (element) => {
+function copyToClipboard(element) {
   const inp = document.querySelector("#prompt-textarea");
   const range = document.createRange();
 
@@ -96,12 +79,55 @@ function showMessage(message) {
   }, 2000);
 }
 
+async function increaseLikeCount(button) {
+  console.log('increased');
+  const id = button.parentNode.querySelector("input[name='id']").value;
+  const isLiked = button.parentNode.querySelector("input[name='isLiked']").value;
+  console.log(isLiked);
+  const likeCountElement = button.parentNode.querySelector("p");
+  const currentCount = parseInt(likeCountElement.textContent);
+  if (email === null || email === undefined) alert('Please login in GPT Cat');
+
+  if (isLiked == "false") {
+    likeCountElement.textContent = currentCount + 1;
+    button.parentNode.querySelector("input[name='isLiked']").value = "true";
+    await fetch('http://localhost:5000/like', {
+      method: 'POST',
+      body: JSON.stringify({ id: id, email: email }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+  else {
+    likeCountElement.textContent = currentCount - 1;
+    button.parentNode.querySelector("input[name='isLiked']").value = "false";
+    await fetch('http://localhost:5000/unlike', {
+      method: 'POST',
+      body: JSON.stringify({ id: id, email: email }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+}
+
+const attachLikeEventListeners = () => {
+  const likeButtons = document.querySelectorAll('button[data-like-button]');
+  likeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      increaseLikeCount(button);
+    });
+  });
+}
+
 //Show trending prompts
 const modifyGPT = () => {
   console.log("changing");
   fetch("http://localhost:5000/")
     .then(response => response.json())
     .then(data => {
+      console.log(data);
       const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
 
       if (element) {
@@ -117,22 +143,25 @@ const modifyGPT = () => {
         const boxSpacing = "10px";
 
         element.innerHTML = `
-            <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; padding: ${boxSpacing}; margin: 0; width: 100%;">
-              ${data
-            .map(
-              (file) => `
-                    <div style="background-color: #3e3f4b; width: ${boxSize}; height: auto; color: white; margin-bottom: ${boxSpacing}; margin-right: ${boxSpacing}; padding: ${boxSpacing}; border-radius: 5px; overflow: hidden;">
-                      <h3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${file.name}</h3>
-                      <div style="display: flex; flex-direction: row; align-items: space-between; justify-content: space-between; color: white;">
-                        <p style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${file.content}</p>
-                        <button style="cursor: pointer;" onclick="copyToClipboard(this.parentNode.querySelector("p")); showMessage("Copied")">Copy</button>
-                      </div>
-                    </div>
-                  `
-            )
-            .join("")}
-            </div>
-          `;
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; padding: ${boxSpacing}; margin: 0; width: 100%;">
+          ${data.map((file) => `
+            <div style="background-color: #3e3f4b; width: ${boxSize}; height: auto; color: white; margin-bottom: ${boxSpacing}; margin-right: ${boxSpacing}; padding: ${boxSpacing}; border-radius: 5px; overflow: hidden;">
+              <h3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${file.name}</h3>
+              <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; color: white;">
+                <p style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;margin-bottom: 2vh">${file.content}</p>
+                <div style="display:flex; width:100%; justify-content: space-between;">
+                  <p style="margin-right:0.3vw">${file.likes ? file.likes : 0} </p>
+                  <input type="hidden" name="id" value="${file._id}">
+                  <input type="hidden" name="isLiked" value="${file.likedBy.includes(email)}">
+                  <button style="cursor: pointer; margin-right: auto;" data-like-button>Likes</button>
+                  <button style="cursor: pointer; margin-left: auto;" onclick="copyToClipboard(this.parentNode.querySelector('p')); showMessage('Copied')">Copy</button>
+                </div>
+              </div>
+            </div>      
+          `).join("")}
+        </div>
+      `;
+        attachLikeEventListeners();
 
       } else {
         console.log("Element not found.");
@@ -144,7 +173,7 @@ const modifyGPT = () => {
 }
 
 //bookmark chat gpt conversation upto that point
-const sendBookmarkData = async (email) => {
+const sendBookmarkData = async (email, name) => {
   let x = document.getElementsByClassName("empty:hidden");
   x = Array.from(x);
   x = x.map((query) => query.innerText);
@@ -162,6 +191,7 @@ const sendBookmarkData = async (email) => {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
+      name: name,
       email: email,
       queries: x,
       response: y
@@ -169,3 +199,36 @@ const sendBookmarkData = async (email) => {
   });
 }
 
+
+//Monitor URL changes
+let url = window.location.href;
+
+const observerCallback = function (mutationsList, observer) {
+  for (const mutation of mutationsList) {
+    if (mutation.type === 'childList') {
+      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
+
+      if (element) {
+        observer.disconnect();
+        modifyGPT();
+        break;
+      }
+    }
+  }
+};
+
+window.addEventListener('click', () => {
+  console.log('clicked');
+  if (window.location.href != url) {
+    url = window.location.href;
+    let observer = new MutationObserver(observerCallback);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+  }
+})
+
+if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
+
+  let observer = new MutationObserver(observerCallback);
+  observer.observe(document.body, { childList: true, subtree: true });
+}

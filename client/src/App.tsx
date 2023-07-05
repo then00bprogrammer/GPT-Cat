@@ -8,8 +8,9 @@ import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./Providers/AuthProvider";
 import Profile from "./components/Profile";
-import Bookmark from "./components/Bookmark";
+import Bookmarks from "./components/Bookmarks";
 import LogIn from "./components/LogIn";
+import TopPrompts from "./components/TopPrompts";
 
 function App() {
   const currentUser = useContext(AuthContext);
@@ -30,8 +31,9 @@ function App() {
           <NavBar />
           <Routes>
             <Route path="/" element={<Prompts />} />
+            <Route path="/topPrompts" element={<TopPrompts />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/bookmarks" element={<Bookmark />} />
+            <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/prompts/:id/:folderName" element={<Prompts />} />
           </Routes>
           <MenuBar />
