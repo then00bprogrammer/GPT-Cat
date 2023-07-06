@@ -57,7 +57,7 @@ Contributions to the GPT Cat are welcome! If you'd like to contribute, please fo
 5. Open a pull request on the original repository.
    
 <h2>License</h2>
-The Chat GPT Manager is licensed under the MIT License. Please see the LICENSE file for more details.
+The Chat GPT Manager is licensed under the MIT License. Please see the <a href='https://github.com/then00bprogrammer/GPT-Cat/blob/main/LICENSE'>LICENSE</a> file for more details.
 
 Thank you for using the Chat GPT Manager! If you have any questions or need further assistance, please don't hesitate to reach out. Enjoy immersing yourself in the magic of preserving and sharing your extraordinary conversations with the world!
    
