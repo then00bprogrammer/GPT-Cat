@@ -19,11 +19,25 @@
         "https://chat.openai.com/*"
       ],
       "run_at": "document_idle",
-      "js": ["content.js"]
+      "js": [
+        "content.js"
+      ],
+      "css": ["content.css"]
     }
   ],
   "background": {
     "service_worker": "background.js",
     "type": "module"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "images/*.png",
+        "images/*.svg"
+      ],
+      "matches": [
+        "https://chat.openai.com/*"
+      ]
+    }
+  ]
 }

@@ -38,7 +38,8 @@ const NavBar: React.FC = () => {
         _hover={{ bg: useColorModeValue("white", "gray.900") }}
         icon={<Icon as={useColorModeValue(FaMoon, FaRegLightbulb)} boxSize={8} height='full' />}
       />
-      <Avatar src={imageURL} />
+      {/* <Avatar src={imageURL} /> */}
+      {/* Will add when login with google works */}
     </HStack>
   );
 };

@@ -33,7 +33,7 @@ const DeleteFileModal = ({
     try {
       setIsDeleted(true);
       onClose();
-      await fetch(`http://localhost:5000/files/${id}/${currentUser?.email}`, {
+      await fetch(`https://gpt-cat.onrender.com/files/${id}/${currentUser?.email}`, {
         method: "DELETE",
       });
     } catch (error) {

@@ -9,7 +9,7 @@ export const addPrompt = async (name: string, pathArray: string[] | undefined, c
         }
       }
   
-      const resp = await fetch('http://localhost:5000/files', {
+      const resp = await fetch('https://gpt-cat.onrender.com/files', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

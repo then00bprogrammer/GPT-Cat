@@ -1,6 +1,20 @@
-.rounded-button {
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-  }
-  
+.bookmark-button {
+  background-color: whitesmoke;
+  position: fixed;
+  top: 5vh;
+  right: 16px;
+  padding: 10px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.bookmark-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.prompt-box:hover {
+  background-color: black;
+}

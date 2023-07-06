@@ -23,6 +23,18 @@ const MONGODB_URI = 'mongodb+srv://nikhil03:hellskitchen03@cluster0.v5kssag.mong
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
+app.get('/private/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    const user = await User.findOne({ email: email });
+    const files = await File.find({ user: user._id });
+    res.json(files);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 app.get('/:email/:id?', async (req, res) => {
   try {
     const { email, id } = req.params;
@@ -56,20 +68,21 @@ app.get('/:email/:id?', async (req, res) => {
     console.error('Error retrieving data:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-});
 
+});
 
 app.get('/', async (req, res) => {
   try {
     const files = await File.find({ view: 'public' })
-      .sort({ likes: -1 })
-      .limit(10);
+    .sort({ likes: -1 });
+    // .limit(10);
     res.json(files);
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 app.post('/createUser', async (req, res) => {
   try {
@@ -185,7 +198,7 @@ mongoose
   .connect(MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(process.env.PORT || 3000, () => {
+    app.listen(5000, () => {
       console.log('Server is listening on port 5000');
     });
   })

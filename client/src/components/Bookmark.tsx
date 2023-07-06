@@ -43,7 +43,8 @@ const Bookmark = ({ _id, name, link }: Bookmarks) => {
           cursor="pointer"
           padding="2vw"
           fontSize="xl"
-          width="100%"
+          width="95%"
+          marginRight="5%"
           bg={useColorModeValue("gray.200", "gray.600")}
           borderRadius={10}
           overflowX="hidden"

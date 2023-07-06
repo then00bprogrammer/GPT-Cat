@@ -1,27 +1,35 @@
+// import './content.css';
 console.log("This is from Content Script.");
+
+const linkElement = document.createElement('link');
+linkElement.rel = 'stylesheet';
+linkElement.href = 'content.css';
+document.head.appendChild(linkElement);
+
+
 let email = '';
+let globalData = []
 
 chrome.runtime.sendMessage({ action: 'getValue' }, function (response) {
   email = response.email;
 });
 
+let bookmarkRegular = chrome.runtime.getURL("images/bookmark-regular.svg");
+let bookmarkSolid = chrome.runtime.getURL("images/bookmark-solid.svg");
+let starRegular = chrome.runtime.getURL("images/star-regular.svg");
+let starSolid = chrome.runtime.getURL("images/star-solid.svg");
+let thumbsUpRegular = chrome.runtime.getURL("images/thumbs-up-regular.svg");
+let thumbsUpSolid = chrome.runtime.getURL("images/thumbs-up-solid.svg");
+let clipboardRegular = chrome.runtime.getURL("images/clipboard-regular.svg");
+let eyeRegular = chrome.runtime.getURL("images/eye-regular.svg");
+
 const createBookmarkButton = () => {
   const button = document.createElement('button');
-  button.style.position = 'fixed';
-  button.style.bottom = '80px';
-  button.style.right = '16px';
-  button.style.padding = '10px';
-  button.style.border = 'none';
-  button.style.borderRadius = '50%';
-  button.style.cursor = 'pointer';
-
+  button.classList.add('bookmark-button');
   const icon = document.createElement('img');
-  icon.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXj3VLdkPLOXpyxCpKsKMNk0JTyYyMJVoSTDURHqA&s';
-  icon.style.width = '20px';
-  icon.style.height = '20px';
-  icon.style.objectFit = 'contain';
+  icon.src = bookmarkRegular;
+  icon.classList.add('bookmark-icon');
   button.appendChild(icon);
-
   return button;
 }
 
@@ -45,44 +53,16 @@ button.addEventListener('click', () => {
 });
 
 //Copy prompt
-function copyToClipboard(element) {
-  const inp = document.querySelector("#prompt-textarea");
-  const range = document.createRange();
-
-  range.selectNode(element);
-  window.getSelection().removeAllRanges();
-  window.getSelection().addRange(range);
-  inp.value = range
-  document.execCommand("copy");
-  window.getSelection().removeAllRanges();
-
-  const button = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.absolute.bottom-0.left-0.w-full.border-t.md\\:border-t-0.dark\\:border-white\\/20.md\\:border-transparent.md\\:dark\\:border-transparent.md\\:bg-vert-light-gradient.bg-white.dark\\:bg-gray-800.md\\:\\!bg-transparent.dark\\:md\\:bg-vert-dark-gradient.pt-2.md\\:pl-2.md\\:w-\\[calc\\(100\\%-\\.5rem\\)\\] > form > div > div.flex.flex-col.w-full.py-\\[10px\\].flex-grow.md\\:py-4.md\\:pl-4.relative.border.border-black\\/10.bg-white.dark\\:border-gray-900\\/50.dark\\:text-white.dark\\:bg-gray-700.rounded-xl.shadow-xs.dark\\:shadow-xs > button");
-
-  button.removeAttribute("disabled");
+function copyToClipboard(box) {
+  const ind = box.parentNode.querySelector("input[name='index']").value;
+  const text = globalData[ind].content;
+  const inp = document.getElementById("prompt-textarea");
+  inp.value = text;
+  const inputEvent = new Event('input', { bubbles: true });
+  inp.dispatchEvent(inputEvent);
 }
 
-//Show copied status
-function showMessage(message) {
-  const messageElement = document.createElement("div");
-  messageElement.textContent = message;
-  messageElement.style.position = "fixed";
-  messageElement.style.bottom = "20px";
-  messageElement.style.left = "50%";
-  messageElement.style.transform = "translateX(-50%)";
-  messageElement.style.backgroundColor = "#000000";
-  messageElement.style.color = "#ffffff";
-  messageElement.style.padding = "10px";
-  messageElement.style.borderRadius = "5px";
-
-  document.body.appendChild(messageElement);
-
-  setTimeout(() => {
-    document.body.removeChild(messageElement);
-  }, 2000);
-}
-
-async function increaseLikeCount(button) {
-  console.log('increased');
+async function handleLike(button) {
   const id = button.parentNode.querySelector("input[name='id']").value;
   const isLiked = button.parentNode.querySelector("input[name='isLiked']").value;
   console.log(isLiked);
@@ -90,46 +70,97 @@ async function increaseLikeCount(button) {
   const currentCount = parseInt(likeCountElement.textContent);
   if (email === null || email === undefined) alert('Please login in GPT Cat');
 
-  if (isLiked == "false") {
+  if (isLiked === "false") {
     likeCountElement.textContent = currentCount + 1;
     button.parentNode.querySelector("input[name='isLiked']").value = "true";
-    await fetch('http://localhost:5000/like', {
+    button.querySelector("img").src = thumbsUpSolid;
+    await fetch('https://gpt-cat.onrender.com/like', {
       method: 'POST',
       body: JSON.stringify({ id: id, email: email }),
       headers: {
         'Content-Type': 'application/json'
       }
-    })
-  }
-  else {
+    });
+  } else {
     likeCountElement.textContent = currentCount - 1;
     button.parentNode.querySelector("input[name='isLiked']").value = "false";
-    await fetch('http://localhost:5000/unlike', {
+    button.querySelector("img").src = thumbsUpRegular;
+    await fetch('https://gpt-cat.onrender.com/unlike', {
       method: 'POST',
       body: JSON.stringify({ id: id, email: email }),
       headers: {
         'Content-Type': 'application/json'
       }
-    })
+    });
   }
 }
+
+
+async function handleStar(button) {
+  const id = button.parentNode.querySelector("input[name='id']").value;
+  const isStarred = button.parentNode.querySelector("input[name='isStarred']").value;
+  console.log(isStarred);
+  if (email === null || email === undefined) alert('Please login in GPT Cat');
+
+  if (isStarred === "false") {
+    button.parentNode.querySelector("input[name='isStarred']").value = "true";
+    button.querySelector("img").src = starSolid;
+    await fetch('https://gpt-cat.onrender.com/star', {
+      method: 'POST',
+      body: JSON.stringify({ id: id, email: email }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  } else {
+    button.parentNode.querySelector("input[name='isStarred']").value = "false";
+    button.querySelector("img").src = starRegular;
+    await fetch('https://gpt-cat.onrender.com/unstar', {
+      method: 'POST',
+      body: JSON.stringify({ id: id, email: email }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+}
+
 
 const attachLikeEventListeners = () => {
   const likeButtons = document.querySelectorAll('button[data-like-button]');
   likeButtons.forEach(button => {
     button.addEventListener('click', () => {
-      increaseLikeCount(button);
+      handleLike(button);
+    });
+  });
+}
+const attachStarEventListeners = () => {
+  const starButtons = document.querySelectorAll('button[data-star-button]');
+  starButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      handleStar(button);
     });
   });
 }
 
+const copyEventListeners = () => {
+  const boxes = document.getElementsByClassName('copy-button');
+  const boxesArray = Array.from(boxes);
+  console.log(boxesArray.length)
+  boxesArray.forEach((box) => {
+    box.addEventListener('click', () => {
+      copyToClipboard(box);
+    });
+  });
+};
+
 //Show trending prompts
 const modifyGPT = () => {
   console.log("changing");
-  fetch("http://localhost:5000/")
+  fetch("https://gpt-cat.onrender.com/")
     .then(response => response.json())
     .then(data => {
-      console.log(data);
+      globalData = data;
       const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
 
       if (element) {
@@ -139,32 +170,41 @@ const modifyGPT = () => {
         const heading = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
         heading.innerText = "GPT Cat : Trending prompts";
 
-        element.innerHTML = ""
+        const button = document.createElement("button");
+        button.innerText = "Switch to Private";
+        button.style.marginBottom = "10px";
+        button.style.backgroundColor = "#202123";
+        button.style.color = "white";
+        button.style.padding = "10px 20px";
+        button.style.width = `calc(100% - 20px)`
 
-        const boxSize = "30%";
-        const boxSpacing = "10px";
+        button.addEventListener("click", () => {
+          if (button.innerText === "Switch to Private") {
+            fetch(`https://gpt-cat.onrender.com/private/${email}`)
+            .then(response => response.json())
+            .then(updatedData => {
+              console.log(updatedData);
+              modifyHTML(element, updatedData);
+              button.innerText = "Switch to Public";
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          } else {
+            fetch("https://gpt-cat.onrender.com/")
+            .then(response => response.json())
+            .then(updatedData => {
+              modifyHTML(element, updatedData);
+              button.innerText = "Switch to Private";
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+        });
 
-        element.innerHTML = `
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; padding: ${boxSpacing}; margin: 0; width: 100%;">
-          ${data.map((file) => `
-            <div style="background-color: #3e3f4b; width: ${boxSize}; height: auto; color: white; margin-bottom: ${boxSpacing}; margin-right: ${boxSpacing}; padding: ${boxSpacing}; border-radius: 5px; overflow: hidden;">
-              <h3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${file.name}</h3>
-              <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; color: white;">
-                <p style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;margin-bottom: 2vh">${file.content}</p>
-                <div style="display:flex; width:100%; justify-content: space-between;">
-                  <p style="margin-right:0.3vw">${file.likes ? file.likes : 0} </p>
-                  <input type="hidden" name="id" value="${file._id}">
-                  <input type="hidden" name="isLiked" value="${file.likedBy.includes(email)}">
-                  <button style="cursor: pointer; margin-right: auto;" data-like-button>Likes</button>
-                  <button style="cursor: pointer; margin-left: auto;" onclick="copyToClipboard(this.parentNode.querySelector('p')); showMessage('Copied')">Copy</button>
-                </div>
-              </div>
-            </div>      
-          `).join("")}
-        </div>
-      `;
-        attachLikeEventListeners();
-
+        heading.insertAdjacentElement("afterend", button);
+        modifyHTML(element, data);
       } else {
         console.log("Element not found.");
       }
@@ -174,20 +214,71 @@ const modifyGPT = () => {
     });
 }
 
+function modifyHTML(element, data) {
+  globalData = data;
+  element.innerHTML = ""
+  const boxSpacing = "10px";
+  element.innerHTML = `
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin: 0; width: 100%;">
+    ${data
+      .map(
+        (file, index) => `
+          <div key=${index} class="prompt-box" style="background-color: #3e3f4b; width: 31%; height: auto; color: white; margin-bottom: ${boxSpacing}; margin-right: ${boxSpacing}; padding: ${boxSpacing}; border-radius: 5px;">
+            <input type="hidden" name="index" value="${index}">
+            <div class="popover" style="position: relative;">
+              <h3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${file.name}</h3>
+              <div class="popover-content" style="display: none; position: absolute; top: 115%; left: 0%; width: 100%; background-color:#202123; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);overflow: visible; !important; z-index:999">
+              <p style=" color:#ffffff; white;font-weight: bold; !important;">${file.name}</p>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; color: white; width:100%;
+            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+              <p style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;margin-bottom: 2vh">${file.content}</p>
+              <div style="height:10%;display:flex; width:100%;">
+                <input type="hidden" name="id" value="${file._id}">
+                <input type="hidden" name="index" value="${index}">
+                <input type="hidden" name="isLiked" value="${file.likedBy.includes(email)}">
+                <input type="hidden" name="isStarred" value="${file.starredBy.includes(email)}">
+                <button style="color:white;cursor: pointer; width: 10%; margin-right:0.3vw" data-like-button>
+                  <img class="gpt-like-button" src=${file.likedBy.includes(email) ? thumbsUpSolid : thumbsUpRegular} style="width:100%;height:100%" alt="Like button">
+                </button>
+                <p style="margin-right: auto">${file.likes ? file.likes : 0} </p>
+                <button class="copy-button" style="color:white;cursor: pointer; width: 7% ;margin-right:0.3vw" copy-button>
+                  <img class="gpt-star-button" src=${clipboardRegular} style="width:100%;height:100%" alt="Copy prompt">
+                </button>
+                <button style="color:white;cursor: pointer; width: 10%" data-star-button>
+                  <img class="gpt-star-button" src=${file.starredBy.includes(email) ? starSolid : starRegular} style="width:100%;height:100%" alt="Add to Favourites">
+                </button>
+              </div>
+            </div>
+          </div>
+        `
+      )
+      .join("")}
+  </div>
+`;
+  const popoverElements = document.getElementsByClassName("popover");
+  Array.from(popoverElements).forEach((popoverElement) => {
+    const popoverContent = popoverElement.querySelector(".popover-content");
+
+    popoverElement.addEventListener("mouseenter", () => {
+      popoverContent.style.display = "block";
+    });
+
+    popoverElement.addEventListener("mouseleave", () => {
+      popoverContent.style.display = "none";
+    });
+  });
+
+  attachLikeEventListeners();
+  attachStarEventListeners();
+  copyEventListeners();
+}
+
+
 //bookmark chat gpt conversation upto that point
 const sendBookmarkData = async (email, name) => {
-  // let x = document.getElementsByClassName("empty:hidden");
-  // x = Array.from(x);
-  // x = x.map((query) => query.innerText);
-  // if (x.length > 0) {
-  //   x.shift();
-  // }
-
-  // let y = document.getElementsByClassName("markdown");
-  // y = Array.from(y);
-  // y = y.map((query) => query.innerText);
-
-  await fetch("http://localhost:5000/bookmark/", {
+  await fetch("https://gpt-cat.onrender.com/bookmark/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -218,19 +309,41 @@ const observerCallback = function (mutationsList, observer) {
   }
 };
 
-window.addEventListener('click', () => {
-  console.log('clicked');
-  if (window.location.href != url) {
-    console.log(window.location.href);
-    url = window.location.href;
+function addButtonListener() {
+  const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.dark.flex-shrink-0.overflow-x-hidden.bg-gray-900 > div > div > div > nav > div.mb-1.flex.flex-row.gap-2 > a");
+
+  element.addEventListener('click', () => {
     let observer = new MutationObserver(observerCallback);
     observer.observe(document.body, { childList: true, subtree: true });
+  })
+}
 
+const switchButtonObserver = function (mutationsList, buttonObserver) {
+  for (const mutation of mutationsList) {
+    if (mutation.type === 'childList') {
+      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.dark.flex-shrink-0.overflow-x-hidden.bg-gray-900 > div > div > div > nav > div.mb-1.flex.flex-row.gap-2 > a");
+      if (element) {
+        buttonObserver.disconnect();
+        addButtonListener();
+        break;
+      }
+    }
   }
-})
+};
+
+
+let observer = new MutationObserver(switchButtonObserver);
+observer.observe(document.body, { childList: true, subtree: true });
 
 if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
 
   let observer = new MutationObserver(observerCallback);
   observer.observe(document.body, { childList: true, subtree: true });
 }
+
+document.addEventListener('click',()=>{
+  if(url===window.location.href) return;
+  url = window.location.href;
+  let observer = new MutationObserver(switchButtonObserver);
+  observer.observe(document.body, { childList: true, subtree: true });
+})

@@ -25,7 +25,7 @@ const TopPrompts = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const resp = await fetch("http://localhost:5000");
+      const resp = await fetch("https://gpt-cat.onrender.com/");
       const prompts = await resp.json();
       setPrompts(prompts);
     } catch (error) {

@@ -9,7 +9,7 @@ export const addFolder = async (name: string, pathArray: string[] | undefined, e
         }
       }
   
-      const resp=await fetch('http://localhost:5000/folders', {
+      const resp=await fetch('https://gpt-cat.onrender.com/folders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

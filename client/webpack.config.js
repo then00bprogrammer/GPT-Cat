@@ -30,7 +30,7 @@ module.exports = {
 
             },
             {
-                test: /\.(jpg|png)$/,
+                test: /\.(jpg|png|svg)$/,
                 use: {
                     loader: 'url-loader',
                 },
@@ -42,7 +42,9 @@ module.exports = {
             patterns: [
                 { from: "manifest.json", to: "../manifest.json" },
                 { from: "content.js", to: "../content.js" },
-                { from: "background.js", to: "../background.js" }
+                { from: "content.css", to: "../content.css" },
+                { from: "background.js", to: "../background.js" },
+                { from: "./src/assets/images", to: "../images" }
             ],
         }),
         ...getHtmlPlugins(["index"]),
