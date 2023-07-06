@@ -3,13 +3,21 @@
 Welcome to the GPT Cat! This web extension allows you to save prompts in an organized and infinitely customizable manager, bookmark conversations, and make them public, enabling you to immortalize and share your interactions with the world. With this enchanting companion, you can transform ordinary conversations into something extraordinary. Let's explore the features and usage instructions below.
 </p>
 <img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/ae76a0fd-251c-4d10-8eaa-41f638663213'/>
-<h2 align="center">Save prompts in an organized way</h2>
+<ul>
+  <li><h2>Save prompts in an organized way</h2></li>
+</ul>
 <img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/925632bb-11be-4c79-9f30-e9d2c8871a4b'/>
-<h2 align="center">See your bookmarked chats here</h2>
+<ul>
+  <li><h2>See your bookmarked chats here</h2></li>
+</ul>
 <img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/90d7a00b-6e90-4142-97f9-465a60739f5d'/>
-<h2 align="center">Make your prompts public and see how the world reacts to it here!</h2>
+<ul>
+  <li><h2>Make your prompts public and see how the world reacts to it here!</h2></li>
+</ul>
 <img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/db339c77-800d-4ea2-bf6d-5077ed4546be'/>
-<h2 align="center">Switch on the dark mode</h2>
+<ul>
+  <li><h2>Switch on the dark mode</h2></li>
+</ul>
 <p>Hopefully you create better prompts than this though😶</p>
 <img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/2e2a099d-0b61-444a-9ebd-44aa1fed7ca2'/>
 <h2>Installation</h2>
