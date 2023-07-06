@@ -30,6 +30,7 @@ export const theme = extendTheme({
         borderRadius: "10px",
         width: '12px',
         backgroundColor: 'gray.200',
+        marginLeft:'3vw'
       },
       '::-webkit-scrollbar-thumb': {
         borderRadius: "10px",

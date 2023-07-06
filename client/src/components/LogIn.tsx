@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import {
   Button,
   Flex,
@@ -9,12 +9,16 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import {
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
 import { Link, useNavigate } from "react-router-dom";
 import useEnterKeyPress from "../hooks/useEnterKeyPress";
+import CustomAlert from "./CustomAlert";
 
 const LogIn = () => {
+  const [showAlert,setShowAlert]=useState<boolean>(false);
   const navigate = useNavigate();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [signupForm, setSignupForm] = useState({
@@ -41,7 +45,7 @@ const LogIn = () => {
         email: "",
         password: "",
       });
-      navigate('/');
+      navigate("/");
     } catch (error) {
       console.log(error);
       setCustomErrorMessage("Internal Server Error");
@@ -49,6 +53,7 @@ const LogIn = () => {
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setShowAlert(false);
     setCustomErrorMessage("");
     setSignupForm((prev) => ({
       ...prev,
@@ -79,6 +84,7 @@ const LogIn = () => {
       bgRepeat="no-repeat"
       bgSize="cover"
     >
+      <CustomAlert title='Error!' description={customErrorMessage} showAlert={showAlert} setShowAlert={setShowAlert}></CustomAlert>
       <Heading fontSize="4xl" color="white">
         {" "}
         LOGIN
@@ -95,8 +101,9 @@ const LogIn = () => {
           width="75vw"
           bg={inputBG}
           borderColor="teal.500"
+          focusBorderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
-          _focus={{ borderColor: "teal.500", bg:inputBG }}
+          _focus={{ borderColor: "teal.500", bg: inputBG }}
           color={color}
         />
         <FormLabel color="white">Password</FormLabel>
@@ -110,8 +117,9 @@ const LogIn = () => {
           width="75vw"
           bg={inputBG}
           borderColor="teal.500"
+          focusBorderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
-          _focus={{ borderColor: "teal.500", bg:inputBG }}
+          _focus={{ borderColor: "teal.500", bg: inputBG }}
           color={color}
         />
 
@@ -137,8 +145,23 @@ const LogIn = () => {
             Login
           </Button>
           <Link to="/auth">
-            <Text color="gray.500" fontSize="lg">
+            <Text
+              color="gray.500"
+              fontSize="lg"
+              _hover={{ textDecoration: "underline" }}
+            >
               New here?
+            </Text>
+          </Link>
+          <Link to="/resetPassword">
+            <Text
+              color="gray.500"
+              cursor="pointer"
+              marginTop="1vh"
+              fontSize="lg"
+              _hover={{ textDecoration: "underline" }}
+            >
+              Reset your password
             </Text>
           </Link>
         </Flex>

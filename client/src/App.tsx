@@ -11,6 +11,7 @@ import Profile from "./components/Profile";
 import Bookmarks from "./components/Bookmarks";
 import LogIn from "./components/LogIn";
 import TopPrompts from "./components/TopPrompts";
+import ResetPassword from "./components/ResetPassword";
 
 function App() {
   const currentUser = useContext(AuthContext);
@@ -44,6 +45,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LogIn />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/resetPassword" element={<ResetPassword />} />
           </Routes>
         </Router>
       )}

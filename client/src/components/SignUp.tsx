@@ -12,8 +12,10 @@ import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
 import {  Link } from "react-router-dom";
 import useEnterKeyPress from "../hooks/useEnterKeyPress";
+import CustomAlert from "./CustomAlert";
 
 const SignupForm = () => {
+  const [showAlert,setShowAlert]=useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [signupForm, setSignupForm] = useState({
     email: "",
@@ -31,11 +33,13 @@ const SignupForm = () => {
 
     if (signupForm.password !== signupForm.confirmPassword) {
       setCustomErrorMessage("Passwords do not match");
+      setShowAlert(true);
       return;
     }
 
     if (signupForm.password.length < 6) {
       setCustomErrorMessage("Password should be at least 6 characters long");
+      setShowAlert(true);
       return;
     }
 
@@ -66,6 +70,7 @@ const SignupForm = () => {
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCustomErrorMessage("");
+    setShowAlert(false);
     setSignupForm((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
@@ -93,6 +98,7 @@ const SignupForm = () => {
       bgRepeat="no-repeat"
       bgSize="cover"
     >
+      <CustomAlert title='Error!' description={customErrorMessage} showAlert={showAlert} setShowAlert={setShowAlert}></CustomAlert>
       <Heading fontSize="4xl" color="white">
         {" "}
         REGISTER
@@ -110,6 +116,7 @@ const SignupForm = () => {
           bg={inputBG}
           color={color}
           borderColor="teal.500"
+          focusBorderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
           _focus={{ borderColor: "teal.500", bg:inputBG }}
         />
@@ -125,6 +132,7 @@ const SignupForm = () => {
           bg={inputBG}
           color={color}
           borderColor="teal.500"
+          focusBorderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
           _focus={{ borderColor: "teal.500", bg:inputBG }}
         />
@@ -139,6 +147,7 @@ const SignupForm = () => {
           bg={inputBG}
           color={color}
           borderColor="teal.500"
+          focusBorderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
           _focus={{ borderColor: "teal.500", bg:inputBG }}
         />
@@ -167,6 +176,17 @@ const SignupForm = () => {
           <Link to="/">
             <Text color="gray.500" fontSize="lg">
               Already a Member?
+            </Text>
+          </Link>
+          <Link to="/resetPassword">
+            <Text
+              color="gray.500"
+              cursor="pointer"
+              marginTop="1vh"
+              fontSize="lg"
+              _hover={{ textDecoration: "underline" }}
+            >
+              Reset your password
             </Text>
           </Link>
         </Flex>

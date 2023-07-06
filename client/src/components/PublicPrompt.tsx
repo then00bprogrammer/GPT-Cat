@@ -110,8 +110,7 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked,isStarred }: Props) => 
           color={textColor}
           padding="2vw"
           fontSize="xl"
-          width="95%"
-          marginRight="5%"
+          width="100%"
           bg={bg}
           borderRadius={10}
           overflowX="hidden"

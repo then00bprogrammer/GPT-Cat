@@ -2,6 +2,12 @@
   "version": "1.0.0",
   "manifest_version": 3,
   "name": "GPT Cat",
+  "icons": {
+    "16": "images/icon-2.png",
+    "32": "images/icon-2.png",
+    "48": "images/icon-2.png",
+    "128": "images/icon-2.png"
+  },
   "action": {
     "default_popup": "js/index.html",
     "default_title": "GPT Cat"

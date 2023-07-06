@@ -24,7 +24,7 @@ const NavBar: React.FC = () => {
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("blackAlpha.700", "gray.400")}
     >
-      <Avatar src="https://img.lovepik.com/element/45001/6381.png_860.png" />
+      <Avatar src="../images/icon-3.png" />
       <Text textAlign="center" fontWeight="bold" fontSize="2xl">
         GPT Cat
       </Text>

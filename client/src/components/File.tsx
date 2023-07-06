@@ -106,8 +106,7 @@ const File = ({ _id, name, content, view }: {
         <HStack
           padding="2vw"
           fontSize="xl"
-          width="95%"
-          marginRight="5%"
+          width="100%"
           bg={bg}
           borderRadius={10}
           color={textColor}

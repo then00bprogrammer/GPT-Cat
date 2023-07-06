@@ -60,8 +60,7 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
       cursor="pointer"
       padding="2vw"
       fontSize="xl"
-      width="95%"
-      marginRight="5%"
+      width="100%"
       bg={bg}
       borderRadius={10}
     >
