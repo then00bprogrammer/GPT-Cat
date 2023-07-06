@@ -65,8 +65,8 @@ const LogIn = () => {
 
   const colorMode = useColorMode();
   const bgImage = useColorModeValue(
-    "https://images.unsplash.com/photo-1432821596592-e2c18b78144f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bG9naW58ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-    "https://images.unsplash.com/photo-1511406361295-0a1ff814c0ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGRhcmslMjBsb2dpbiUyMHBhZ2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+    "../images/login-light.jpeg",
+    "../images/login-dark.avif"
   );
   const color = useColorModeValue("black", "white");
   const inputBG = useColorModeValue("white", "blackAlpha.300");
