@@ -1,7 +1,10 @@
 <h1 align="center">GPT Cat: Your Chat GPT Manager</h1>
 <p align="center">
-Welcome to the GPT Cat! This web extension allows you to save prompts in an organized and infinitely customizable manager, bookmark conversations, and make them public, enabling you to immortalize and share your interactions with the world. With this enchanting companion, you can transform ordinary conversations into something extraordinary. Let's explore the features and usage instructions below.
+Welcome to the GPT Cat! This web extension allows you to save prompts in an organized and infinitely customizable manager, bookmark conversations, and make them public, enabling you to immortalize and share your interactions with the world. With this enchanting companion, you can transform ordinary conversations into something extraordinary. 
 </p>
+
+https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/69de8e3c-97bd-45ad-8963-b61d7a8bda3b
+<h1>Features</h1>
 <img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/ae76a0fd-251c-4d10-8eaa-41f638663213'/>
 <ul>
   <li><h2>Save prompts in an organized way</h2></li>
