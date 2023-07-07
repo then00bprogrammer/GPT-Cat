@@ -23,7 +23,7 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
   const [editable, setEditable] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [inputName, setInputName] = useState(name);
-  const textColor = useColorModeValue('black','gray.50');
+  const textColor = useColorModeValue("black", "gray.50");
   const onDeleteClose = () => {
     setIsDeleteOpen(false);
   };
@@ -38,7 +38,7 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
       try {
         await fetch(`https://gpt-cat.onrender.com/folders/${_id}`, {
           method: "PATCH",
-          body: JSON.stringify({ name: inputName, email:currentUser?.email }),
+          body: JSON.stringify({ name: inputName, email: currentUser?.email }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -53,55 +53,57 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
     setInputName(event.target.innerText);
   };
   if (!isDeleted)
-  return (
-    <HStack
-      color={textColor}
-      key={_id}
-      cursor="pointer"
-      padding="2vw"
-      fontSize="xl"
-      width="100%"
-      bg={bg}
-      borderRadius={10}
-    >
-      <DeleteFolderModal
-        isOpen={isDeleteOpen}
-        onClose={onDeleteClose}
-        id={_id}
-        setIsDeleted={setIsDeleted}
-      />
-      <Link to={`/prompts/${_id}/${inputName}`}>
-        <Icon as={FaRegFolderOpen} />
-      </Link>
-      <Text
-        fontSize='sm'
-        outline="none"
-        border="none"
-        borderBottom={editable ? "2px dashed" : "none"}
-        contentEditable={editable}
-        onInput={handleChange}
-        paddingRight="5vw"
-        bg={editable ? "gray.500" : "none"}
-        color={editable ? "white" : textColor}
-        style={{ caretColor: "white" }}
+    return (
+      <HStack
+        color={textColor}
+        key={_id}
+        cursor="pointer"
+        padding="2vw"
+        fontSize="xl"
+        width="100%"
+        bg={bg}
+        borderRadius={10}
       >
-        {name}
-      </Text>
-      <Spacer />
-      <Icon
-        as={editable ? FaCheck : FaPencilAlt}
-        onClick={(event: React.MouseEvent<SVGSVGElement, MouseEvent>) =>
-          handleToggleEdit(event, _id)
-        }
-        cursor="pointer"
-      />
-      <Icon
-        as={FaTrashAlt}
-        cursor="pointer"
-        onClick={() => setIsDeleteOpen(!isDeleteOpen)}
-      />
-    </HStack>
-  );
+        <DeleteFolderModal
+          isOpen={isDeleteOpen}
+          onClose={onDeleteClose}
+          id={_id}
+          setIsDeleted={setIsDeleted}
+        />
+        <Link to={`/prompts/${_id}/${inputName}`}>
+          <Icon as={FaRegFolderOpen} />
+        </Link>
+        <Link to={`/prompts/${_id}/${inputName}`}>
+          <Text
+            fontSize="sm"
+            outline="none"
+            border="none"
+            borderBottom={editable ? "2px dashed" : "none"}
+            contentEditable={editable}
+            onInput={handleChange}
+            paddingRight="5vw"
+            bg={editable ? "gray.500" : "none"}
+            color={editable ? "white" : textColor}
+            style={{ caretColor: "white" }}
+          >
+            {name}
+          </Text>
+        </Link>
+        <Spacer />
+        <Icon
+          as={editable ? FaCheck : FaPencilAlt}
+          onClick={(event: React.MouseEvent<SVGSVGElement, MouseEvent>) =>
+            handleToggleEdit(event, _id)
+          }
+          cursor="pointer"
+        />
+        <Icon
+          as={FaTrashAlt}
+          cursor="pointer"
+          onClick={() => setIsDeleteOpen(!isDeleteOpen)}
+        />
+      </HStack>
+    );
   else return null;
 };
 

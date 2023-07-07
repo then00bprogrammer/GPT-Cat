@@ -114,6 +114,8 @@ const File = ({ _id, name, content, view }: {
         >
           <Icon as={FaFileAlt} onClick={onToggle} cursor="pointer" />
           <Text
+            cursor='pointer'
+            onClick={onToggle}
             fontSize='sm'
             outline="none"
             border="none"
@@ -146,9 +148,8 @@ const File = ({ _id, name, content, view }: {
         </HStack>
         <Box width="full" as={Collapse} in={isOpen} animateOpacity>
           <HStack
-            width="95%"
+            width="100%"
             p="1vh 3vw"
-            marginRight="5%"
             color="white"
             mt="1"
             mb="1"
