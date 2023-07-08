@@ -1,4 +1,3 @@
-// import './content.css';
 console.log("This is from Content Script.");
 
 const linkElement = document.createElement('link');
@@ -6,6 +5,71 @@ linkElement.rel = 'stylesheet';
 linkElement.href = 'content.css';
 document.head.appendChild(linkElement);
 
+let writingStyle = '';
+
+fetch('http://localhost:5000/writingStyles')
+  .then(async (res) => {
+    let wstyles = await res.json();
+
+    const dropdownContainer = document.createElement("div");
+    dropdownContainer.classList.add("dropdown-container");
+    dropdownContainer.style.marginBottom = '1vh';
+
+    const dropdownMenu = document.createElement("select");
+    dropdownMenu.id = "dropdown-menu";
+    dropdownMenu.style.width = "40%";
+    dropdownMenu.style.backgroundColor = '#40414f';
+    dropdownMenu.style.marginBottom = '1vh';
+    dropdownMenu.classList.add('selct-css');
+
+    let option = document.createElement("option");
+    option.value = '';
+    option.textContent = 'Tone';
+    option.classList.add('option-input');
+    dropdownMenu.appendChild(option);
+
+    for (const wstyle of wstyles) {
+      option = document.createElement("option");
+      option.value = wstyle.content;
+      option.textContent = wstyle.name;
+      option.style.backgroundColor = '#3e3f4b';
+      option.classList.add('option-input');
+      dropdownMenu.appendChild(option);
+    }
+
+    const promptTextarea = document.getElementById("prompt-textarea");
+
+    const parentElement = promptTextarea.parentNode;
+    parentElement.insertBefore(dropdownContainer, promptTextarea);
+    dropdownContainer.appendChild(dropdownMenu);
+
+    dropdownMenu.addEventListener("change", (event) => {
+      const writingStyle = event.target.value!=''?'Tone: ' + event.target.value:'';
+
+      const inp = document.getElementById("prompt-textarea");
+      const alreadyValue = inp.value;
+      let arr=[]
+      if(alreadyValue!=''){
+        arr = alreadyValue.split("\n");
+      }
+
+      if (arr.length > 1) {
+        inp.value = writingStyle + '\n' + arr[1];
+      } 
+      else if (arr.length === 1) {
+        if (arr[0][0] == 'T') {
+          inp.value = writingStyle;
+        }
+        else if (arr[0][0] == 'P') {
+          inp.value = writingStyle +  '\n' + arr[0];
+        }
+      }
+      else inp.value = writingStyle;
+    });
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 
 let email = '';
 let globalData = []
@@ -46,7 +110,10 @@ button.addEventListener('click', () => {
     alert("Please refresh the browser");
     return;
   }
-  if (email === null || email === undefined) alert('Please login in GPT Cat');
+  if (email === null || email === undefined) {
+    alert('Please login in GPT Cat');
+    return;
+  }
   sendBookmarkData(email, name);
   alert('Bookmarked!');
 
@@ -57,7 +124,24 @@ function copyToClipboard(box) {
   const ind = box.parentNode.querySelector("input[name='index']").value;
   const text = globalData[ind].content;
   const inp = document.getElementById("prompt-textarea");
-  inp.value = text;
+  const alreadyValue = inp.value;
+  let arr=[]
+  if(alreadyValue!=''){
+    arr = alreadyValue.split("\n");
+  }
+  console.log("arr: ",arr,arr.length);
+  if (arr.length === 2) {
+    inp.value = arr[0] +  '\n' + 'Prompt: ' + text;
+  }
+  else if (arr.length === 1) {
+    if (arr[0][0] == 'T') {
+      inp.value = arr[0] +  '\n' + 'Prompt: ' + text;
+    }
+    else if (arr[0][0] == 'P') {
+      inp.value = 'Prompt: ' + text;
+    }
+  }
+  else inp.value = 'Prompt: ' + text;
   const inputEvent = new Event('input', { bubbles: true });
   inp.dispatchEvent(inputEvent);
 }
@@ -181,25 +265,25 @@ const modifyGPT = () => {
         button.addEventListener("click", () => {
           if (button.innerText === "Switch to Private") {
             fetch(`https://gpt-cat.onrender.com/private/${email}`)
-            .then(response => response.json())
-            .then(updatedData => {
-              console.log(updatedData);
-              modifyHTML(element, updatedData);
-              button.innerText = "Switch to Public";
-            })
-            .catch(error => {
-              console.error(error);
-            });
+              .then(response => response.json())
+              .then(updatedData => {
+                console.log(updatedData);
+                modifyHTML(element, updatedData);
+                button.innerText = "Switch to Public";
+              })
+              .catch(error => {
+                console.error(error);
+              });
           } else {
             fetch("https://gpt-cat.onrender.com/")
-            .then(response => response.json())
-            .then(updatedData => {
-              modifyHTML(element, updatedData);
-              button.innerText = "Switch to Private";
-            })
-            .catch(error => {
-              console.error(error);
-            });
+              .then(response => response.json())
+              .then(updatedData => {
+                modifyHTML(element, updatedData);
+                button.innerText = "Switch to Private";
+              })
+              .catch(error => {
+                console.error(error);
+              });
           }
         });
 
@@ -341,8 +425,8 @@ if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-re
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
-document.addEventListener('click',()=>{
-  if(url===window.location.href) return;
+document.addEventListener('click', () => {
+  if (url === window.location.href) return;
   url = window.location.href;
   let observer = new MutationObserver(switchButtonObserver);
   observer.observe(document.body, { childList: true, subtree: true });

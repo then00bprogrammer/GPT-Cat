@@ -15,6 +15,25 @@
   object-fit: contain;
 }
 
-.prompt-box:hover {
+#prompt-box:hover {
   background-color: black;
+}
+
+.selct-css:focus{
+  border-color: #717182;
+}
+
+.option-input{
+  background-color: #202123;
+  color: white;
+  padding: '20px 10px';
+}
+.option-input:focus{
+  border-color: #717182;
+  background-color: #3e3f4b;
+}
+
+.prompt-box:hover{
+  border-color: #717182;
+  background-color: #3e3f4b;
 }

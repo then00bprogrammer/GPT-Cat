@@ -8,6 +8,7 @@ const cors = require('cors');
 const Folder = require('./models/folderSchema');
 const User = require('./models/userSchema');
 const File = require('./models/fileSchema');
+const WritingStyle = require('./models/writingStyle') 
 
 const corsOptions = {
   origin: true,
@@ -22,6 +23,26 @@ const MONGODB_URI = 'mongodb+srv://nikhil03:hellskitchen03@cluster0.v5kssag.mong
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+
+app.post('/addWritingStyle',async(req,res)=>{
+  try{
+    const { name, content} = req.body;
+    const prompt = new WritingStyle({name: name, content:content});
+    await prompt.save();
+    res.sendStatus(202);
+  } catch(error){
+    console.log('An error occured while adding writing style',error);
+  }
+});
+
+app.get('/writingStyles',async(req,res)=>{
+  try{
+    const writingStyles = await WritingStyle.find({});
+    res.status(200).json(writingStyles);
+  } catch(error){
+    console.log(error);
+  }
+})
 
 app.get('/private/:email', async (req, res) => {
   try {
