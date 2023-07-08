@@ -1,13 +1,12 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    console.log("I'm from background.js");
     if (request.action === 'setValue') {
-        chrome.storage.local.set({ emailValue: request.value }, function() {
+        chrome.storage.local.set({ email: request.email }, function() {
             sendResponse({ success: true });
         });
     }
     if (request.action === 'getValue') {
-        chrome.storage.local.get(["emailValue"], function(result) {
-            sendResponse({ email : result.emailValue });
+        chrome.storage.local.get(["email"], function(result) {
+            sendResponse({ email : result.email });
         });
     }
     return true; 

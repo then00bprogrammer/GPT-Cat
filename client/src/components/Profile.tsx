@@ -36,6 +36,12 @@ const Profile = () => {
   const [signOut] = useSignOut(auth);
   const handleSignOut = async () => {
     await signOut();
+    chrome.runtime.sendMessage(
+      { action: "setValue", email: null },
+      function (response) {
+        console.log("Received response from background.js:", response);
+      }
+    );
   };
 
   return (

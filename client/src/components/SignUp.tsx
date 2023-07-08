@@ -10,12 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/clientApp";
-import {  Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useEnterKeyPress from "../hooks/useEnterKeyPress";
 import CustomAlert from "./CustomAlert";
 
 const SignupForm = () => {
-  const [showAlert,setShowAlert]=useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [signupForm, setSignupForm] = useState({
     email: "",
@@ -54,9 +54,15 @@ const SignupForm = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          'email': signupForm.email,
+          email: signupForm.email,
         }),
       });
+      chrome.runtime.sendMessage(
+        { action: "setValue", email: signupForm.email },
+        function (response) {
+          console.log("Received response from background.js:", response);
+        }
+      );
       setSignupForm({
         email: "",
         password: "",
@@ -98,7 +104,12 @@ const SignupForm = () => {
       bgRepeat="no-repeat"
       bgSize="cover"
     >
-      <CustomAlert title='Error!' description={customErrorMessage} showAlert={showAlert} setShowAlert={setShowAlert}></CustomAlert>
+      <CustomAlert
+        title="Error!"
+        description={customErrorMessage}
+        showAlert={showAlert}
+        setShowAlert={setShowAlert}
+      ></CustomAlert>
       <Heading fontSize="4xl" color="white">
         {" "}
         REGISTER
@@ -118,7 +129,7 @@ const SignupForm = () => {
           borderColor="teal.500"
           focusBorderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
-          _focus={{ borderColor: "teal.500", bg:inputBG }}
+          _focus={{ borderColor: "teal.500", bg: inputBG }}
         />
         <FormLabel color="white">Password</FormLabel>
         <Input
@@ -134,7 +145,7 @@ const SignupForm = () => {
           borderColor="teal.500"
           focusBorderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
-          _focus={{ borderColor: "teal.500", bg:inputBG }}
+          _focus={{ borderColor: "teal.500", bg: inputBG }}
         />
         <FormLabel color="white">Confirm Password</FormLabel>
         <Input
@@ -149,7 +160,7 @@ const SignupForm = () => {
           borderColor="teal.500"
           focusBorderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
-          _focus={{ borderColor: "teal.500", bg:inputBG }}
+          _focus={{ borderColor: "teal.500", bg: inputBG }}
         />
         <Flex
           width="full"

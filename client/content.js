@@ -18,15 +18,20 @@ linkElement.rel = 'stylesheet';
 linkElement.href = 'content.css';
 document.head.appendChild(linkElement);
 
-//Initializing email
-
-let email = '';
 let globalData = []
+let email = '';
+const updateEmail = ()=>{
+  chrome.runtime.sendMessage({ action: 'getValue' }, function (response) {
+    email = response.email;
+  });
+}
 
-chrome.runtime.sendMessage({ action: 'getValue' }, function (response) {
-  email = response.email;
-});
-
+const checkIsLoggedIn = ()=>{
+  if (email === null || email === undefined || email=='') {
+    alert('Please login in GPT Cat');
+    return;
+  }
+}
 //Adding writing style
 
 let writingStyle = '';
@@ -115,19 +120,20 @@ const button = createBookmarkButton();
 document.body.appendChild(button);
 
 button.addEventListener('click', () => {
+  updateEmail();
+  checkIsLoggedIn();
+
+  if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
+    alert("Please refresh the browser");
+    return;
+  }
+
   const name = prompt('Please name the conversation:');
   if (name === null || name === '') {
     alert('Name cannot be empty.');
     return;
   }
-  if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
-    alert("Please refresh the browser");
-    return;
-  }
-  if (email === null || email === undefined) {
-    alert('Please login in GPT Cat');
-    return;
-  }
+
   handleBookmark(email, name);
   alert('Bookmarked!');
 });
@@ -151,6 +157,8 @@ const handleBookmark = async (email, name) => {
 //Getting trending prompts
 
 const getPrompts = () => {
+  updateEmail();
+
   fetch("http://localhost:5000/")
     .then(response => response.json())
     .then(data => {
@@ -174,11 +182,14 @@ const getPrompts = () => {
 
         button.addEventListener("click", () => {
           if (button.innerText === "Switch to Private") {
+            updateEmail();
+            checkIsLoggedIn();
             fetch(`http://localhost:5000/private/${email}`)
               .then(response => response.json())
               .then(updatedData => {
                 modifyHTML(element, updatedData);
                 button.innerText = "Switch to Public";
+                heading.innerText='GPT Cat : Private prompts'
               })
               .catch(error => {
                 console.error(error);
@@ -189,6 +200,7 @@ const getPrompts = () => {
               .then(updatedData => {
                 modifyHTML(element, updatedData);
                 button.innerText = "Switch to Private";
+                heading.innerText='GPT Cat : Trending prompts'
               })
               .catch(error => {
                 console.error(error);
@@ -210,6 +222,7 @@ const getPrompts = () => {
 //Modifying website to display trending prompts
 
 const modifyHTML = (element, data) => {
+  updateEmail();
   globalData = data;
   element.innerHTML = ""
   const boxSpacing = "10px";
@@ -332,6 +345,8 @@ const handleCopy = (box) => {
 }
 
 const handleLike = async (button) => {
+  updateEmail();
+  checkIsLoggedIn();
   const id = button.parentNode.querySelector("input[name='id']").value;
   const isLiked = button.parentNode.querySelector("input[name='isLiked']").value;
   const likeCountElement = button.parentNode.querySelector("p");
@@ -364,6 +379,8 @@ const handleLike = async (button) => {
 }
 
 const handleStar = async (button) => {
+  updateEmail();
+  checkIsLoggedIn();
   const id = button.parentNode.querySelector("input[name='id']").value;
   const isStarred = button.parentNode.querySelector("input[name='isStarred']").value;
   if (email === null || email === undefined) alert('Please login in GPT Cat');

@@ -36,7 +36,7 @@ const LogIn = () => {
     try {
       await signInWithEmailAndPassword(signupForm.email, signupForm.password);
       chrome.runtime.sendMessage(
-        { action: "setValue", value: signupForm.email },
+        { action: "setValue", email: signupForm.email },
         function (response) {
           console.log("Received response from background.js:", response);
         }
