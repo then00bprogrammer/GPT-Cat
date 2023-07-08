@@ -44,11 +44,23 @@ app.get('/writingStyles',async(req,res)=>{
   }
 })
 
-app.get('/private/:email', async (req, res) => {
+app.get('/getUserPrompts/:email', async (req, res) => {
   try {
     const { email } = req.params;
     const user = await User.findOne({ email: email });
     const files = await File.find({ user: user._id });
+    res.json(files);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/getTopPromptsByCategory/:category', async (req, res) => {
+  try {
+    const { category } = req.params;
+    const files = await File.find({ view: 'public', category:category })
+    .sort({ likes: -1 });
     res.json(files);
   } catch (error) {
     console.log(error);
@@ -92,17 +104,19 @@ app.get('/:email/:id?', async (req, res) => {
 
 });
 
+
 app.get('/', async (req, res) => {
   try {
     const files = await File.find({ view: 'public' })
     .sort({ likes: -1 });
-    // .limit(10);
+    files.forEach((file)=>console.log(file.user.email))
     res.json(files);
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 app.post('/createUser', async (req, res) => {

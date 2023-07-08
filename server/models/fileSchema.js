@@ -18,31 +18,37 @@ const fileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+
   },
-  likes:{
+  likes: {
     type: Number,
     default: 0
   },
-  likedBy:{
+  likedBy: {
     type: [String],
-    default:[]
+    default: []
   },
-  starredBy:{
+  starredBy: {
     type: [String],
-    default:[]
+    default: []
   },
-  view:{
+  view: {
     type: String,
     default: "private"
   },
-  referenceFile:{
+  referenceFile: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'File'
   },
-  category:{
+  category: {
     type: String,
-    default: "General"
+    default: "general"
   }
+});
+
+fileSchema.pre('find', function(next) {
+  this.populate('user', 'email');
+  next();
 });
 
 const File = mongoose.model('File', fileSchema);

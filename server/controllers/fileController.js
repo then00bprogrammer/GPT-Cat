@@ -1,6 +1,7 @@
 const User = require('../models/userSchema');
 const Folder = require('../models/folderSchema');
 const File = require('../models/fileSchema');
+const Category = require('../models/categorySchema');
 
 const createFile = async (req, res) => {
   try {
@@ -8,6 +9,14 @@ const createFile = async (req, res) => {
     let CategoryName;
     if(category=='')CategoryName='Default';
     else CategoryName=category;
+
+    CategoryName =  CategoryName.toLowerCase();
+
+    const doesCategoryExist = await Category.find({name:CategoryName});
+    if(doesCategoryExist.length===0){
+      const newCategory = new Category({name:CategoryName});
+      await newCategory.save();
+    }
     
     const user = await User.findOne({ email: email });
     const folders = path.split('/').filter(folder => folder.trim() !== '');

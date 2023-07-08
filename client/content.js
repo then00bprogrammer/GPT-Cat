@@ -11,6 +11,7 @@ let thumbsUpRegular = chrome.runtime.getURL("images/thumbs-up-regular.svg");
 let thumbsUpSolid = chrome.runtime.getURL("images/thumbs-up-solid.svg");
 let clipboardRegular = chrome.runtime.getURL("images/clipboard-regular.svg");
 let eyeRegular = chrome.runtime.getURL("images/eye-regular.svg");
+let userRegular = chrome.runtime.getURL("images/user-regular.svg")
 
 //Adding css
 
@@ -164,6 +165,7 @@ const getPrompts = () => {
   fetch("http://localhost:5000/")
     .then(response => response.json())
     .then(data => {
+      console.log(data);
       globalData = data;
       const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
 
@@ -190,7 +192,7 @@ const getPrompts = () => {
           if (button.innerText === "Switch to Private") {
             updateEmail();
             checkIsLoggedIn();
-            fetch(`http://localhost:5000/private/${email}`)
+            fetch(`http://localhost:5000/getUserPrompts/${email}`)
               .then(response => response.json())
               .then(updatedData => {
                 modifyHTML(element, updatedData);
@@ -230,7 +232,7 @@ const getPrompts = () => {
 const modifyHTML = (element, data) => {
   updateEmail();
   globalData = data;
-  element.innerHTML = ""
+  element.innerHTML = "";
   const boxSpacing = "10px";
   element.innerHTML = `
   <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin: 0; width: 100%;">
@@ -257,6 +259,7 @@ const modifyHTML = (element, data) => {
                   <img class="gpt-like-button" src=${file.likedBy.includes(email) ? thumbsUpSolid : thumbsUpRegular} style="width:100%;height:100%" alt="Like button">
                 </button>
                 <p style="margin-right: auto">${file.likes ? file.likes : 0} </p>
+        
                 <button class="copy-button" style="color:white;cursor: pointer; width: 7% ;margin-right:0.3vw" copy-button>
                   <img class="gpt-star-button" src=${clipboardRegular} style="width:100%;height:100%" alt="Copy prompt">
                 </button>
@@ -271,18 +274,24 @@ const modifyHTML = (element, data) => {
       .join("")}
           </div>
           `;
+
   const popoverElements = document.getElementsByClassName("popover");
   Array.from(popoverElements).forEach((popoverElement) => {
     const popoverContent = popoverElement.querySelector(".popover-content");
-
+    let timeoutId;
+  
     popoverElement.addEventListener("mouseenter", () => {
-      popoverContent.style.display = "block";
+      timeoutId = setTimeout(() => {
+        popoverContent.style.display = "block";
+      }, 500);
     });
-
+  
     popoverElement.addEventListener("mouseleave", () => {
+      clearTimeout(timeoutId);
       popoverContent.style.display = "none";
     });
   });
+  
 
   attachLikeEventListeners();
   attachStarEventListeners();
