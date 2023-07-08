@@ -48,7 +48,7 @@ const SignupForm = () => {
         signupForm.email,
         signupForm.password
       );
-      await fetch("https://gpt-cat.onrender.com/createUser", {
+      await fetch("http://localhost:5000/createUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

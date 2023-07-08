@@ -61,7 +61,7 @@ const File = ({ _id, name, content, view }: {
     setEditable(!editable);
     if (toSubmit) {
       try {
-        await fetch(`https://gpt-cat.onrender.com/files/${_id}`, {
+        await fetch(`http://localhost:5000/files/${_id}`, {
           method: "PATCH",
           body: JSON.stringify({ name: inputName, email: currentUser?.email }),
           headers: {
@@ -77,7 +77,7 @@ const File = ({ _id, name, content, view }: {
   const handleChangeVisibility = async ()=>{
     try{
       setVisible(!visible);
-      await fetch(`https://gpt-cat.onrender.com/files/changeVisibility/${_id}`,{
+      await fetch(`http://localhost:5000/files/changeVisibility/${_id}`,{
         method:'PATCH'
       });
     }

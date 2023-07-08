@@ -36,7 +36,7 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
     setEditable(!editable);
     if (toSubmit) {
       try {
-        await fetch(`https://gpt-cat.onrender.com/folders/${_id}`, {
+        await fetch(`http://localhost:5000/folders/${_id}`, {
           method: "PATCH",
           body: JSON.stringify({ name: inputName, email: currentUser?.email }),
           headers: {

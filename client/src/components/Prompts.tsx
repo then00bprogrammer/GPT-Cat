@@ -60,7 +60,7 @@ const Prompts = () => {
     setIsLoading(true);
     try {
       const resp = await fetch(
-        `https://gpt-cat.onrender.com/${currentUser?.email}/${
+        `http://localhost:5000/${currentUser?.email}/${
           id != undefined ? id : ""
         }`
       );

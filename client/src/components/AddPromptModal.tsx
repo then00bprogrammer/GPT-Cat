@@ -32,6 +32,7 @@ const AddPromptModal = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const currentUser = useContext(AuthContext);
   const [promptName, setPromptName] = useState<string>("");
+  const [categoryName, setCategoryName] = useState<string>("");
   const [promptText, setPromptText] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -39,6 +40,7 @@ const AddPromptModal = ({
     setIsLoading(true);
     const newFile = await addPrompt(
       promptName,
+      categoryName,
       path,
       promptText,
       currentUser?.email
@@ -72,6 +74,15 @@ const AddPromptModal = ({
                   focusBorderColor="gray.100"
                   value={promptName}
                   onChange={(e) => setPromptName(e.target.value)}
+                />
+              </InputGroup>
+              <InputGroup margin={2}>
+                <InputLeftAddon children="Category: " />
+                <Input
+                  type="text"
+                  focusBorderColor="gray.100"
+                  value={categoryName}
+                  onChange={(e) => setCategoryName(e.target.value)}
                 />
               </InputGroup>
               <Textarea

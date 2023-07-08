@@ -1,5 +1,11 @@
 import { useState, useEffect, useContext } from "react";
-import { VStack, useColorModeValue, Flex, Heading } from "@chakra-ui/react";
+import {
+  VStack,
+  useColorModeValue,
+  Flex,
+  Heading,
+  Select,
+} from "@chakra-ui/react";
 import { AuthContext } from "../Providers/AuthProvider";
 import Ball from "../assets/ball.json";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -25,7 +31,7 @@ const TopPrompts = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const resp = await fetch("https://gpt-cat.onrender.com/");
+      const resp = await fetch("http://localhost:5000/");
       const prompts = await resp.json();
       setPrompts(prompts);
     } catch (error) {
@@ -66,9 +72,17 @@ const TopPrompts = () => {
       ) : (
         <>
           <VStack width="full" height="100%" overflowY="auto">
-            <Heading color={useColorModeValue("gray.700", "white")} marginBottom='1vh'>
+            <Heading
+              color={useColorModeValue("gray.700", "white")}
+              marginBottom="1vh"
+            >
               Top Prompts
             </Heading>
+            <Select placeholder="Select Categories" bg='gray.500' borderColor='gray.500' focusBorderColor='gray.600' color='white'>
+              <option value="option1"  style={{ color: 'black' }}>Option 1</option>
+              <option value="option2"  style={{ color: 'black' }}>Option 2</option>
+              <option value="option3"  style={{ color: 'black' }}>Option 3</option>
+            </Select>
             {prompts.map((prompt) => (
               <PublicPrompt
                 key={prompt._id}
@@ -84,7 +98,7 @@ const TopPrompts = () => {
                 isStarred={
                   currentUser?.email
                     ? prompt.starredBy.includes(currentUser?.email)
-                    :false
+                    : false
                 }
               />
             ))}

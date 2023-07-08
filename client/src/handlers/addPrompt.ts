@@ -1,4 +1,4 @@
-export const addPrompt = async (name: string, pathArray: string[] | undefined, content: string, email: string | null |undefined) => {
+export const addPrompt = async (name: string,categoryName:string, pathArray: string[] | undefined, content: string, email: string | null |undefined) => {
     try {
       let path: string = '';
       if (pathArray !== undefined) {
@@ -9,12 +9,12 @@ export const addPrompt = async (name: string, pathArray: string[] | undefined, c
         }
       }
   
-      const resp = await fetch('https://gpt-cat.onrender.com/files', {
+      const resp = await fetch('http://localhost:5000/files', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 'name': name, 'path': path, 'content': content, 'email':email })
+        body: JSON.stringify({ 'name': name,category:categoryName, 'path': path, 'content': content, 'email':email })
       });
       const newFile = await resp.json();
       return newFile;

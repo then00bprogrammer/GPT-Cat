@@ -4,7 +4,11 @@ const File = require('../models/fileSchema');
 
 const createFile = async (req, res) => {
   try {
-    const { name, path, content, email } = req.body;
+    const { name, path, content, category, email } = req.body;
+    let CategoryName;
+    if(category=='')CategoryName='Default';
+    else CategoryName=category;
+    
     const user = await User.findOne({ email: email });
     const folders = path.split('/').filter(folder => folder.trim() !== '');
     folders.unshift("home");
@@ -26,7 +30,7 @@ const createFile = async (req, res) => {
       parentFolder = folder;
     }
 
-    const newFile = new File({ name, content, view: 'private', parent: parentFolder._id, user: user._id });
+    const newFile = new File({ name, content, category:CategoryName, view: 'private', parent: parentFolder._id, user: user._id });
     await newFile.save();
     const respFile = {
       name: newFile.name,

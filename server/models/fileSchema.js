@@ -38,6 +38,10 @@ const fileSchema = new mongoose.Schema({
   referenceFile:{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'File'
+  },
+  category:{
+    type: String,
+    default: "General"
   }
 });
 

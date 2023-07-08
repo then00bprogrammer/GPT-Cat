@@ -33,7 +33,7 @@ const DeleteBookmarkModal = ({
     try {
       setIsDeleted(true);
       onClose();
-      await fetch(`https://gpt-cat.onrender.com/bookmark`, {
+      await fetch(`http://localhost:5000/bookmark`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

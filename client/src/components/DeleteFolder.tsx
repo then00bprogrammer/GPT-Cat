@@ -33,7 +33,7 @@ const DeleteFolderModal = ({
     try {
       setIsDeleted(true);
       onClose();
-      await fetch(`https://gpt-cat.onrender.com/folders/${id}`, {
+      await fetch(`http://localhost:5000/folders/${id}`, {
         method: "DELETE",
       });
     } catch (error) {
