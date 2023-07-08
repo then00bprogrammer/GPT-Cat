@@ -1,4 +1,5 @@
 console.log("This is from Content Script.");
+let url = window.location.href;
 
 //Necessary imports
 
@@ -20,14 +21,14 @@ document.head.appendChild(linkElement);
 
 let globalData = []
 let email = '';
-const updateEmail = ()=>{
+const updateEmail = () => {
   chrome.runtime.sendMessage({ action: 'getValue' }, function (response) {
     email = response.email;
   });
 }
 
-const checkIsLoggedIn = ()=>{
-  if (email === null || email === undefined || email=='') {
+const checkIsLoggedIn = () => {
+  if (email === null || email === undefined || email == '') {
     alert('Please login in GPT Cat');
     return;
   }
@@ -37,11 +38,12 @@ const checkIsLoggedIn = ()=>{
 let writingStyle = '';
 
 const addWritingStyle = async () => {
+  const dropdownContainer = document.createElement("div");
+  dropdownContainer.classList.add('writingStyles');
   fetch('http://localhost:5000/writingStyles')
     .then(async (res) => {
       let wstyles = await res.json();
 
-      const dropdownContainer = document.createElement("div.writingStyles");
       dropdownContainer.classList.add("dropdown-container");
       dropdownContainer.style.marginBottom = '1vh';
 
@@ -172,6 +174,9 @@ const getPrompts = () => {
         const heading = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
         heading.innerText = "GPT Cat : Trending prompts";
 
+        if(document.getElementsByClassName('switch-cat-gpt').length>0){
+          return;
+        }
         const button = document.createElement("button");
         button.innerText = "Switch to Private";
         button.style.marginBottom = "10px";
@@ -179,6 +184,7 @@ const getPrompts = () => {
         button.style.color = "white";
         button.style.padding = "10px 20px";
         button.style.width = `calc(100% - 20px)`
+        button.classList.add('switch-cat-gpt');
 
         button.addEventListener("click", () => {
           if (button.innerText === "Switch to Private") {
@@ -189,7 +195,7 @@ const getPrompts = () => {
               .then(updatedData => {
                 modifyHTML(element, updatedData);
                 button.innerText = "Switch to Public";
-                heading.innerText='GPT Cat : Private prompts'
+                heading.innerText = 'GPT Cat : Private prompts'
               })
               .catch(error => {
                 console.error(error);
@@ -200,7 +206,7 @@ const getPrompts = () => {
               .then(updatedData => {
                 modifyHTML(element, updatedData);
                 button.innerText = "Switch to Private";
-                heading.innerText='GPT Cat : Trending prompts'
+                heading.innerText = 'GPT Cat : Trending prompts'
               })
               .catch(error => {
                 console.error(error);
@@ -426,28 +432,6 @@ const homePageObserverCallback = function (mutationsList, observer) {
   }
 };
 
-const addButtonListener = () => {
-  const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.dark.flex-shrink-0.overflow-x-hidden.bg-gray-900 > div > div > div > nav > div.mb-1.flex.flex-row.gap-2 > a");
-
-  element.addEventListener('click', () => {
-    let observer = new MutationObserver(homePageObserverCallback);
-    observer.observe(document.body, { childList: true, subtree: true });
-  })
-}
-
-const switchButtonObserverCallback = function (mutationsList, buttonObserver) {
-  for (const mutation of mutationsList) {
-    if (mutation.type === 'childList') {
-      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.dark.flex-shrink-0.overflow-x-hidden.bg-gray-900 > div > div > div > nav > div.mb-1.flex.flex-row.gap-2 > a");
-      if (element) {
-        buttonObserver.disconnect();
-        addButtonListener();
-        break;
-      }
-    }
-  }
-};
-
 
 if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
 
@@ -455,11 +439,14 @@ if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-re
   homePageObserver.observe(document.body, { childList: true, subtree: true });
 }
 
-let switchButtonObserver = new MutationObserver(switchButtonObserverCallback);
-switchButtonObserver.observe(document.body, { childList: true, subtree: true });
-
-
 document.addEventListener('click', () => {
-  let switchButtonObserver = new MutationObserver(switchButtonObserverCallback);
-  switchButtonObserver.observe(document.body, { childList: true, subtree: true });
+  setTimeout(() => {
+    const doesWritingStylesExist = document.getElementsByClassName('writingStyles');
+    if (doesWritingStylesExist.length === 0) addWritingStyle();
+
+    if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
+      let homePageObserver = new MutationObserver(homePageObserverCallback);
+      homePageObserver.observe(document.body, { childList: true, subtree: true });
+    }
+  }, 1000)
 })
