@@ -29,17 +29,26 @@ type Props = {
   isStarred: boolean;
 };
 
-const PublicPrompt = ({ _id, name, content,likes,isLiked,isStarred }: Props) => {
-  const [hasLiked,setHasLiked] = useState<boolean>(isLiked);
-  const [hasStarred,setHasStarred] = useState<boolean>(isStarred);
-  const [numberOfLikes,setHasNumberOfLikes] = useState<number>(parseInt(likes));
+const PublicPrompt = ({
+  _id,
+  name,
+  content,
+  likes,
+  isLiked,
+  isStarred,
+}: Props) => {
+  const [hasLiked, setHasLiked] = useState<boolean>(isLiked);
+  const [hasStarred, setHasStarred] = useState<boolean>(isStarred);
+  const [numberOfLikes, setHasNumberOfLikes] = useState<number>(
+    parseInt(likes)
+  );
 
   const currentUser = useContext(AuthContext);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const bg = useColorModeValue("gray.200", "gray.600");
   const { isOpen, onToggle } = useDisclosure();
   const [isCopied, setIsCopied] = useState<boolean>(false);
-  const textColor = useColorModeValue('black','gray.50');
+  const textColor = useColorModeValue("black", "gray.50");
 
   const handleCopy = async () => {
     const text: string = content;
@@ -48,60 +57,58 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked,isStarred }: Props) => 
     } else {
       document.execCommand("copy", true, text);
     }
-    
+
     setIsCopied(true);
     setTimeout(() => {
       setIsCopied(false);
     }, 2000);
   };
 
-  const handleLike = async ()=>{
+  const handleLike = async () => {
     if (!hasLiked) {
-        setHasLiked(true);
-        setHasNumberOfLikes(numberOfLikes+1);
-        await fetch('http://localhost:5000/like', {
-          method: 'POST',
-          body: JSON.stringify({ id: _id, email: currentUser?.email }),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-      }
-      else {
-        setHasLiked(false);
-        setHasNumberOfLikes(numberOfLikes-1);
-        await fetch('http://localhost:5000/unlike', {
-          method: 'POST',
-          body: JSON.stringify({ id: _id, email: currentUser?.email }),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-      }
-  }
+      setHasLiked(true);
+      setHasNumberOfLikes(numberOfLikes + 1);
+      await fetch("http://localhost:5000/like", {
+        method: "POST",
+        body: JSON.stringify({ id: _id, email: currentUser?.email }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } else {
+      setHasLiked(false);
+      setHasNumberOfLikes(numberOfLikes - 1);
+      await fetch("http://localhost:5000/unlike", {
+        method: "POST",
+        body: JSON.stringify({ id: _id, email: currentUser?.email }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+  };
 
-  const handleStar = async ()=>{
+  const handleStar = async () => {
     if (!hasStarred) {
       setHasStarred(true);
-      await fetch('http://localhost:5000/star', {
-        method: 'POST',
+      await fetch("http://localhost:5000/star", {
+        method: "POST",
         body: JSON.stringify({ id: _id, email: currentUser?.email }),
         headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-    }
-    else {
+          "Content-Type": "application/json",
+        },
+      });
+    } else {
       setHasStarred(false);
-      await fetch('http://localhost:5000/unstar', {
-        method: 'POST',
+      await fetch("http://localhost:5000/unstar", {
+        method: "POST",
         body: JSON.stringify({ id: _id, email: currentUser?.email }),
         headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+          "Content-Type": "application/json",
+        },
+      });
     }
-  }
+  };
 
   if (!isDeleted) {
     return (
@@ -110,14 +117,16 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked,isStarred }: Props) => 
           color={textColor}
           padding="2vw"
           fontSize="xl"
-          width="100%"
+          width="90%"
+          marginLeft="5vw"
+          marginRight="5vw"
           bg={bg}
           borderRadius={10}
           overflowX="hidden"
         >
           <Icon as={FaFileAlt} onClick={onToggle} cursor="pointer" />
           <Text
-            fontSize='sm'
+            fontSize="sm"
             outline="none"
             border="none"
             borderBottom="none"
@@ -131,11 +140,16 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked,isStarred }: Props) => 
           <Spacer />
           <Text>{numberOfLikes}</Text>
           <Icon
-            as={hasLiked?FaThumbsUp:FaRegThumbsUp}
+            as={hasLiked ? FaThumbsUp : FaRegThumbsUp}
             cursor="pointer"
             onClick={handleLike}
           />
-          <Icon onClick={handleStar} cursor='pointer' marginLeft={1} as={hasStarred?FaStar:FaRegStar}/>
+          <Icon
+            onClick={handleStar}
+            cursor="pointer"
+            marginLeft={1}
+            as={hasStarred ? FaStar : FaRegStar}
+          />
         </HStack>
         <Box width="full" as={Collapse} in={isOpen} animateOpacity>
           <HStack
@@ -153,7 +167,7 @@ const PublicPrompt = ({ _id, name, content,likes,isLiked,isStarred }: Props) => 
             <Text>{content}</Text>
             <Spacer />
             <HStack>
-              {isCopied && <Text fontSize='sm' >Prompt copied!</Text>}
+              {isCopied && <Text fontSize="sm">Prompt copied!</Text>}
               <Icon as={FaCopy} cursor="pointer" onClick={handleCopy} />
             </HStack>
           </HStack>

@@ -96,7 +96,9 @@ const Prompts = () => {
 
   return (
     <VStack
-      padding="5vw"
+      // padding="5vw"
+      paddingTop="5vw"
+      paddingBottom="5vw"
       minHeight="80vh"
       width="100%"
       overflowY="hidden"
@@ -134,20 +136,24 @@ const Prompts = () => {
             setFolders={setFolders}
           />
           <HStack
+            width="90%"
+            marginLeft="5vw"
+            marginRight="5vw"
             marginBottom="1vh"
             color="teal.400"
-            width="full"
             alignItems="center"
             justifyContent="flex-start"
             fontSize="xl"
-            overflowY="hidden"
-            overflowX='hidden'
+            overflow="hidden"
           >
             <Link to="#">
               <Text fontWeight="bold">/</Text>
             </Link>
 
-            <Breadcrumb fontWeight="medium" fontSize="sm">
+            <Breadcrumb
+              fontWeight="medium"
+              fontSize="sm"
+            >
               {path &&
                 path.map((pathItem, index) => (
                   <BreadcrumbItem key={index}>
@@ -162,12 +168,22 @@ const Prompts = () => {
             </Breadcrumb>
             <Spacer />
             <Popover placement="left-end" isLazy>
-              <PopoverTrigger >
-                <Button bg="none" _hover={{ bg: "none" }} padding={0} margin={0}>
-                  <Icon color='teal.400' cursor="pointer" as={FaPlus}/>
+              <PopoverTrigger>
+                <Button
+                  bg="none"
+                  _hover={{ bg: "none" }}
+                  padding={0}
+                  margin={0}
+                >
+                  <Icon color="teal.400" cursor="pointer" as={FaPlus} />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent width="fit-content" border={0} fontSize="md" cursor='pointer'>
+              <PopoverContent
+                width="fit-content"
+                border={0}
+                fontSize="md"
+                cursor="pointer"
+              >
                 <PopoverArrow bg="gray.100" />
                 <PopoverHeader
                   padding="1vh 2vh"

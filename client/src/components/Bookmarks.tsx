@@ -5,7 +5,6 @@ import Bookmark from "./Bookmark";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Ball from "../assets/ball.json";
 
-
 type Bookmarks = {
   _id: string;
   name: string;
@@ -43,13 +42,17 @@ const Bookmarks = () => {
 
   return (
     <VStack
-      padding="5vw"
+      paddingTop="5vw"
+      paddingBottom="5vw"
       minHeight="80vh"
       width="100%"
       overflowY="hidden"
       bg={bodyBG}
     >
-      <Heading color={useColorModeValue("gray.700", "white")} marginBottom='1vh'>
+      <Heading
+        color={useColorModeValue("gray.700", "white")}
+        marginBottom="1vh"
+      >
         BOOKMARKS
       </Heading>
       {isLoading ? (

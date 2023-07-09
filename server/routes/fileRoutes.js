@@ -3,9 +3,9 @@ const fileController = require('../controllers/fileController');
 
 const router = express.Router();
 
-router.post('/', fileController.createFile);
-router.patch('/:id/', fileController.renameFile);
-router.patch('/changeVisibility/:id/', fileController.changeVisibility);
+router.patch('/changeVisibility', fileController.changeVisibility);
 router.delete('/:id/:email', fileController.deleteFile);
+router.patch('/:id/', fileController.renameFile);
+router.post('/', fileController.createFile);
 
 module.exports = router;

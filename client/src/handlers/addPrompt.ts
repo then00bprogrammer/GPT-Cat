@@ -1,4 +1,4 @@
-export const addPrompt = async (name: string,categoryName:string, pathArray: string[] | undefined, content: string, email: string | null |undefined) => {
+export const addPrompt = async (name: string, pathArray: string[] | undefined, content: string, email: string | null |undefined) => {
     try {
       let path: string = '';
       if (pathArray !== undefined) {
@@ -14,7 +14,7 @@ export const addPrompt = async (name: string,categoryName:string, pathArray: str
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 'name': name,category:categoryName, 'path': path, 'content': content, 'email':email })
+        body: JSON.stringify({ 'name': name, 'path': path, 'content': content, 'email':email })
       });
       const newFile = await resp.json();
       return newFile;

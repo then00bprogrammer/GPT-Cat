@@ -43,6 +43,14 @@ const fileSchema = new mongoose.Schema({
   category: {
     type: String,
     default: "general"
+  },
+  link:{
+    type: String,
+    default: "#"
+  },
+  publicAuthorName:{
+    type: String,
+    default: "Anonymous"
   }
 });
 

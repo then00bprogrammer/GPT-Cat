@@ -46,7 +46,8 @@ const TopPrompts = () => {
 
   return (
     <VStack
-      padding="5vw"
+      paddingTop="5vw"
+      paddingBottom="5vw"
       minHeight="80vh"
       width="100%"
       overflowY="hidden"
@@ -71,17 +72,31 @@ const TopPrompts = () => {
         </Flex>
       ) : (
         <>
-          <VStack width="full" height="100%" overflowY="auto">
+          <VStack width="100%" height="100%" overflowY="auto">
             <Heading
               color={useColorModeValue("gray.700", "white")}
               marginBottom="1vh"
             >
               Top Prompts
             </Heading>
-            <Select placeholder="Select Categories" bg='gray.500' borderColor='gray.500' focusBorderColor='gray.600' color='white'>
-              <option value="option1"  style={{ color: 'black' }}>Option 1</option>
-              <option value="option2"  style={{ color: 'black' }}>Option 2</option>
-              <option value="option3"  style={{ color: 'black' }}>Option 3</option>
+            <Select
+              width='90%'
+              marginLeft='5vw' marginRight='5vw'
+              placeholder="Select Categories"
+              bg="gray.500"
+              borderColor="gray.500"
+              focusBorderColor="gray.600"
+              color="white"
+            >
+              <option value="option1" style={{ color: "black" }}>
+                Option 1
+              </option>
+              <option value="option2" style={{ color: "black" }}>
+                Option 2
+              </option>
+              <option value="option3" style={{ color: "black" }}>
+                Option 3
+              </option>
             </Select>
             {prompts.map((prompt) => (
               <PublicPrompt

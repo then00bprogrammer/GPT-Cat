@@ -11,7 +11,7 @@ let thumbsUpRegular = chrome.runtime.getURL("images/thumbs-up-regular.svg");
 let thumbsUpSolid = chrome.runtime.getURL("images/thumbs-up-solid.svg");
 let clipboardRegular = chrome.runtime.getURL("images/clipboard-regular.svg");
 let eyeRegular = chrome.runtime.getURL("images/eye-regular.svg");
-let userRegular = chrome.runtime.getURL("images/user-regular.svg")
+let linkSolid = chrome.runtime.getURL("images/link.svg")
 
 //Adding css
 
@@ -34,6 +34,7 @@ const checkIsLoggedIn = () => {
     return;
   }
 }
+
 //Adding writing style
 
 let writingStyle = '';
@@ -77,7 +78,8 @@ const addWritingStyle = async () => {
       dropdownContainer.appendChild(dropdownMenu);
 
       dropdownMenu.addEventListener("change", (event) => {
-        const writingStyle = event.target.value != '' ? 'Tone: ' + event.target.value : '';
+        let writingStyle = event.target.value != '' ? 'Tone: ' + event.target.value : '';
+        writingStyle = writingStyle.toString();
 
         const inp = document.getElementById("prompt-textarea");
         const alreadyValue = inp.value;
@@ -97,7 +99,7 @@ const addWritingStyle = async () => {
             inp.value = writingStyle + '\n' + arr[0];
           }
         }
-        else inp.value = writingStyle;
+        else inp.value = writingStyle + '\n';
       });
     })
     .catch((error) => {
@@ -176,7 +178,7 @@ const getPrompts = () => {
         const heading = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
         heading.innerText = "GPT Cat : Trending prompts";
 
-        if(document.getElementsByClassName('switch-cat-gpt').length>0){
+        if (document.getElementsByClassName('switch-cat-gpt').length > 0) {
           return;
         }
         const button = document.createElement("button");
@@ -240,58 +242,64 @@ const modifyHTML = (element, data) => {
       .map(
         (file, index) => `
         <div key=${index} class="prompt-box" style="background-color: #3e3f4b; width: 31%; height: auto; color: white; margin-bottom: ${boxSpacing}; margin-right: ${boxSpacing}; padding: ${boxSpacing}; border-radius: 5px;">
-        <input type="hidden" name="index" value="${index}">
-        <div class="popover" style="position: relative;">
-        <h3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${file.name}</h3>
-        <div class="popover-content" style="display: none; position: absolute; top: 115%; left: 0%; width: 100%; background-color:#202123; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);overflow: visible; !important; z-index:999">
-              <p style=" color:#ffffff; white;font-weight: bold; !important;">${file.name}</p>
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; color: white; width:100%;
-            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-              <p style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;margin-bottom: 2vh">${file.content}</p>
-              <div style="height:10%;display:flex; width:100%;">
-                <input type="hidden" name="id" value="${file._id}">
-                <input type="hidden" name="index" value="${index}">
-                <input type="hidden" name="isLiked" value="${file.likedBy.includes(email)}">
-                <input type="hidden" name="isStarred" value="${file.starredBy.includes(email)}">
-                <button style="color:white;cursor: pointer; width: 10%; margin-right:0.3vw" data-like-button>
-                  <img class="gpt-like-button" src=${file.likedBy.includes(email) ? thumbsUpSolid : thumbsUpRegular} style="width:100%;height:100%" alt="Like button">
-                </button>
-                <p style="margin-right: auto">${file.likes ? file.likes : 0} </p>
-        
-                <button class="copy-button" style="color:white;cursor: pointer; width: 7% ;margin-right:0.3vw" copy-button>
-                  <img class="gpt-star-button" src=${clipboardRegular} style="width:100%;height:100%" alt="Copy prompt">
-                </button>
-                <button style="color:white;cursor: pointer; width: 10%" data-star-button>
-                  <img class="gpt-star-button" src=${file.starredBy.includes(email) ? starSolid : starRegular} style="width:100%;height:100%" alt="Add to Favourites">
-                </button>
-              </div>
+          <input type="hidden" name="index" value="${index}">
+          <div class="popover" style="position: relative;">
+            <h3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${file.name}</h3>
+            <div class="popover-content" style="display: none; position: absolute; top: 115%; left: 0%; width: 100%; background-color:#202123; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);overflow: visible; !important; z-index:999">
+                <p style=" color:#ffffff; white;font-weight: bold; !important;">Prompt Name: ${file.name}</p>
+                <p style=" color:#ffffff; white;font-weight: bold; !important;">Author: ${file.publicAuthorName}</p> <!-- Added line to display author name -->
             </div>
           </div>
-          `
+          <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; color: white; width:100%;
+          overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+            <p style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;margin-bottom: 2vh">${file.content}</p>
+            <div style="height:10%;display:flex; width:100%;">
+              <input type="hidden" name="id" value="${file._id}">
+              <input type="hidden" name="index" value="${index}">
+              <input type="hidden" name="isLiked" value="${file.likedBy.includes(email)}">
+              <input type="hidden" name="isStarred" value="${file.starredBy.includes(email)}">
+              <button style="color:white;cursor: pointer; width: 10%; margin-right:0.3vw" data-like-button>
+                <img class="gpt-like-button" src=${file.likedBy.includes(email) ? thumbsUpSolid : thumbsUpRegular} style="width:100%;height:100%" alt="Like button">
+              </button>
+              <p style="margin-right: auto">${file.likes ? file.likes : 0} </p>
+              <button title="Promotional link" style="color:white;cursor: pointer; width: 10% ;margin-right:0.3vw">
+                <a href=${file.link}>
+                  <img src=${linkSolid} style="width:100%;height:100%" alt="Copy prompt">
+                </a>
+              </button>
+              <button class="copy-button" style="color:white;cursor: pointer; width: 7% ;margin-right:0.3vw" copy-button>
+                <img class="gpt-star-button" src=${clipboardRegular} style="width:100%;height:100%" alt="Copy prompt">
+              </button>
+              <button style="color:white;cursor: pointer; width: 10%" data-star-button>
+                <img class="gpt-star-button" src=${file.starredBy.includes(email) ? starSolid : starRegular} style="width:100%;height:100%" alt="Add to Favourites">
+              </button>
+            </div>
+          </div>
+        </div>
+        `
       )
       .join("")}
           </div>
           `;
 
+
   const popoverElements = document.getElementsByClassName("popover");
   Array.from(popoverElements).forEach((popoverElement) => {
     const popoverContent = popoverElement.querySelector(".popover-content");
     let timeoutId;
-  
+
     popoverElement.addEventListener("mouseenter", () => {
       timeoutId = setTimeout(() => {
         popoverContent.style.display = "block";
       }, 500);
     });
-  
+
     popoverElement.addEventListener("mouseleave", () => {
       clearTimeout(timeoutId);
       popoverContent.style.display = "none";
     });
   });
-  
+
 
   attachLikeEventListeners();
   attachStarEventListeners();

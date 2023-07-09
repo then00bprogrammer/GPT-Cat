@@ -58,9 +58,11 @@ const Folder = ({ name, _id }: { name: string; _id: string }) => {
         color={textColor}
         key={_id}
         cursor="pointer"
+        marginLeft='5vw'
+        marginRight='5vw'
         padding="2vw"
         fontSize="xl"
-        width="100%"
+        width="90%"
         bg={bg}
         borderRadius={10}
       >

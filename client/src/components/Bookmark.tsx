@@ -19,13 +19,9 @@ type Bookmarks = {
 const Bookmark = ({ _id, name, link }: Bookmarks) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
-  const textColor = useColorModeValue('black','gray.50');
+  const textColor = useColorModeValue("black", "gray.50");
   const onDeleteClose = () => {
     setIsDeleteOpen(false);
-  };
-
-  const handleRedirect = () => {
-    chrome.tabs.create({ url: link });
   };
 
   if (!isDeleted) {
@@ -43,7 +39,9 @@ const Bookmark = ({ _id, name, link }: Bookmarks) => {
           cursor="pointer"
           padding="2vw"
           fontSize="xl"
-          width="100%"
+          width="90%"
+          marginLeft="5vw"
+          marginRight="5vw"
           bg={useColorModeValue("gray.200", "gray.600")}
           borderRadius={10}
           overflowX="hidden"
@@ -51,7 +49,7 @@ const Bookmark = ({ _id, name, link }: Bookmarks) => {
           <Text
             color={textColor}
             fontSize="sm"
-            onClick={handleRedirect}
+            onClick={() => chrome.tabs.create({ url: link })}
             _hover={{ textDecoration: "underline" }}
           >
             {name}
@@ -60,7 +58,7 @@ const Bookmark = ({ _id, name, link }: Bookmarks) => {
           <Icon
             as={FaExternalLinkAlt}
             cursor="pointer"
-            onClick={handleRedirect}
+            onClick={() => chrome.tabs.create({ url: link })}
           />
           <Icon
             as={FaTrashAlt}

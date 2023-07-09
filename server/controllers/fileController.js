@@ -5,19 +5,8 @@ const Category = require('../models/categorySchema');
 
 const createFile = async (req, res) => {
   try {
-    const { name, path, content, category, email } = req.body;
-    let CategoryName;
-    if(category=='')CategoryName='Default';
-    else CategoryName=category;
+    const { name, path, content, email } = req.body;
 
-    CategoryName =  CategoryName.toLowerCase();
-
-    const doesCategoryExist = await Category.find({name:CategoryName});
-    if(doesCategoryExist.length===0){
-      const newCategory = new Category({name:CategoryName});
-      await newCategory.save();
-    }
-    
     const user = await User.findOne({ email: email });
     const folders = path.split('/').filter(folder => folder.trim() !== '');
     folders.unshift("home");
@@ -39,7 +28,7 @@ const createFile = async (req, res) => {
       parentFolder = folder;
     }
 
-    const newFile = new File({ name, content, category:CategoryName, view: 'private', parent: parentFolder._id, user: user._id });
+    const newFile = new File({ name, content, view: 'private', parent: parentFolder._id, user: user._id });
     await newFile.save();
     const respFile = {
       name: newFile.name,
@@ -90,12 +79,12 @@ const renameFile = async (req, res) => {
 const deleteFile = async (req, res) => {
   try {
     const { id, email } = req.params;
-    const user = await User.findOne({email: email});
+    const user = await User.findOne({ email: email });
     const file = await File.findById(id);
-    
-    if(file.referenceFile){
+
+    if (file.referenceFile) {
       const referenceFile = await File.findById(file.referenceFile);
-      referenceFile.starredBy = referenceFile.starredBy.filter((starredEmail)=>starredEmail!=email);
+      referenceFile.starredBy = referenceFile.starredBy.filter((starredEmail) => starredEmail != email);
       await referenceFile.save();
     }
     const folder = await Folder.findById(file.parent);
@@ -121,10 +110,15 @@ const deleteFile = async (req, res) => {
 
 const changeVisibility = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id, category, link, authorName } = req.body;
     const file = await File.findById(id);
     if (file.view === 'public') file.view = 'private';
-    else file.view = 'public';
+    else{
+      file.view = 'public';
+      file.category=category;
+      file.link=link;
+      file.publicAuthorName=authorName;
+    }
     await file.save();
 
     if (file.parent) {
@@ -142,7 +136,7 @@ const changeVisibility = async (req, res) => {
   } catch (error) {
 
   }
-}
+};
 
 module.exports = {
   createFile,

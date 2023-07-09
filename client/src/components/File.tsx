@@ -21,6 +21,7 @@ import {
 } from "react-icons/fa";
 import DeleteFileModal from "./DeleteFile";
 import { AuthContext } from "../Providers/AuthProvider";
+import MakePromptPublic from "./MakePromptPublic";
 
 const File = ({ _id, name, content, view }: {
   _id: string;
@@ -31,6 +32,7 @@ const File = ({ _id, name, content, view }: {
   const currentUser = useContext(AuthContext);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
+  const [isMakePublicModalOpen, setisMakePublicModalOpen] = useState<boolean>(false);
   const bg = useColorModeValue("gray.200", "gray.600");
   const { isOpen, onToggle } = useDisclosure();
   const [editable, setEditable] = useState<boolean>(false);
@@ -76,10 +78,23 @@ const File = ({ _id, name, content, view }: {
 
   const handleChangeVisibility = async ()=>{
     try{
-      setVisible(!visible);
-      await fetch(`http://localhost:5000/files/changeVisibility/${_id}`,{
-        method:'PATCH'
-      });
+      if(!visible){
+        setVisible(true);
+        setisMakePublicModalOpen(true);
+      }
+      else{
+        setVisible(false);
+        await fetch('http://localhost:5000/files/changeVisibility',{
+          method:'PATCH',
+          headers:{
+            'Content-type':'application/json'
+          },
+          body:JSON.stringify({
+            view:'public',
+            id:_id
+          })
+        })
+      }
     }
     catch (error){
       console.log('An error occured while changing visibility');
@@ -94,6 +109,10 @@ const File = ({ _id, name, content, view }: {
     setIsDeleteOpen(false);
   };
 
+  const onMakePublicClose = ()=>{
+    setisMakePublicModalOpen(false);
+  }
+
   if (!isDeleted) {
     return (
       <VStack width="full">
@@ -103,10 +122,17 @@ const File = ({ _id, name, content, view }: {
           id={_id}
           setIsDeleted={setIsDeleted}
         />
+        <MakePromptPublic
+        isOpen={isMakePublicModalOpen}
+        onClose={onMakePublicClose}
+        id={_id}
+        />
         <HStack
+          marginLeft='5vw'
+          marginRight='5vw'
           padding="2vw"
           fontSize="xl"
-          width="100%"
+          width="90%"
           bg={bg}
           borderRadius={10}
           color={textColor}

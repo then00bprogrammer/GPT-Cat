@@ -13,41 +13,47 @@ import {
   ModalOverlay,
   Textarea,
 } from "@chakra-ui/react";
-import { addPrompt } from "../handlers/addPrompt";
 import { useState, useContext, useRef } from "react";
 import { AuthContext } from "../Providers/AuthProvider";
 import useEnterKeyPress from "../hooks/useEnterKeyPress";
 
-const AddPromptModal = ({
+const MakePromptPublic = ({
   isOpen,
   onClose,
-  path,
-  setFiles,
+  id,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  path: string[];
-  setFiles: any;
+  id: string;
 }) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const currentUser = useContext(AuthContext);
-  const [promptName, setPromptName] = useState<string>("");
   const [categoryName, setCategoryName] = useState<string>("");
-  const [promptText, setPromptText] = useState<string>("");
+  const [authorName, setAuthorName] = useState<string>("");
+  const [promotionalLink, setPromotionalLink] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleAddPrompt = async () => {
+  const handleChangeVisibility = async () => {
     setIsLoading(true);
-    const newFile = await addPrompt(
-      promptName,
-      path,
-      promptText,
-      currentUser?.email
-    );
-    console.log(newFile);
-    setFiles((prevFiles: any) => [...prevFiles, newFile]);
-    setIsLoading(false);
+    try {
+      await fetch("http://localhost:5000/files/changeVisibility", {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          view: "private",
+          id: id,
+          category: categoryName,
+          authorName: authorName,
+          link: promotionalLink,
+        }),
+      });
+    } catch (error) {
+      console.log("An error occured while changing visibility");
+    }
     onClose();
+    setIsLoading(false);
   };
 
   useEnterKeyPress(buttonRef);
@@ -58,7 +64,7 @@ const AddPromptModal = ({
         <ModalContent>
           <ModalBody>
             <Heading margin="2% auto" size="xl" textAlign="center">
-              Enter your prompt
+              Make prompt public
             </Heading>
             <InputGroup
               size="sm"
@@ -67,20 +73,32 @@ const AddPromptModal = ({
               justifyContent="center"
             >
               <InputGroup margin={2}>
-                <InputLeftAddon children="Prompt Name: " />
+                <InputLeftAddon children="Prompt Category: " />
                 <Input
                   type="text"
                   focusBorderColor="gray.100"
-                  value={promptName}
-                  onChange={(e) => setPromptName(e.target.value)}
+                  value={categoryName}
+                  onChange={(e) => setCategoryName(e.target.value)}
                 />
               </InputGroup>
-              <Textarea
-                placeholder="Enter Your Prompt here"
-                focusBorderColor="gray.100"
-                value={promptText}
-                onChange={(e) => setPromptText(e.target.value)}
-              />
+              <InputGroup margin={2}>
+                <InputLeftAddon children="Author Name: " />
+                <Input
+                  type="text"
+                  focusBorderColor="gray.100"
+                  value={authorName}
+                  onChange={(e) => setAuthorName(e.target.value)}
+                />
+              </InputGroup>
+              <InputGroup margin={2}>
+                <InputLeftAddon children="Promotional Link: " />
+                <Input
+                  type="text"
+                  focusBorderColor="gray.100"
+                  value={promotionalLink}
+                  onChange={(e) => setPromotionalLink(e.target.value)}
+                />
+              </InputGroup>
             </InputGroup>
           </ModalBody>
           <ModalFooter>
@@ -93,7 +111,7 @@ const AddPromptModal = ({
                   color="white"
                   variant="solid"
                   _hover={{ bg: "teal.500" }}
-                  onClick={handleAddPrompt}
+                  onClick={handleChangeVisibility}
                 >
                   Add Prompt
                 </Button>
@@ -102,7 +120,11 @@ const AddPromptModal = ({
                 <Button
                   colorScheme="red"
                   variant="outline"
-                  _hover={{ bg: "red.500", color: "white", borderColor:'red.500' }}
+                  _hover={{
+                    bg: "red.500",
+                    color: "white",
+                    borderColor: "red.500",
+                  }}
                   onClick={() => onClose()}
                 >
                   Cancel
@@ -116,4 +138,4 @@ const AddPromptModal = ({
   );
 };
 
-export default AddPromptModal;
+export default MakePromptPublic;
