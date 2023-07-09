@@ -8,11 +8,12 @@ https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/69de8e3c-97bd-45ad-
 <h1>Features</h1>
 <ul>
   <li>Keep your prompts organized by saving them in nested folders</li>
-  <li>Browse Prompts by category in Chat GPT/extension</li>
-  <li>Add different writing style to the Chat GPT responses</li>
+  <li>Browse trending prompts by category in Chat GPT/extension</li>
+  <li>Add different writing styles to the Chat GPT responses</li>
+  <li>Bookmark your conversations with Chat GPT</li>
+  <li>Like any prompt or favourite them to add them to your collection</li>
   <li>Make your prompts public/private</li>
   <li>Add promotional links to your prompts</li>
-  <li>Bookmark your conversations with Chat GPT</li>
   <li>Dark Mode</li>
 </ul>
 <img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/b55615d9-af35-4db7-b1d8-b7df1dedec21'/>
