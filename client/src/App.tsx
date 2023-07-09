@@ -32,10 +32,11 @@ function App() {
           <NavBar />
           <Routes>
             <Route path="/" element={<Prompts />} />
+            <Route path="/prompts/:id/:folderName" element={<Prompts />} />
             <Route path="/topPrompts" element={<TopPrompts />} />
+            <Route path="/topPromptsByCategory/:category" element={<TopPrompts />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
-            <Route path="/prompts/:id/:folderName" element={<Prompts />} />
             <Route path="/login" element={<LogIn />} />
           </Routes>
           <MenuBar />

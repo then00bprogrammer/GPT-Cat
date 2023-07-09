@@ -68,7 +68,7 @@ const PublicPrompt = ({
     if (!hasLiked) {
       setHasLiked(true);
       setHasNumberOfLikes(numberOfLikes + 1);
-      await fetch("http://localhost:5000/like", {
+      await fetch("https://gpt-cat.onrender.com/like", {
         method: "POST",
         body: JSON.stringify({ id: _id, email: currentUser?.email }),
         headers: {
@@ -78,7 +78,7 @@ const PublicPrompt = ({
     } else {
       setHasLiked(false);
       setHasNumberOfLikes(numberOfLikes - 1);
-      await fetch("http://localhost:5000/unlike", {
+      await fetch("https://gpt-cat.onrender.com/unlike", {
         method: "POST",
         body: JSON.stringify({ id: _id, email: currentUser?.email }),
         headers: {
@@ -91,7 +91,7 @@ const PublicPrompt = ({
   const handleStar = async () => {
     if (!hasStarred) {
       setHasStarred(true);
-      await fetch("http://localhost:5000/star", {
+      await fetch("https://gpt-cat.onrender.com/star", {
         method: "POST",
         body: JSON.stringify({ id: _id, email: currentUser?.email }),
         headers: {
@@ -100,7 +100,7 @@ const PublicPrompt = ({
       });
     } else {
       setHasStarred(false);
-      await fetch("http://localhost:5000/unstar", {
+      await fetch("https://gpt-cat.onrender.com/unstar", {
         method: "POST",
         body: JSON.stringify({ id: _id, email: currentUser?.email }),
         headers: {

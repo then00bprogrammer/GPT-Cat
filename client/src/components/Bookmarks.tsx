@@ -19,7 +19,7 @@ const Bookmarks = () => {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const resp = await fetch("http://localhost:5000/bookmarks", {
+      const resp = await fetch("https://gpt-cat.onrender.com/bookmarks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

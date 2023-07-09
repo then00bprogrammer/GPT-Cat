@@ -8,7 +8,8 @@ const cors = require('cors');
 const Folder = require('./models/folderSchema');
 const User = require('./models/userSchema');
 const File = require('./models/fileSchema');
-const WritingStyle = require('./models/writingStyle') 
+const Category = require('./models/categorySchema');
+const WritingStyle = require('./models/writingStyle') ;
 
 const corsOptions = {
   origin: true,
@@ -23,6 +24,26 @@ const MONGODB_URI = 'mongodb+srv://nikhil03:hellskitchen03@cluster0.v5kssag.mong
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+
+app.patch('/addCategory',async(req,res)=>{
+  try{
+    const { name } =req.body;
+    const newCategory = new Category({name:name});
+    await newCategory.save();
+    res.sendStatus(202);
+  } catch(error){
+    console.log('An error occured while',error);
+  }
+});
+
+app.get('/getCategories',async(req,res)=>{
+  try{
+    const allCategories = await Category.find({});
+    res.json(allCategories);
+  } catch (error){
+    console.log('An error occured while fetching categories',error);
+  }
+})
 
 app.post('/addWritingStyle',async(req,res)=>{
   try{

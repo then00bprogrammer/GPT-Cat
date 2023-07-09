@@ -36,7 +36,7 @@ const MakePromptPublic = ({
   const handleChangeVisibility = async () => {
     setIsLoading(true);
     try {
-      await fetch("http://localhost:5000/files/changeVisibility", {
+      await fetch("https://gpt-cat.onrender.com/files/changeVisibility", {
         method: "PATCH",
         headers: {
           "Content-type": "application/json",

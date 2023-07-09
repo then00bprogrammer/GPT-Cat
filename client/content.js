@@ -42,7 +42,7 @@ let writingStyle = '';
 const addWritingStyle = async () => {
   const dropdownContainer = document.createElement("div");
   dropdownContainer.classList.add('writingStyles');
-  fetch('http://localhost:5000/writingStyles')
+  fetch('https://gpt-cat.onrender.com/writingStyles')
     .then(async (res) => {
       let wstyles = await res.json();
 
@@ -144,7 +144,7 @@ button.addEventListener('click', () => {
 });
 
 const handleBookmark = async (email, name) => {
-  await fetch("http://localhost:5000/bookmark/", {
+  await fetch("https://gpt-cat.onrender.com/bookmark/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -164,7 +164,7 @@ const handleBookmark = async (email, name) => {
 const getPrompts = () => {
   updateEmail();
 
-  fetch("http://localhost:5000/")
+  fetch("https://gpt-cat.onrender.com/")
     .then(response => response.json())
     .then(data => {
       console.log(data);
@@ -194,7 +194,7 @@ const getPrompts = () => {
           if (button.innerText === "Switch to Private") {
             updateEmail();
             checkIsLoggedIn();
-            fetch(`http://localhost:5000/getUserPrompts/${email}`)
+            fetch(`https://gpt-cat.onrender.com/getUserPrompts/${email}`)
               .then(response => response.json())
               .then(updatedData => {
                 modifyHTML(element, updatedData);
@@ -205,7 +205,7 @@ const getPrompts = () => {
                 console.error(error);
               });
           } else {
-            fetch("http://localhost:5000/")
+            fetch("https://gpt-cat.onrender.com/")
               .then(response => response.json())
               .then(updatedData => {
                 modifyHTML(element, updatedData);
@@ -380,7 +380,7 @@ const handleLike = async (button) => {
     likeCountElement.textContent = currentCount + 1;
     button.parentNode.querySelector("input[name='isLiked']").value = "true";
     button.querySelector("img").src = thumbsUpSolid;
-    await fetch('http://localhost:5000/like', {
+    await fetch('https://gpt-cat.onrender.com/like', {
       method: 'POST',
       body: JSON.stringify({ id: id, email: email }),
       headers: {
@@ -391,7 +391,7 @@ const handleLike = async (button) => {
     likeCountElement.textContent = currentCount - 1;
     button.parentNode.querySelector("input[name='isLiked']").value = "false";
     button.querySelector("img").src = thumbsUpRegular;
-    await fetch('http://localhost:5000/unlike', {
+    await fetch('https://gpt-cat.onrender.com/unlike', {
       method: 'POST',
       body: JSON.stringify({ id: id, email: email }),
       headers: {
@@ -411,7 +411,7 @@ const handleStar = async (button) => {
   if (isStarred === "false") {
     button.parentNode.querySelector("input[name='isStarred']").value = "true";
     button.querySelector("img").src = starSolid;
-    await fetch('http://localhost:5000/star', {
+    await fetch('https://gpt-cat.onrender.com/star', {
       method: 'POST',
       body: JSON.stringify({ id: id, email: email }),
       headers: {
@@ -421,7 +421,7 @@ const handleStar = async (button) => {
   } else {
     button.parentNode.querySelector("input[name='isStarred']").value = "false";
     button.querySelector("img").src = starRegular;
-    await fetch('http://localhost:5000/unstar', {
+    await fetch('https://gpt-cat.onrender.com/unstar', {
       method: 'POST',
       body: JSON.stringify({ id: id, email: email }),
       headers: {
