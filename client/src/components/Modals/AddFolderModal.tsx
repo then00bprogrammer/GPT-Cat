@@ -13,8 +13,8 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { useContext, useState, useRef } from "react";
-import { addFolder } from "../handlers/addFolder";
-import { AuthContext } from "../Providers/AuthProvider";
+import { addFolder } from "../../handlers/addFolder";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 const AddFolderModal = ({
   isOpen,

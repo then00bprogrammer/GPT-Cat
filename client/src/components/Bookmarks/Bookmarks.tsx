@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 import { VStack, Heading, useColorModeValue, Flex } from "@chakra-ui/react";
-import { AuthContext } from "../Providers/AuthProvider";
+import { AuthContext } from "../../Providers/AuthProvider";
 import Bookmark from "./Bookmark";
 import { Player } from "@lottiefiles/react-lottie-player";
-import Ball from "../assets/ball.json";
+import Ball from "../../assets/ball.json";
 
 type Bookmarks = {
   _id: string;

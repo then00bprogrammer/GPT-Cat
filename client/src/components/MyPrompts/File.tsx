@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Collapse,
@@ -11,7 +11,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import {
-  FaCheck,
   FaCopy,
   FaFileAlt,
   FaLock,
@@ -19,9 +18,10 @@ import {
   FaPencilAlt,
   FaTrashAlt,
 } from "react-icons/fa";
-import DeleteFileModal from "./DeleteFile";
-import { AuthContext } from "../Providers/AuthProvider";
-import MakePromptPublic from "./MakePromptPublic";
+
+import DeleteFileModal from "../Modals/DeleteFileModal";
+import MakePromptPublicModal from "../Modals/MakePromptPublicModal";
+import EditPromptModal from "../Modals/EditPromptModal";
 
 const File = ({
   _id,
@@ -34,18 +34,17 @@ const File = ({
   content: string;
   view: string;
 }) => {
-  const currentUser = useContext(AuthContext);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
-  const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const [isMakePublicModalOpen, setisMakePublicModalOpen] =
     useState<boolean>(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const bg = useColorModeValue("gray.200", "gray.600");
-  const { isOpen, onToggle } = useDisclosure();
-  const [editable, setEditable] = useState<boolean>(false);
-  const [inputName, setInputName] = useState(name);
+
+  const [isDeleted, setIsDeleted] = useState<boolean>(false);
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(view === "public");
-
+  
+  const { isOpen, onToggle } = useDisclosure();
   const textColor = useColorModeValue("black", "gray.50");
 
   const handleCopy = async () => {
@@ -59,27 +58,7 @@ const File = ({
     setIsCopied(true);
     setTimeout(() => {
       setIsCopied(false);
-    }, 2000);
-  };
-
-  const handleToggleEdit = async (
-    event: React.MouseEvent<SVGSVGElement, MouseEvent>
-  ) => {
-    const toSubmit: boolean = editable;
-    setEditable(!editable);
-    if (toSubmit) {
-      try {
-        await fetch(`https://gpt-cat.onrender.com/files/${_id}`, {
-          method: "PATCH",
-          body: JSON.stringify({ name: inputName, email: currentUser?.email }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-      } catch (error) {
-        console.log("An error occurred while editing the file", error);
-      }
-    }
+    }, 1000);
   };
 
   const handleChangeVisibility = async () => {
@@ -105,31 +84,24 @@ const File = ({
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLDivElement>) => {
-    setInputName(event.target.innerText);
-  };
-
-  const onDeleteClose = () => {
-    setIsDeleteOpen(false);
-  };
-
-  const onMakePublicClose = () => {
-    setisMakePublicModalOpen(false);
-  };
-
   if (!isDeleted) {
     return (
       <VStack width="full">
+        <MakePromptPublicModal
+          isOpen={isMakePublicModalOpen}
+          onClose={() => setisMakePublicModalOpen(false)}
+          id={_id}
+        />
         <DeleteFileModal
           isOpen={isDeleteOpen}
-          onClose={onDeleteClose}
+          onClose={() => setIsDeleteOpen(false)}
           id={_id}
           setIsDeleted={setIsDeleted}
         />
-        <MakePromptPublic
-          isOpen={isMakePublicModalOpen}
-          onClose={onMakePublicClose}
-          id={_id}
+        <EditPromptModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          _id={_id}
         />
         <HStack
           marginLeft="5vw"
@@ -149,12 +121,8 @@ const File = ({
             fontSize="sm"
             outline="none"
             border="none"
-            borderBottom={editable ? "2px dashed" : "none"}
-            contentEditable={editable}
-            onInput={handleChange}
-            bg={editable ? "gray.500" : "none"}
             paddingRight="5vw"
-            color={editable ? "white" : textColor}
+            color={textColor}
             style={{ caretColor: "white" }}
           >
             {name}
@@ -166,8 +134,8 @@ const File = ({
             cursor="pointer"
           />
           <Icon
-            as={editable ? FaCheck : FaPencilAlt}
-            onClick={handleToggleEdit}
+            as={FaPencilAlt}
+            onClick={()=>setIsEditModalOpen(true)}
             cursor="pointer"
           />
           <Icon

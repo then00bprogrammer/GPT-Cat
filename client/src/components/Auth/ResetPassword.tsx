@@ -15,9 +15,9 @@ import {
   CloseButton,
   Icon,
 } from "@chakra-ui/react";
-import useEnterKeyPress from "../hooks/useEnterKeyPress";
-import { AuthContext } from "../Providers/AuthProvider";
-import { auth } from "../firebase/clientApp";
+import useEnterKeyPress from "../../hooks/useEnterKeyPress";
+import { AuthContext } from "../../Providers/AuthProvider";
+import { auth } from "../../firebase/clientApp";
 import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
 import { FaArrowLeft, FaChevronLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";

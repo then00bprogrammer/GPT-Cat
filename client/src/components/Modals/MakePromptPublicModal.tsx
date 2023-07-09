@@ -14,14 +14,14 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useState, useEffect, useContext, useRef } from "react";
-import { AuthContext } from "../Providers/AuthProvider";
-import useEnterKeyPress from "../hooks/useEnterKeyPress";
+import { AuthContext } from "../../Providers/AuthProvider";
+import useEnterKeyPress from "../../hooks/useEnterKeyPress";
 
 type CategoryType = {
   name: string;
 };
 
-const MakePromptPublic = ({
+const MakePromptPublicModal = ({
   isOpen,
   onClose,
   id,
@@ -175,4 +175,4 @@ const MakePromptPublic = ({
   );
 };
 
-export default MakePromptPublic;
+export default MakePromptPublicModal;

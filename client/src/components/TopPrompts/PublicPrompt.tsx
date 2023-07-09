@@ -18,7 +18,7 @@ import {
   FaStar,
   FaThumbsUp,
 } from "react-icons/fa";
-import { AuthContext } from "../Providers/AuthProvider";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 type Props = {
   _id: string;
@@ -39,9 +39,7 @@ const PublicPrompt = ({
 }: Props) => {
   const [hasLiked, setHasLiked] = useState<boolean>(isLiked);
   const [hasStarred, setHasStarred] = useState<boolean>(isStarred);
-  const [numberOfLikes, setHasNumberOfLikes] = useState<number>(
-    parseInt(likes)
-  );
+  const [numberOfLikes, setHasNumberOfLikes] = useState<number>(parseInt(likes));
 
   const currentUser = useContext(AuthContext);
   const [isDeleted, setIsDeleted] = useState<boolean>(false);

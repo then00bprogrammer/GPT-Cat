@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { ChakraProvider } from "@chakra-ui/react";
 import { AuthProvider } from "./Providers/AuthProvider";
-import { PathProvider } from "./Providers/PathProvider";
 import { ColorModeScript } from "@chakra-ui/react";
 import { theme } from "./chakra/theme";
 import "./firebase/clientApp";
@@ -17,11 +16,9 @@ rootDiv.render(
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <ChakraProvider theme={theme}>
       <AuthProvider>
-        <PathProvider>
-          <React.StrictMode>
-            <App />
-          </React.StrictMode>
-        </PathProvider>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
       </AuthProvider>
     </ChakraProvider>
   </>

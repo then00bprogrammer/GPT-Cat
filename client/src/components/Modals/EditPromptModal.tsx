@@ -13,42 +13,22 @@ import {
   ModalOverlay,
   Textarea,
 } from "@chakra-ui/react";
-import { addPrompt } from "../handlers/addPrompt";
-import { useState, useContext, useRef } from "react";
-import { AuthContext } from "../Providers/AuthProvider";
-import useEnterKeyPress from "../hooks/useEnterKeyPress";
+import { useState, useRef } from "react";
+import useEnterKeyPress from "../../hooks/useEnterKeyPress";
 
-const AddPromptModal = ({
+const EditPromptModal = ({
   isOpen,
   onClose,
-  path,
-  setFiles,
+  _id,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  path: string[];
-  setFiles: any;
+  _id: string;
 }) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const currentUser = useContext(AuthContext);
   const [promptName, setPromptName] = useState<string>("");
-  const [categoryName, setCategoryName] = useState<string>("");
   const [promptText, setPromptText] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const handleAddPrompt = async () => {
-    setIsLoading(true);
-    const newFile = await addPrompt(
-      promptName,
-      path,
-      promptText,
-      currentUser?.email
-    );
-    console.log(newFile);
-    setFiles((prevFiles: any) => [...prevFiles, newFile]);
-    setIsLoading(false);
-    onClose();
-  };
 
   useEnterKeyPress(buttonRef);
   return (
@@ -67,7 +47,7 @@ const AddPromptModal = ({
               justifyContent="center"
             >
               <InputGroup margin={2}>
-                <InputLeftAddon children="Prompt Name: " />
+                <InputLeftAddon children="Name: " />
                 <Input
                   type="text"
                   focusBorderColor="gray.100"
@@ -88,21 +68,27 @@ const AddPromptModal = ({
               <LightMode>
                 <Button
                   ref={buttonRef}
-                  isLoading={isLoading}
-                  bg="teal.400"
-                  color="white"
-                  variant="solid"
-                  _hover={{ bg: "teal.500" }}
-                  onClick={handleAddPrompt}
+                  colorScheme="red"
+                  variant="outline"
+                  _hover={{
+                    bg: "red.500",
+                    color: "white",
+                    borderColor: "red.500",
+                  }}
+                  onClick={() => onClose()}
                 >
-                  Add Prompt
+                  Edit
                 </Button>
               </LightMode>
               <LightMode>
                 <Button
                   colorScheme="red"
                   variant="outline"
-                  _hover={{ bg: "red.500", color: "white", borderColor:'red.500' }}
+                  _hover={{
+                    bg: "red.500",
+                    color: "white",
+                    borderColor: "red.500",
+                  }}
                   onClick={() => onClose()}
                 >
                   Cancel
@@ -116,4 +102,4 @@ const AddPromptModal = ({
   );
 };
 
-export default AddPromptModal;
+export default EditPromptModal;

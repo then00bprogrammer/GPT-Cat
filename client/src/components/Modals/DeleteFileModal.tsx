@@ -1,4 +1,5 @@
 import { useState, useContext, useRef } from "react";
+import { Player } from "@lottiefiles/react-lottie-player";
 import {
   Button,
   Flex,
@@ -10,12 +11,11 @@ import {
   ModalFooter,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { Player } from "@lottiefiles/react-lottie-player";
-import Dustbin from "../assets/trash-can.json";
-import { AuthContext } from "../Providers/AuthProvider";
-import useEnterKeyPress from "../hooks/useEnterKeyPress";
+import Dustbin from "../../assets/trash-can.json";
+import { AuthContext } from "../../Providers/AuthProvider";
+import useEnterKeyPress from "../../hooks/useEnterKeyPress";
 
-const DeleteFolderModal = ({
+const DeleteFileModal = ({
   isOpen,
   onClose,
   id,
@@ -29,11 +29,11 @@ const DeleteFolderModal = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const currentUser = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const handleDeleteFolder = async () => {
+  const handleDeleteFile = async () => {
     try {
       setIsDeleted(true);
       onClose();
-      await fetch(`https://gpt-cat.onrender.com/folders/${id}`, {
+      await fetch(`https://gpt-cat.onrender.com/files/${id}/${currentUser?.email}`, {
         method: "DELETE",
       });
     } catch (error) {
@@ -42,7 +42,7 @@ const DeleteFolderModal = ({
   };
 
   useEnterKeyPress(buttonRef);
-  
+
   return (
     <>
       <Modal size={["xs", "xs", "lg", "lg"]} isOpen={isOpen} onClose={onClose}>
@@ -50,8 +50,7 @@ const DeleteFolderModal = ({
         <ModalContent>
           <ModalBody>
             <Heading margin="2% auto" size="xl" textAlign="center">
-              Are you sure you would like to delete this folder and its
-              contents?
+              Are you sure you would like to delete this file?
             </Heading>
             <Player
               autoplay
@@ -77,7 +76,7 @@ const DeleteFolderModal = ({
                   width="40%"
                   borderRadius={5}
                   _hover={{ bg: "red.500", color: "white", borderColor:'red.500' }}
-                  onClick={handleDeleteFolder}
+                  onClick={handleDeleteFile}
                 >
                   Delete
                 </Button>
@@ -90,4 +89,4 @@ const DeleteFolderModal = ({
   );
 };
 
-export default DeleteFolderModal;
+export default DeleteFileModal;

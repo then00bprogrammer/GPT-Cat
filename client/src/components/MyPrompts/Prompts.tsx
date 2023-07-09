@@ -19,12 +19,12 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { FaArrowLeft, FaFolder, FaPen, FaPlus } from "react-icons/fa";
-import AddPromptModal from "./AddPromptModal";
+import AddPromptModal from "../Modals/AddPromptModal";
 import File from "./File";
-import AddFolderModal from "./AddFolderModal";
+import AddFolderModal from "../Modals/AddFolderModal";
 import Folder from "./Folder";
-import { AuthContext } from "../Providers/AuthProvider";
-import Ball from "../assets/ball.json";
+import { AuthContext } from "../../Providers/AuthProvider";
+import Ball from "../../assets/ball.json";
 import { Player } from "@lottiefiles/react-lottie-player";
 
 type Folder = {

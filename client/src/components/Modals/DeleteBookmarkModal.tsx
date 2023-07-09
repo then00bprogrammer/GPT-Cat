@@ -11,11 +11,11 @@ import {
   ModalFooter,
   ModalOverlay,
 } from "@chakra-ui/react";
-import Dustbin from "../assets/trash-can.json";
-import { AuthContext } from "../Providers/AuthProvider";
-import useEnterKeyPress from "../hooks/useEnterKeyPress";
+import Dustbin from "../../assets/trash-can.json";
+import { AuthContext } from "../../Providers/AuthProvider";
+import useEnterKeyPress from "../../hooks/useEnterKeyPress";
 
-const DeleteFileModal = ({
+const DeleteBookmarkModal = ({
   isOpen,
   onClose,
   id,
@@ -33,8 +33,15 @@ const DeleteFileModal = ({
     try {
       setIsDeleted(true);
       onClose();
-      await fetch(`https://gpt-cat.onrender.com/files/${id}/${currentUser?.email}`, {
+      await fetch(`https://gpt-cat.onrender.com/bookmark`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: currentUser?.email,
+          id: id,
+        }),
       });
     } catch (error) {
       console.error("An error occurred while deleting the file:", error);
@@ -89,4 +96,4 @@ const DeleteFileModal = ({
   );
 };
 
-export default DeleteFileModal;
+export default DeleteBookmarkModal;

@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { FaExternalLinkAlt, FaTrashAlt } from "react-icons/fa";
-import DeleteBookmarkModal from "./DeleteBookmark";
+import DeleteBookmarkModal from "../Modals/DeleteBookmarkModal";
 
 type Bookmarks = {
   _id: string;

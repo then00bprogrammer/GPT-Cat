@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import {
   Avatar,
   HStack,
@@ -9,14 +8,11 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { AuthContext } from "../Providers/AuthProvider";
 import { FaMoon } from "react-icons/fa";
 import { BsFillSunFill } from "react-icons/bs";
 
-const NavBar: React.FC = () => {
+const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const currentUser = useContext(AuthContext);
-  const imageURL = currentUser?.photoURL || undefined;
   return (
     <HStack
       width="100vw"
@@ -39,8 +35,6 @@ const NavBar: React.FC = () => {
         _hover={{ bg: useColorModeValue("white", "gray.900") }}
         icon={<Icon as={useColorModeValue(FaMoon, BsFillSunFill)} boxSize={8} height='full' />}
       />
-      {/* <Avatar src={imageURL} /> */}
-      {/* Will add when login with google works */}
     </HStack>
   );
 };

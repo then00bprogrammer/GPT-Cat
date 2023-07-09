@@ -23,16 +23,14 @@ import {
 } from "@chakra-ui/react";
 
 const Profile = () => {
-  const [showAlert, setShowAlert] = useState<boolean>(false);
-  const onClose = ()=>{
-    setShowAlert(false);
-  }
   const currentUser = useContext(AuthContext);
-  const [sendPasswordResetEmail, sending, error] =
-    useSendPasswordResetEmail(auth);
   const displayName = currentUser?.displayName
     ? currentUser.displayName
     : currentUser?.email?.split("@")[0];
+
+  const [sendPasswordResetEmail, sending, error] =
+    useSendPasswordResetEmail(auth);
+
   const [signOut] = useSignOut(auth);
   const handleSignOut = async () => {
     await signOut();
@@ -43,6 +41,8 @@ const Profile = () => {
       }
     );
   };
+  
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   return (
     <VStack
@@ -71,7 +71,7 @@ const Profile = () => {
               position="relative"
               right={-1}
               top={-1}
-              onClick={onClose}
+              onClick={() => setShowAlert(false)}
             />
           </Alert>
         )}
@@ -106,7 +106,7 @@ const Profile = () => {
           onClick={async () => {
             if (!currentUser?.email) return;
             const success = await sendPasswordResetEmail(currentUser.email);
-            if(success) setShowAlert(true);
+            if (success) setShowAlert(true);
           }}
         >
           Reset your password

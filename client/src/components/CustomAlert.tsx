@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Alert,
   AlertIcon,
@@ -17,7 +16,7 @@ const CustomAlert = ({
 }: {
   title: string;
   description: string;
-  showAlert: any;
+  showAlert: boolean;
   setShowAlert: any;
 }) => {
   const onClose = () => {

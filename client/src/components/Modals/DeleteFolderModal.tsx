@@ -1,5 +1,4 @@
 import { useState, useContext, useRef } from "react";
-import { Player } from "@lottiefiles/react-lottie-player";
 import {
   Button,
   Flex,
@@ -11,11 +10,12 @@ import {
   ModalFooter,
   ModalOverlay,
 } from "@chakra-ui/react";
-import Dustbin from "../assets/trash-can.json";
-import { AuthContext } from "../Providers/AuthProvider";
-import useEnterKeyPress from "../hooks/useEnterKeyPress";
+import { Player } from "@lottiefiles/react-lottie-player";
+import Dustbin from "../../assets/trash-can.json";
+import { AuthContext } from "../../Providers/AuthProvider";
+import useEnterKeyPress from "../../hooks/useEnterKeyPress";
 
-const DeleteBookmarkModal = ({
+const DeleteFolderModal = ({
   isOpen,
   onClose,
   id,
@@ -29,19 +29,12 @@ const DeleteBookmarkModal = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const currentUser = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const handleDeleteFile = async () => {
+  const handleDeleteFolder = async () => {
     try {
       setIsDeleted(true);
       onClose();
-      await fetch(`https://gpt-cat.onrender.com/bookmark`, {
+      await fetch(`https://gpt-cat.onrender.com/folders/${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: currentUser?.email,
-          id: id,
-        }),
       });
     } catch (error) {
       console.error("An error occurred while deleting the file:", error);
@@ -49,7 +42,7 @@ const DeleteBookmarkModal = ({
   };
 
   useEnterKeyPress(buttonRef);
-
+  
   return (
     <>
       <Modal size={["xs", "xs", "lg", "lg"]} isOpen={isOpen} onClose={onClose}>
@@ -57,7 +50,8 @@ const DeleteBookmarkModal = ({
         <ModalContent>
           <ModalBody>
             <Heading margin="2% auto" size="xl" textAlign="center">
-              Are you sure you would like to delete this file?
+              Are you sure you would like to delete this folder and its
+              contents?
             </Heading>
             <Player
               autoplay
@@ -83,7 +77,7 @@ const DeleteBookmarkModal = ({
                   width="40%"
                   borderRadius={5}
                   _hover={{ bg: "red.500", color: "white", borderColor:'red.500' }}
-                  onClick={handleDeleteFile}
+                  onClick={handleDeleteFolder}
                 >
                   Delete
                 </Button>
@@ -96,4 +90,4 @@ const DeleteBookmarkModal = ({
   );
 };
 
-export default DeleteBookmarkModal;
+export default DeleteFolderModal;

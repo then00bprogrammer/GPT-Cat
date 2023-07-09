@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Button,
   Flex,
@@ -6,35 +6,57 @@ import {
   FormLabel,
   Heading,
   Text,
-  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
-import {
-  useSignInWithEmailAndPassword,
-} from "react-firebase-hooks/auth";
-import { auth } from "../firebase/clientApp";
-import { Link, useNavigate } from "react-router-dom";
-import useEnterKeyPress from "../hooks/useEnterKeyPress";
-import CustomAlert from "./CustomAlert";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase/clientApp";
+import { Link } from "react-router-dom";
+import useEnterKeyPress from "../../hooks/useEnterKeyPress";
+import CustomAlert from "../CustomAlert";
 
-const LogIn = () => {
-  const [showAlert,setShowAlert]=useState<boolean>(false);
-  const navigate = useNavigate();
+const SignupForm = () => {
+  const [showAlert, setShowAlert] = useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [signupForm, setSignupForm] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
 
   const [customErrorMessage, setCustomErrorMessage] = useState<string>("");
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (signupForm.password !== signupForm.confirmPassword) {
+      setCustomErrorMessage("Passwords do not match");
+      setShowAlert(true);
+      return;
+    }
+
+    if (signupForm.password.length < 6) {
+      setCustomErrorMessage("Password should be at least 6 characters long");
+      setShowAlert(true);
+      return;
+    }
+
     try {
-      await signInWithEmailAndPassword(signupForm.email, signupForm.password);
+      await createUserWithEmailAndPassword(
+        signupForm.email,
+        signupForm.password
+      );
+      await fetch("https://gpt-cat.onrender.com/createUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: signupForm.email,
+        }),
+      });
       chrome.runtime.sendMessage(
         { action: "setValue", email: signupForm.email },
         function (response) {
@@ -44,8 +66,8 @@ const LogIn = () => {
       setSignupForm({
         email: "",
         password: "",
+        confirmPassword: "",
       });
-      navigate("/");
     } catch (error) {
       console.log(error);
       setCustomErrorMessage("Internal Server Error");
@@ -53,23 +75,22 @@ const LogIn = () => {
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setShowAlert(false);
     setCustomErrorMessage("");
+    setShowAlert(false);
     setSignupForm((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
   };
 
-  useEnterKeyPress(buttonRef);
-
-  const colorMode = useColorMode();
   const bgImage = useColorModeValue(
     "../images/login-light.jpeg",
     "../images/login-dark.avif"
   );
-  const color = useColorModeValue("black", "white");
   const inputBG = useColorModeValue("white", "blackAlpha.300");
+  const color = useColorModeValue("black", "white");
+
+  useEnterKeyPress(buttonRef);
 
   return (
     <Flex
@@ -79,15 +100,19 @@ const LogIn = () => {
       alignItems="center"
       justifyContent="center"
       bgImage={bgImage}
-      color={color}
       bgPosition="center"
       bgRepeat="no-repeat"
       bgSize="cover"
     >
-      <CustomAlert title='Error!' description={customErrorMessage} showAlert={showAlert} setShowAlert={setShowAlert}></CustomAlert>
+      <CustomAlert
+        title="Error!"
+        description={customErrorMessage}
+        showAlert={showAlert}
+        setShowAlert={setShowAlert}
+      ></CustomAlert>
       <Heading fontSize="4xl" color="white">
         {" "}
-        LOGIN
+        REGISTER
       </Heading>
       <form onSubmit={onSubmit}>
         <FormLabel color="white">Email address</FormLabel>
@@ -100,11 +125,11 @@ const LogIn = () => {
           onChange={onChange}
           width="75vw"
           bg={inputBG}
+          color={color}
           borderColor="teal.500"
           focusBorderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
           _focus={{ borderColor: "teal.500", bg: inputBG }}
-          color={color}
         />
         <FormLabel color="white">Password</FormLabel>
         <Input
@@ -116,13 +141,27 @@ const LogIn = () => {
           onChange={onChange}
           width="75vw"
           bg={inputBG}
+          color={color}
           borderColor="teal.500"
           focusBorderColor="teal.500"
           _hover={{ borderColor: "teal.500" }}
           _focus={{ borderColor: "teal.500", bg: inputBG }}
-          color={color}
         />
-
+        <FormLabel color="white">Confirm Password</FormLabel>
+        <Input
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          type="password"
+          mb={2}
+          onChange={onChange}
+          width="75vw"
+          bg={inputBG}
+          color={color}
+          borderColor="teal.500"
+          focusBorderColor="teal.500"
+          _hover={{ borderColor: "teal.500" }}
+          _focus={{ borderColor: "teal.500", bg: inputBG }}
+        />
         <Flex
           width="full"
           flexDir="column"
@@ -133,6 +172,7 @@ const LogIn = () => {
             width="25vw"
             height="50px"
             bg="teal.400"
+            color="white"
             variant="solid"
             _hover={{ bg: "teal.500" }}
             mt={5}
@@ -142,15 +182,11 @@ const LogIn = () => {
             isLoading={loading}
             ref={buttonRef}
           >
-            Login
+            Sign Up
           </Button>
-          <Link to="/auth">
-            <Text
-              color="gray.500"
-              fontSize="lg"
-              _hover={{ textDecoration: "underline" }}
-            >
-              New here?
+          <Link to="/">
+            <Text color="gray.500" fontSize="lg">
+              Already a Member?
             </Text>
           </Link>
           <Link to="/resetPassword">
@@ -169,4 +205,4 @@ const LogIn = () => {
     </Flex>
   );
 };
-export default LogIn;
+export default SignupForm;

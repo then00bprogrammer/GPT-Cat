@@ -13,8 +13,8 @@ import {
   FaTrashAlt,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import DeleteFolderModal from "./DeleteFolder";
-import { AuthContext } from "../Providers/AuthProvider";
+import DeleteFolderModal from "../Modals/DeleteFolderModal";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 const Folder = ({ name, _id }: { name: string; _id: string }) => {
   const currentUser = useContext(AuthContext);

@@ -1,16 +1,15 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   VStack,
   useColorModeValue,
   Heading,
   Select,
   Flex,
-  HStack,
 } from "@chakra-ui/react";
-import { AuthContext } from "../Providers/AuthProvider";
+import { AuthContext } from "../../Providers/AuthProvider";
 import PublicPrompt from "./PublicPrompt";
 import { Player } from "@lottiefiles/react-lottie-player";
-import Ball from "../assets/ball.json";
+import Ball from "../../assets/ball.json";
 
 type PublicPromptType = {
   name: string;
