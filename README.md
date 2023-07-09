@@ -4,12 +4,19 @@ Welcome to the GPT Cat! This web extension allows you to save prompts in an orga
 </p>
 
 https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/69de8e3c-97bd-45ad-8963-b61d7a8bda3b
+
 <h1>Features</h1>
-<img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/ae76a0fd-251c-4d10-8eaa-41f638663213'/>
 <ul>
-  <li><h2>Save prompts in an organized way</h2></li>
+  <li>Keep your prompts organized by saving them in nested folders</li>
+  <li>Browse trending prompts by category in Chat GPT/extension</li>
+  <li>Add different writing styles to the Chat GPT responses</li>
+  <li>Bookmark your conversations with Chat GPT</li>
+  <li>Like any prompt or favourite them to add them to your collection</li>
+  <li>Make your prompts public/private</li>
+  <li>Add promotional links to your prompts</li>
+  <li>Dark Mode</li>
 </ul>
-<img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/925632bb-11be-4c79-9f30-e9d2c8871a4b'/>
+<img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/b55615d9-af35-4db7-b1d8-b7df1dedec21'/>
 <ul>
   <li><h2>See your bookmarked chats here</h2></li>
 </ul>
