@@ -80,7 +80,22 @@ app.get('/getUserPrompts/:email', async (req, res) => {
 app.get('/getTopPromptsByCategory/:category', async (req, res) => {
   try {
     const { category } = req.params;
+    console.log(category);
     const files = await File.find({ view: 'public', category:category })
+    .sort({ likes: -1 });
+    res.json(files);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/getTopPromptsByCategoryAndEmail/:category/:email', async (req, res) => {
+  try {
+    const { category, email } = req.params;
+    const user = await User.find({email:email});
+    console.log(category);
+    const files = await File.find({ view: 'public', category:category, user:user._id })
     .sort({ likes: -1 });
     res.json(files);
   } catch (error) {

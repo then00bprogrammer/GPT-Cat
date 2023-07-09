@@ -100,6 +100,8 @@ const addWritingStyle = async () => {
           }
         }
         else inp.value = writingStyle + '\n';
+        const inputEvent = new Event('input', { bubbles: true });
+        inp.dispatchEvent(inputEvent);
       });
     })
     .catch((error) => {
@@ -173,7 +175,7 @@ const getPrompts = () => {
 
       if (element) {
         const changeMargin = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
-        changeMargin.style.marginTop = "5vh";
+        changeMargin.style.marginTop = "2vh";
 
         const heading = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
         heading.innerText = "GPT Cat : Trending prompts";
@@ -187,13 +189,56 @@ const getPrompts = () => {
         button.style.backgroundColor = "#202123";
         button.style.color = "white";
         button.style.padding = "10px 20px";
-        button.style.width = `calc(100% - 20px)`
+        button.style.width = '100%';
         button.classList.add('switch-cat-gpt');
+
+        const categorySelect = document.createElement("select");
+        categorySelect.style.backgroundColor = '#202123';
+        categorySelect.style.borderColor = '#202123';
+        categorySelect.style.marginBottom = "10px";
+        categorySelect.style.textAlign= 'center';
+        categorySelect.style.fontSize='15px';
+        categorySelect.style.width = '100%';
+        categorySelect.classList.add('switch-cat-gpt');
+
+        const defaultOption = document.createElement("option");
+        defaultOption.style.backgroundColor = '#40414f';
+        defaultOption.value = "default";
+        defaultOption.text = "Select a Category";
+        categorySelect.appendChild(defaultOption);
+
+
+        fetch("https://gpt-cat.onrender.com/getCategories")
+          .then((res) => res.json())
+          .then(categoryData => {
+            categoryData.forEach(category => {
+              const option = document.createElement("option");
+              option.style.backgroundColor = '#40414f';
+              option.value = category.name;
+              option.text = category.name;
+              categorySelect.appendChild(option);
+            });
+          });
+
+        categorySelect.addEventListener("change", (event) => {
+          const currentCategory = event.target.value;
+          let url = `https://gpt-cat.onrender.com/getTopPromptsByCategory/${currentCategory}`;
+          if (currentCategory == 'default') url = 'https://gpt-cat.onrender.com/';
+          fetch(url)
+            .then(response => response.json())
+            .then(updatedData => {
+              modifyHTML(element, updatedData);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        });
 
         button.addEventListener("click", () => {
           if (button.innerText === "Switch to Private") {
             updateEmail();
             checkIsLoggedIn();
+            categorySelect.style.display = 'none';
             fetch(`https://gpt-cat.onrender.com/getUserPrompts/${email}`)
               .then(response => response.json())
               .then(updatedData => {
@@ -205,6 +250,7 @@ const getPrompts = () => {
                 console.error(error);
               });
           } else {
+            categorySelect.style.display = 'block';
             fetch("https://gpt-cat.onrender.com/")
               .then(response => response.json())
               .then(updatedData => {
@@ -218,6 +264,7 @@ const getPrompts = () => {
           }
         });
 
+        heading.insertAdjacentElement("afterend", categorySelect);
         heading.insertAdjacentElement("afterend", button);
         modifyHTML(element, data);
       } else {
@@ -282,6 +329,8 @@ const modifyHTML = (element, data) => {
           </div>
           `;
 
+  element.classList.add('gpt-cat-prompt-box');
+
 
   const popoverElements = document.getElementsByClassName("popover");
   Array.from(popoverElements).forEach((popoverElement) => {
@@ -291,7 +340,7 @@ const modifyHTML = (element, data) => {
     popoverElement.addEventListener("mouseenter", () => {
       timeoutId = setTimeout(() => {
         popoverContent.style.display = "block";
-      }, 500);
+      }, 1000);
     });
 
     popoverElement.addEventListener("mouseleave", () => {
@@ -450,7 +499,7 @@ const homePageObserverCallback = function (mutationsList, observer) {
 };
 
 
-if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
+if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/' || window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha/#' || window.location.href === 'https://chat.openai.com/#') {
 
   let homePageObserver = new MutationObserver(homePageObserverCallback);
   homePageObserver.observe(document.body, { childList: true, subtree: true });
@@ -461,7 +510,9 @@ document.addEventListener('click', () => {
     const doesWritingStylesExist = document.getElementsByClassName('writingStyles');
     if (doesWritingStylesExist.length === 0) addWritingStyle();
 
-    if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
+    if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/' || window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha/#' || window.location.href === 'https://chat.openai.com/#') {
+      const doesElementExist = document.getElementsByClassName('gpt-cat-prompt-box');
+      if (doesElementExist.length == 0) return;
       let homePageObserver = new MutationObserver(homePageObserverCallback);
       homePageObserver.observe(document.body, { childList: true, subtree: true });
     }

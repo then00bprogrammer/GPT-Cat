@@ -11,11 +11,15 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
-  Textarea,
+  Select,
 } from "@chakra-ui/react";
-import { useState, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { AuthContext } from "../Providers/AuthProvider";
 import useEnterKeyPress from "../hooks/useEnterKeyPress";
+
+type CategoryType = {
+  name: string;
+};
 
 const MakePromptPublic = ({
   isOpen,
@@ -32,6 +36,22 @@ const MakePromptPublic = ({
   const [authorName, setAuthorName] = useState<string>("");
   const [promotionalLink, setPromotionalLink] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
+
+  const fetchCategories = async () => {
+    try {
+      let resp;
+      resp = await fetch("https://gpt-cat.onrender.com/getCategories");
+      const allCategories = await resp.json();
+      setCategories(allCategories);
+    } catch (error) {
+      console.log("Could not fetch categories", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const handleChangeVisibility = async () => {
     setIsLoading(true);
@@ -72,14 +92,31 @@ const MakePromptPublic = ({
               alignItems="center"
               justifyContent="center"
             >
-              <InputGroup margin={2}>
+              <InputGroup margin={2} width='full'>
                 <InputLeftAddon children="Prompt Category: " />
-                <Input
-                  type="text"
-                  focusBorderColor="gray.100"
-                  value={categoryName}
-                  onChange={(e) => setCategoryName(e.target.value)}
-                />
+                <Select
+                  width="100%"
+                  flexGrow={1}
+                  marginLeft="5vw"
+                  marginRight="5vw"
+                  placeholder={"General"}
+                  borderColor="gray.200"
+                  focusBorderColor="gray.200"
+                  color="black"
+                  onChange={(e) => {
+                    setCategoryName(e.target.value);
+                  }}
+                >
+                  {categories.map((category, index) => (
+                    <option
+                      value={category.name}
+                      style={{ color: "black", backgroundColor: "teal.200" }}
+                      key={index}
+                    >
+                      {category.name}
+                    </option>
+                  ))}
+                </Select>
               </InputGroup>
               <InputGroup margin={2}>
                 <InputLeftAddon children="Author Name: " />

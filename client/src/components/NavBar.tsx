@@ -10,7 +10,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { AuthContext } from "../Providers/AuthProvider";
-import { FaMoon, FaRegLightbulb } from "react-icons/fa";
+import { FaMoon } from "react-icons/fa";
+import { BsFillSunFill } from "react-icons/bs";
 
 const NavBar: React.FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -36,7 +37,7 @@ const NavBar: React.FC = () => {
         aria-label="toggle color mode"
         bg={useColorModeValue("white", "gray.900")}
         _hover={{ bg: useColorModeValue("white", "gray.900") }}
-        icon={<Icon as={useColorModeValue(FaMoon, FaRegLightbulb)} boxSize={8} height='full' />}
+        icon={<Icon as={useColorModeValue(FaMoon, BsFillSunFill)} boxSize={8} height='full' />}
       />
       {/* <Avatar src={imageURL} /> */}
       {/* Will add when login with google works */}
