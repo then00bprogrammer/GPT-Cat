@@ -152,12 +152,12 @@ const PublicPrompt = ({
         <Box width="full" as={Collapse} in={isOpen} animateOpacity>
           <HStack
             width="90%"
-            p="1vh 3vw"
+            padding="1vh 3vw"
             marginLeft="5vw"
             marginRight="5vw"
             color="white"
-            mt="1"
-            mb="1"
+            marginTop="1"
+            marginBottom="1"
             bg="teal.500"
             rounded="md"
             shadow="md"

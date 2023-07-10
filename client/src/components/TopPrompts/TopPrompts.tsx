@@ -95,19 +95,15 @@ const TopPrompts = () => {
           marginLeft="5vw"
           marginRight="5vw"
           placeholder={"General"}
-          _placeholder={{color:'white'}}
           bg="gray.400"
           borderColor="gray.400"
           focusBorderColor="gray.500"
-          color="black"
-          onChange={(e) => {
-            setCurrentCategory(e.target.value);
-          }}
+          color={useColorModeValue('black','white')}
+          onChange={(event) => setCurrentCategory(event.target.value)}
         >
           {categories.map((category, index) => (
             <option
               value={category.name}
-              style={{ color: "black",backgroundColor:'teal.200' }}
               key={index}
             >
               {category.name}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   VStack,
@@ -40,6 +40,7 @@ type File = {
 };
 
 const Prompts = () => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const currentUser = useContext(AuthContext);
   const { id } = useParams<{ id: string }>();
   const { folderName } = useParams<{ folderName: string }>();
@@ -70,6 +71,11 @@ const Prompts = () => {
       if (id === undefined) setPath([]);
       if (folderName && !back)
         setPath((previousPath) => [...previousPath, folderName]);
+      const container = containerRef.current;
+      if (container) {
+        console.log(container.scrollWidth, container.clientWidth);
+        setIsOverflowed(container.scrollWidth > container.clientWidth);
+      }
       if (back) setBack(false);
     } catch (error) {
       console.log("Couldnt fetch data", error);
@@ -84,7 +90,6 @@ const Prompts = () => {
   };
 
   const handleJump = (index: number) => {
-    console.log(index);
     setBack(true);
     navigate(-index);
     setPath((previousPath) => previousPath.slice(0, path.length - index));
@@ -93,6 +98,8 @@ const Prompts = () => {
   useEffect(() => {
     fetchData();
   }, [id]);
+
+  const [isOverflowed, setIsOverflowed] = useState<boolean>(false);
 
   return (
     <VStack
@@ -146,69 +153,74 @@ const Prompts = () => {
             fontSize="xl"
             overflow="hidden"
           >
-            <Link to="#">
-              <Text fontWeight="bold">/</Text>
-            </Link>
-
-            <Breadcrumb
-              fontWeight="medium"
-              fontSize="sm"
+            <HStack
+              ref={containerRef}
+              width="80%"
+              overflow="hidden"
+              justifyContent={isOverflowed ? "flex-end" : "flex-start"}
             >
-              {path &&
-                path.map((pathItem, index) => (
-                  <BreadcrumbItem key={index}>
-                    <BreadcrumbLink
-                      href="#"
-                      onClick={() => handleJump(path.length - index - 1)}
-                    >
-                      {pathItem}
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                ))}
-            </Breadcrumb>
-            <Spacer />
-            <Popover placement="left-end" isLazy>
-              <PopoverTrigger>
-                <Button
-                  bg="none"
-                  _hover={{ bg: "none" }}
-                  padding={0}
-                  margin={0}
+              <Link to="#">
+                <Text fontWeight="bold">/</Text>
+              </Link>
+              <Breadcrumb fontWeight="medium" fontSize="sm">
+                {path &&
+                  path.map((pathItem, index) => (
+                    <BreadcrumbItem key={index} whiteSpace="nowrap">
+                      <BreadcrumbLink
+                        href="#"
+                        onClick={() => handleJump(path.length - index - 1)}
+                      >
+                        {pathItem}
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                  ))}
+              </Breadcrumb>
+            </HStack>
+
+            <HStack width="20%">
+              <Popover placement="left-end" isLazy>
+                <PopoverTrigger>
+                  <Button
+                    bg="none"
+                    _hover={{ bg: "none" }}
+                    padding={0}
+                    margin={0}
+                  >
+                    <Icon color="teal.400" cursor="pointer" as={FaPlus} />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  width="fit-content"
+                  border={0}
+                  fontSize="md"
+                  cursor="pointer"
                 >
-                  <Icon color="teal.400" cursor="pointer" as={FaPlus} />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                width="fit-content"
-                border={0}
-                fontSize="md"
-                cursor="pointer"
-              >
-                <PopoverArrow bg="gray.100" />
-                <PopoverHeader
-                  padding="1vh 2vh"
-                  borderBottom="2px solid black"
-                  bg="gray.100"
-                  onClick={() => setIsNewFolderModalOpen(true)}
-                >
-                  <HStack>
-                    <Icon as={FaFolder} marginRight={2} />
-                    <Text fontSize="md">New folder</Text>
-                  </HStack>
-                </PopoverHeader>
-                <PopoverHeader
-                  padding="1vh 2vh"
-                  bg="gray.100"
-                  onClick={() => setisNewFileModalOpen(true)}
-                >
-                  <HStack>
-                    <Icon as={FaPen} marginRight={2} />
-                    <Text fontSize="md">Add Prompt</Text>
-                  </HStack>
-                </PopoverHeader>
-              </PopoverContent>
-            </Popover>
-            <Icon cursor="pointer" as={FaArrowLeft} onClick={handleBack} />
+                  <PopoverArrow bg="gray.100" />
+                  <PopoverHeader
+                    padding="1vh 2vh"
+                    borderBottom="2px solid black"
+                    bg="gray.100"
+                    onClick={() => setIsNewFolderModalOpen(true)}
+                  >
+                    <HStack>
+                      <Icon as={FaFolder} marginRight={2} />
+                      <Text fontSize="md">New folder</Text>
+                    </HStack>
+                  </PopoverHeader>
+                  <PopoverHeader
+                    padding="1vh 2vh"
+                    bg="gray.100"
+                    onClick={() => setisNewFileModalOpen(true)}
+                  >
+                    <HStack>
+                      <Icon as={FaPen} marginRight={2} />
+                      <Text fontSize="md">Add Prompt</Text>
+                    </HStack>
+                  </PopoverHeader>
+                </PopoverContent>
+              </Popover>
+              <Icon cursor="pointer" as={FaArrowLeft} onClick={handleBack} />
+            </HStack>
           </HStack>
           <VStack width="full" height="100%" overflowY="auto">
             {folders.map((folder) => (
