@@ -40,6 +40,8 @@ const checkIsLoggedIn = () => {
 let writingStyle = '';
 
 const addWritingStyle = async () => {
+  const doesWritingStylesExist = document.getElementsByClassName('writingStyles');
+  if (doesWritingStylesExist.length != 0) return;
   const dropdownContainer = document.createElement("div");
   dropdownContainer.classList.add('writingStyles');
   fetch('https://gpt-cat.onrender.com/writingStyles')
@@ -74,6 +76,7 @@ const addWritingStyle = async () => {
       const promptTextarea = document.getElementById("prompt-textarea");
 
       const parentElement = promptTextarea.parentNode;
+      parentElement.style.marginTop = '5vh';
       parentElement.insertBefore(dropdownContainer, promptTextarea);
       dropdownContainer.appendChild(dropdownMenu);
 
@@ -164,6 +167,7 @@ const handleBookmark = async (email, name) => {
 //Getting trending prompts
 
 const getPrompts = () => {
+  console.log('getting');
   updateEmail();
 
   fetch("https://gpt-cat.onrender.com/")
@@ -171,13 +175,12 @@ const getPrompts = () => {
     .then(data => {
       console.log(data);
       globalData = data;
-      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
+      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
 
       if (element) {
-        const changeMargin = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
-        changeMargin.style.marginTop = "2vh";
-
-        const heading = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
+        const heading = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
+        heading.style.marginBottom = '2vh';
+        heading.style.marginTop = '1vh';
         heading.innerText = "GPT Cat : Trending prompts";
 
         if (document.getElementsByClassName('switch-cat-gpt').length > 0) {
@@ -196,8 +199,8 @@ const getPrompts = () => {
         categorySelect.style.backgroundColor = '#202123';
         categorySelect.style.borderColor = '#202123';
         categorySelect.style.marginBottom = "10px";
-        categorySelect.style.textAlign= 'center';
-        categorySelect.style.fontSize='15px';
+        categorySelect.style.textAlign = 'center';
+        categorySelect.style.fontSize = '15px';
         categorySelect.style.width = '100%';
         categorySelect.classList.add('switch-cat-gpt');
 
@@ -280,11 +283,12 @@ const getPrompts = () => {
 
 const modifyHTML = (element, data) => {
   updateEmail();
+
   globalData = data;
   element.innerHTML = "";
   const boxSpacing = "10px";
   element.innerHTML = `
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin: 0; width: 100%;">
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin: 0; width: 100%; overflow-y: scroll; height:40vh">
     ${data
       .map(
         (file, index) => `
@@ -485,10 +489,10 @@ const handleStar = async (button) => {
 //HANDLING MUTATIONS
 
 const homePageObserverCallback = function (mutationsList, observer) {
+  console.log('mutation');
   for (const mutation of mutationsList) {
     if (mutation.type === 'childList') {
-      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:h-full.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
-
+      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
       if (element) {
         observer.disconnect();
         getPrompts();
@@ -510,9 +514,11 @@ document.addEventListener('click', () => {
     const doesWritingStylesExist = document.getElementsByClassName('writingStyles');
     if (doesWritingStylesExist.length === 0) addWritingStyle();
 
-    if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/' || window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha/#' || window.location.href === 'https://chat.openai.com/#') {
+    if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/' || window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha/#' || window.location.href === 'https://chat.openai.com/#' ||
+      window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha') {
+        console.log('home page');
       const doesElementExist = document.getElementsByClassName('gpt-cat-prompt-box');
-      if (doesElementExist.length == 0) return;
+      if (doesElementExist.length != 0) return;
       let homePageObserver = new MutationObserver(homePageObserverCallback);
       homePageObserver.observe(document.body, { childList: true, subtree: true });
     }
