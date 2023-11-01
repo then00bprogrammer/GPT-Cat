@@ -40,9 +40,9 @@ const checkIsLoggedIn = () => {
 let writingStyle = '';
 
 const addWritingStyle = async () => {
-  const doesWritingStylesExist = document.getElementsByClassName('writingStyles');
-  if (doesWritingStylesExist.length != 0) return;
   const dropdownContainer = document.createElement("div");
+  dropdownContainer.style.marginLeft = '1%';
+  dropdownContainer.style.marginTop = '1%';
   dropdownContainer.classList.add('writingStyles');
   fetch('https://gpt-cat.onrender.com/writingStyles')
     .then(async (res) => {
@@ -76,7 +76,6 @@ const addWritingStyle = async () => {
       const promptTextarea = document.getElementById("prompt-textarea");
 
       const parentElement = promptTextarea.parentNode;
-      parentElement.style.marginTop = '5vh';
       parentElement.insertBefore(dropdownContainer, promptTextarea);
       dropdownContainer.appendChild(dropdownMenu);
 
@@ -111,8 +110,6 @@ const addWritingStyle = async () => {
       console.error(error);
     });
 }
-
-addWritingStyle();
 
 //Adding bookmark functionality
 
@@ -167,7 +164,6 @@ const handleBookmark = async (email, name) => {
 //Getting trending prompts
 
 const getPrompts = () => {
-  console.log('getting');
   updateEmail();
 
   fetch("https://gpt-cat.onrender.com/")
@@ -175,33 +171,49 @@ const getPrompts = () => {
     .then(data => {
       console.log(data);
       globalData = data;
-      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
+      const element = document.querySelector("#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div.relative.flex.h-full.max-w-full.flex-1.flex-col.overflow-hidden > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div.flex.h-full.w-full.pb-2.md\\:pb-\\[8vh\\]");
 
       if (element) {
-        const heading = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > h1");
-        heading.style.marginBottom = '2vh';
-        heading.style.marginTop = '1vh';
+        const waste = document.querySelector("#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div.relative.flex.h-full.max-w-full.flex-1.flex-col.overflow-hidden > main > div.flex.h-full.flex-col > div.w-full.pt-2.md\\:pt-0.border-t.md\\:border-t-0.dark\\:border-white\\/20.md\\:border-transparent.md\\:dark\\:border-transparent.md\\:pl-2.gizmo\\:pl-0.gizmo\\:md\\:pl-0.md\\:w-\\[calc\\(100\\%-\\.5rem\\)\\].absolute.bottom-0.left-0.md\\:bg-vert-light-gradient.bg-white.dark\\:bg-gray-800.md\\:\\!bg-transparent.dark\\:md\\:bg-vert-dark-gradient > form > div > div:nth-child(1) > div");
+        waste.innerHTML = ''
+        const waste2 = document.querySelector("#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div.relative.flex.h-full.max-w-full.flex-1.flex-col.overflow-hidden > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div.px-2.w-full.flex.flex-col.py-2.md\\:py-6.sticky.top-0");
+        waste2.innerHTML = ''
+
+        const heading = document.createElement("h1");
         heading.innerText = "GPT Cat : Trending prompts";
+        heading.style.margin = '5vh auto 2.5vh auto';
+        heading.style.textAlign = 'center';
+        element.innerHTML = ''
+        // element.style.backgroundColor='purple'
+        element.style.display = 'flex'
+        element.style.flexDirection = 'column'
+        element.appendChild(heading);
+        element.style.paddingBottom = '0'
+        element.style.marginBottom = '0'
 
         if (document.getElementsByClassName('switch-cat-gpt').length > 0) {
           return;
         }
         const button = document.createElement("button");
         button.innerText = "Switch to Private";
+        button.style.margin = 'auto'
+        button.style.display = 'block';
         button.style.marginBottom = "10px";
         button.style.backgroundColor = "#202123";
         button.style.color = "white";
         button.style.padding = "10px 20px";
-        button.style.width = '100%';
+        button.style.width = '30%';
         button.classList.add('switch-cat-gpt');
 
         const categorySelect = document.createElement("select");
         categorySelect.style.backgroundColor = '#202123';
         categorySelect.style.borderColor = '#202123';
+        categorySelect.style.margin = 'auto'
+        categorySelect.style.display = 'block';
         categorySelect.style.marginBottom = "10px";
         categorySelect.style.textAlign = 'center';
         categorySelect.style.fontSize = '15px';
-        categorySelect.style.width = '100%';
+        categorySelect.style.width = '30%';
         categorySelect.classList.add('switch-cat-gpt');
 
         const defaultOption = document.createElement("option");
@@ -283,19 +295,18 @@ const getPrompts = () => {
 
 const modifyHTML = (element, data) => {
   updateEmail();
-
   globalData = data;
-  element.innerHTML = "";
   const boxSpacing = "10px";
-  element.innerHTML = `
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin: 0; width: 100%; overflow-y: scroll; height:40vh">
+
+  const gptbox = `
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin: auto; width: 70%; overflow:scroll; margin-top:2.5vh; padding-top:0"; class='gpt-cat-prompt-box' >
     ${data
       .map(
         (file, index) => `
         <div key=${index} class="prompt-box" style="background-color: #3e3f4b; width: 31%; height: auto; color: white; margin-bottom: ${boxSpacing}; margin-right: ${boxSpacing}; padding: ${boxSpacing}; border-radius: 5px;">
           <input type="hidden" name="index" value="${index}">
           <div class="popover" style="position: relative;">
-            <h3 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">${file.name}</h3>
+            <p style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size:18px; font-weight:bold">${file.name}</p>
             <div class="popover-content" style="display: none; position: absolute; top: 115%; left: 0%; width: 100%; background-color:#202123; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);overflow: visible; !important; z-index:999">
                 <p style=" color:#ffffff; white;font-weight: bold; !important;">Prompt Name: ${file.name}</p>
                 <p style=" color:#ffffff; white;font-weight: bold; !important;">Author: ${file.publicAuthorName}</p> <!-- Added line to display author name -->
@@ -303,25 +314,25 @@ const modifyHTML = (element, data) => {
           </div>
           <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; color: white; width:100%;
           overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-            <p style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;margin-bottom: 2vh">${file.content}</p>
+            <p style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;margin-bottom: 2vh; font-size:15px">${file.content}</p>
             <div style="height:10%;display:flex; width:100%;">
               <input type="hidden" name="id" value="${file._id}">
               <input type="hidden" name="index" value="${index}">
               <input type="hidden" name="isLiked" value="${file.likedBy.includes(email)}">
               <input type="hidden" name="isStarred" value="${file.starredBy.includes(email)}">
-              <button style="color:white;cursor: pointer; width: 10%; margin-right:0.3vw" data-like-button>
+              <button style="color:white;cursor: pointer; width: 8%; margin-right:0.3vw" data-like-button>
                 <img class="gpt-like-button" src=${file.likedBy.includes(email) ? thumbsUpSolid : thumbsUpRegular} style="width:100%;height:100%" alt="Like button">
               </button>
-              <p style="margin-right: auto">${file.likes ? file.likes : 0} </p>
-              <button title="Promotional link" style="color:white;cursor: pointer; width: 10% ;margin-right:0.3vw">
+              <p style="margin-right: auto; font-size:10px">${file.likes ? file.likes : 0} </p>
+              <button title="Promotional link" style="color:white;cursor: pointer; width: 8% ;margin-right:0.3vw">
                 <a href=${file.link}>
                   <img src=${linkSolid} style="width:100%;height:100%" alt="Copy prompt">
                 </a>
               </button>
-              <button class="copy-button" style="color:white;cursor: pointer; width: 7% ;margin-right:0.3vw" copy-button>
+              <button class="copy-button" style="color:white;cursor: pointer; width: 5% ;margin-right:0.3vw" copy-button>
                 <img class="gpt-star-button" src=${clipboardRegular} style="width:100%;height:100%" alt="Copy prompt">
               </button>
-              <button style="color:white;cursor: pointer; width: 10%" data-star-button>
+              <button style="color:white;cursor: pointer; width: 8%" data-star-button>
                 <img class="gpt-star-button" src=${file.starredBy.includes(email) ? starSolid : starRegular} style="width:100%;height:100%" alt="Add to Favourites">
               </button>
             </div>
@@ -332,8 +343,12 @@ const modifyHTML = (element, data) => {
       .join("")}
           </div>
           `;
+  const elementToRemove = document.querySelector('.gpt-cat-prompt-box');
+  if (elementToRemove) {
+    element.removeChild(elementToRemove);
+  }
+  element.insertAdjacentHTML('beforeend', gptbox);
 
-  element.classList.add('gpt-cat-prompt-box');
 
 
   const popoverElements = document.getElementsByClassName("popover");
@@ -489,10 +504,10 @@ const handleStar = async (button) => {
 //HANDLING MUTATIONS
 
 const homePageObserverCallback = function (mutationsList, observer) {
-  console.log('mutation');
   for (const mutation of mutationsList) {
     if (mutation.type === 'childList') {
-      const element = document.querySelector("#__next > div.overflow-hidden.w-full.h-full.relative.flex.z-0 > div.relative.flex.h-full.max-w-full.flex-1.overflow-hidden > div > main > div.flex-1.overflow-hidden > div > div > div > div.text-gray-800.w-full.mx-auto.md\\:max-w-2xl.lg\\:max-w-3xl.md\\:flex.md\\:flex-col.px-6.dark\\:text-gray-100 > div");
+      const element = document.querySelector("#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div.relative.flex.h-full.max-w-full.flex-1.flex-col.overflow-hidden > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div.flex.h-full.w-full.pb-2.md\\:pb-\\[8vh\\]");
+
       if (element) {
         observer.disconnect();
         getPrompts();
@@ -502,25 +517,28 @@ const homePageObserverCallback = function (mutationsList, observer) {
   }
 };
 
-
 if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/' || window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha/#' || window.location.href === 'https://chat.openai.com/#') {
 
   let homePageObserver = new MutationObserver(homePageObserverCallback);
   homePageObserver.observe(document.body, { childList: true, subtree: true });
 }
 
-document.addEventListener('click', () => {
-  setTimeout(() => {
-    const doesWritingStylesExist = document.getElementsByClassName('writingStyles');
-    if (doesWritingStylesExist.length === 0) addWritingStyle();
+addWritingStyle();
 
-    if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/' || window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha/#' || window.location.href === 'https://chat.openai.com/#' ||
-      window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha') {
-        console.log('home page');
-      const doesElementExist = document.getElementsByClassName('gpt-cat-prompt-box');
-      if (doesElementExist.length != 0) return;
+function checkURL() {
+  if (window.location.href !== checkURL.lastURL) {
+    if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/' || window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha/#' || window.location.href === 'https://chat.openai.com/#') {
+
       let homePageObserver = new MutationObserver(homePageObserverCallback);
       homePageObserver.observe(document.body, { childList: true, subtree: true });
     }
-  }, 1000)
-})
+
+    addWritingStyle();
+    checkURL.lastURL = window.location.href;
+  }
+  setTimeout(checkURL, 1000); 
+}
+
+checkURL.lastURL = window.location.href;
+checkURL();
+
