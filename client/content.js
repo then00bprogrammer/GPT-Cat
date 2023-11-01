@@ -39,31 +39,38 @@ const checkIsLoggedIn = () => {
 
 let writingStyle = '';
 
+let requestInProgress = false;
 const addWritingStyle = async () => {
+  if (requestInProgress) {
+    console.log("request in progress");
+    return; 
+  }
+  const doesAlreadyExist = document.querySelector('.writingStyles');
+  if(doesAlreadyExist!=null) return;
   const dropdownContainer = document.createElement("div");
   dropdownContainer.style.marginLeft = '1%';
   dropdownContainer.style.marginTop = '1%';
   dropdownContainer.classList.add('writingStyles');
   fetch('https://gpt-cat.onrender.com/writingStyles')
-    .then(async (res) => {
-      let wstyles = await res.json();
-
-      dropdownContainer.classList.add("dropdown-container");
-      dropdownContainer.style.marginBottom = '1vh';
-
-      const dropdownMenu = document.createElement("select");
-      dropdownMenu.id = "dropdown-menu";
-      dropdownMenu.style.width = "40%";
-      dropdownMenu.style.backgroundColor = '#40414f';
-      dropdownMenu.style.marginBottom = '1vh';
-      dropdownMenu.classList.add('selct-css');
-
+  .then(async (res) => {
+    let wstyles = await res.json();
+    
+    dropdownContainer.classList.add("dropdown-container");
+    dropdownContainer.style.marginBottom = '1vh';
+    
+    const dropdownMenu = document.createElement("select");
+    dropdownMenu.id = "dropdown-menu";
+    dropdownMenu.style.width = "40%";
+    dropdownMenu.style.backgroundColor = '#40414f';
+    dropdownMenu.style.marginBottom = '1vh';
+    dropdownMenu.classList.add('selct-css');
+    
       let option = document.createElement("option");
       option.value = '';
       option.textContent = 'Tone';
       option.classList.add('option-input');
       dropdownMenu.appendChild(option);
-
+      
       for (const wstyle of wstyles) {
         option = document.createElement("option");
         option.value = wstyle.content;
@@ -72,24 +79,24 @@ const addWritingStyle = async () => {
         option.classList.add('option-input');
         dropdownMenu.appendChild(option);
       }
-
+      
       const promptTextarea = document.getElementById("prompt-textarea");
-
+      
       const parentElement = promptTextarea.parentNode;
       parentElement.insertBefore(dropdownContainer, promptTextarea);
       dropdownContainer.appendChild(dropdownMenu);
-
+      
       dropdownMenu.addEventListener("change", (event) => {
         let writingStyle = event.target.value != '' ? 'Tone: ' + event.target.value : '';
         writingStyle = writingStyle.toString();
-
+        
         const inp = document.getElementById("prompt-textarea");
         const alreadyValue = inp.value;
         let arr = []
         if (alreadyValue != '') {
           arr = alreadyValue.split("\n");
         }
-
+        
         if (arr.length > 1) {
           inp.value = writingStyle + '\n' + arr[1];
         }
@@ -109,16 +116,17 @@ const addWritingStyle = async () => {
     .catch((error) => {
       console.error(error);
     });
-}
-
-//Adding bookmark functionality
-
-const createBookmarkButton = () => {
-  const button = document.createElement('button');
-  button.classList.add('bookmark-button');
-  const icon = document.createElement('img');
-  icon.src = bookmarkRegular;
-  icon.classList.add('bookmark-icon');
+  }
+  addWritingStyle();
+  
+  //Adding bookmark functionality
+  
+  const createBookmarkButton = () => {
+    const button = document.createElement('button');
+    button.classList.add('bookmark-button');
+    const icon = document.createElement('img');
+    icon.src = bookmarkRegular;
+    icon.classList.add('bookmark-icon');
   button.appendChild(icon);
   return button;
 }
@@ -131,7 +139,7 @@ button.addEventListener('click', () => {
   checkIsLoggedIn();
 
   if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-render-sha' || window.location.href === 'https://chat.openai.com/') {
-    alert("Please refresh the browser");
+    alert("Please initiate the conversation");
     return;
   }
 
@@ -174,10 +182,11 @@ const getPrompts = () => {
       const element = document.querySelector("#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div.relative.flex.h-full.max-w-full.flex-1.flex-col.overflow-hidden > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div.flex.h-full.w-full.pb-2.md\\:pb-\\[8vh\\]");
 
       if (element) {
-        const waste = document.querySelector("#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div.relative.flex.h-full.max-w-full.flex-1.flex-col.overflow-hidden > main > div.flex.h-full.flex-col > div.w-full.pt-2.md\\:pt-0.border-t.md\\:border-t-0.dark\\:border-white\\/20.md\\:border-transparent.md\\:dark\\:border-transparent.md\\:pl-2.gizmo\\:pl-0.gizmo\\:md\\:pl-0.md\\:w-\\[calc\\(100\\%-\\.5rem\\)\\].absolute.bottom-0.left-0.md\\:bg-vert-light-gradient.bg-white.dark\\:bg-gray-800.md\\:\\!bg-transparent.dark\\:md\\:bg-vert-dark-gradient > form > div > div:nth-child(1) > div");
-        waste.innerHTML = ''
-        const waste2 = document.querySelector("#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div.relative.flex.h-full.max-w-full.flex-1.flex-col.overflow-hidden > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div.px-2.w-full.flex.flex-col.py-2.md\\:py-6.sticky.top-0");
-        waste2.innerHTML = ''
+        const chatGPTusageExamples = document.querySelector("#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div.relative.flex.h-full.max-w-full.flex-1.flex-col.overflow-hidden > main > div.flex.h-full.flex-col > div.w-full.pt-2.md\\:pt-0.border-t.md\\:border-t-0.dark\\:border-white\\/20.md\\:border-transparent.md\\:dark\\:border-transparent.md\\:pl-2.gizmo\\:pl-0.gizmo\\:md\\:pl-0.md\\:w-\\[calc\\(100\\%-\\.5rem\\)\\].absolute.bottom-0.left-0.md\\:bg-vert-light-gradient.bg-white.dark\\:bg-gray-800.md\\:\\!bg-transparent.dark\\:md\\:bg-vert-dark-gradient > form > div > div:nth-child(1) > div");
+
+        chatGPTusageExamples.innerHTML = ''
+        const gptVersionHeader = document.querySelector("#__next > div.relative.z-0.flex.h-full.w-full.overflow-hidden > div.relative.flex.h-full.max-w-full.flex-1.flex-col.overflow-hidden > main > div.flex.h-full.flex-col > div.flex-1.overflow-hidden > div > div.px-2.w-full.flex.flex-col.py-2.md\\:py-6.sticky.top-0");
+        gptVersionHeader.innerHTML = ''
 
         const heading = document.createElement("h1");
         heading.innerText = "GPT Cat : Trending prompts";
@@ -523,7 +532,6 @@ if (window.location.href === 'https://chat.openai.com/?model=text-davinci-002-re
   homePageObserver.observe(document.body, { childList: true, subtree: true });
 }
 
-addWritingStyle();
 
 function checkURL() {
   if (window.location.href !== checkURL.lastURL) {
