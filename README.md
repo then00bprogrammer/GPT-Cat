@@ -16,7 +16,8 @@ https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/69de8e3c-97bd-45ad-
   <li>Add promotional links to your prompts</li>
   <li>Dark Mode</li>
 </ul>
-<img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/b55615d9-af35-4db7-b1d8-b7df1dedec21'/>
+
+<img src='https://github.com/then00bprogrammer/GPT-Cat/assets/96624909/fd6e048b-8a2d-48ba-9191-a03c79e56fc2'/>
 <ul>
   <li><h2>See your bookmarked chats here</h2></li>
 </ul>
