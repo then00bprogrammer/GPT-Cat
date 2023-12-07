@@ -1,4 +1,5 @@
 <h1 align="center">GPT Cat: Your Chat GPT Manager</h1>
+<h2 color='red'>Chrome has updated its policies and it doesn't allow remote code anymore hence the extension is down. I'm working on it.</h2>
 <p align="center">
 Welcome to the GPT Cat! This web extension allows you to save prompts in an organized and infinitely customizable manager, bookmark conversations, and make them public, enabling you to immortalize and share your interactions with the world. With this enchanting companion, you can transform ordinary conversations into something extraordinary. Install the extension from <a href='https://chrome.google.com/webstore/detail/gpt-cat/ejlhpcfjchaigmpbngppllgegdlcbbck/related'>here</a>.
 </p>
